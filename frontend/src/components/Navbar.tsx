@@ -2,7 +2,6 @@ import classNames from "classnames";
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import "../css/Navbar.css";
-import useWeb3 from "../hooks/useWeb3";
 import { UserInfo } from "../types";
 import { removeUserItem, setUserItem } from "../utils/localstorage";
 // import {
@@ -10,21 +9,23 @@ import { removeUserItem, setUserItem } from "../utils/localstorage";
 //   signOutWithWeb3Onboard,
 // } from "../utils/web3-onboard";
 
-const Navbar = () => {
+const Navbar = (props: any) => {
   const [user, setUser] = useState<UserInfo | undefined>(undefined);
   const location = useLocation();
   const isArtistPage = location.pathname.includes("/artist-page");
-  const { signInWithWeb3Onboard, signOutWithWeb3Onboard } = useWeb3();
+
+  const web3 = props.web3;
+
 
 
   const onClickSignOut = async () => {
-    await signOutWithWeb3Onboard();
+    await web3.signOutWithWeb3Onboard();
     removeUserItem();
     setUser(undefined);
   };
 
   const onClickSignIn = async () => {
-    const address = await signInWithWeb3Onboard();
+    const address = await web3.signInWithWeb3Onboard();
     if (address) {
       const userInfo = { role: "USER", address } as UserInfo;
       setUserItem(userInfo);
