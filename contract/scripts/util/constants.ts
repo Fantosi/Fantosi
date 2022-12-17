@@ -10,7 +10,7 @@ export const auctionInfo: {
 } = {
     wBNBAddress: "0x0",
     timeBuffer: BigNumber.from(300), // 5 min
-    reservePrice: ethers.utils.parseEther("0.01"), // 0.01 BNB
+    reservePrice: ethers.utils.parseEther("0.0001"), // 0.0001 BNB
     minBidIncrementPercentage: BigNumber.from(5), // 5%
     totalDuration: BigNumber.from(86400), // 1 day
     finalDurationPoint: BigNumber.from(86100), // after 23 hours and 55 min, only in test case

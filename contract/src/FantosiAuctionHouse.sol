@@ -9,6 +9,7 @@ pragma solidity ^0.8.6;
 
 import { PausableUpgradeable } from "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
 import { ReentrancyGuardUpgradeable } from "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
+// import { OwnableUpgradeable } from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import { IFantosiAuctionHouse } from "./interfaces/IFantosiAuctionHouse.sol";
 import { IFantosiToken } from "./interfaces/IFantosiToken.sol";
@@ -18,7 +19,7 @@ import { IWBNB } from "./interfaces/IWBNB.sol";
 import "hardhat/console.sol";
 
 contract FantosiAuctionHouse is IFantosiAuctionHouse, PausableUpgradeable, ReentrancyGuardUpgradeable {
-    // 컨트랙트 admin => 최초 경매 시작 시 fantosiDAOExecutor로 설정됨
+    // 컨트랙트 admin
     address admin;
 
     // Fantosi 토큰 컨트랙트
@@ -95,6 +96,7 @@ contract FantosiAuctionHouse is IFantosiAuctionHouse, PausableUpgradeable, Reent
         IFantosiAuctionHouse.Auction memory _auction = auction;
 
         require(_auction.photoCardId == photoCardId, "FANTOSI: INVALID_ID_ERROR");
+        require(msg.value >= reservePrice, "FANTOSI: RESERVE_PRICE_ERROR");
         require(
             block.timestamp < _auction.endTime && block.timestamp < _auction.finalAuctionTime,
             "FANTOSI: EXPIRED_AUCTION_ERROR"
