@@ -45,6 +45,9 @@ contract FantosiAuctionHouse is
     // Final Auction이 시작되는 시점
     uint256 public finalAuctionPoint;
 
+    // 기존에 진행되었던 Auction
+    IFantosiAuctionHouse.Auction[] public auctionHistory;
+
     // 현재 진행되고 있는 Auction
     IFantosiAuctionHouse.Auction public auction;
 
@@ -149,6 +152,18 @@ contract FantosiAuctionHouse is
         emit AuctionMinBidIncrementPercentageUpdated(_minBidIncrementPercentage);
     }
 
+    function getCurrentAuction() external view returns (Auction memory) {
+        return auction;
+    }
+
+    function getAuctionHistory() external view returns (Auction[] memory) {
+        return auctionHistory;
+    }
+
+    function getAuctionHistoryLength() external view returns (uint256) {
+        return auctionHistory.length;
+    }
+
     function _createAuction() internal {
         try fantosiToken.mint() returns (uint256 photoCardId) {
             uint256 startTime;
@@ -203,6 +218,9 @@ contract FantosiAuctionHouse is
         if (_auction.amount > 0) {
             _safeTransferBNBWithFallback(owner(), _auction.amount);
         }
+
+        // 마감된 Auction을 auctionHistory에 저장
+        auctionHistory.push(_auction);
 
         emit AuctionSettled(_auction.photoCardId, _auction.bidder, _auction.amount);
     }
