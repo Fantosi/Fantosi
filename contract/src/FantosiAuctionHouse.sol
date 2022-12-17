@@ -9,7 +9,6 @@ pragma solidity ^0.8.6;
 
 import { PausableUpgradeable } from "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
 import { ReentrancyGuardUpgradeable } from "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
-import { OwnableUpgradeable } from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import { IFantosiAuctionHouse } from "./interfaces/IFantosiAuctionHouse.sol";
 import { IFantosiToken } from "./interfaces/IFantosiToken.sol";
@@ -18,12 +17,10 @@ import { IWBNB } from "./interfaces/IWBNB.sol";
 // TODO: 테스트 완료 후 제거
 import "hardhat/console.sol";
 
-contract FantosiAuctionHouse is
-    IFantosiAuctionHouse,
-    PausableUpgradeable,
-    ReentrancyGuardUpgradeable,
-    OwnableUpgradeable
-{
+contract FantosiAuctionHouse is IFantosiAuctionHouse, PausableUpgradeable, ReentrancyGuardUpgradeable {
+    // 컨트랙트 admin => 최초 경매 시작 시 fantosiDAOExecutor로 설정됨
+    address admin;
+
     // Fantosi 토큰 컨트랙트
     IFantosiToken public fantosiToken;
 
@@ -51,6 +48,14 @@ contract FantosiAuctionHouse is
     // 현재 진행되고 있는 Auction
     IFantosiAuctionHouse.Auction public auction;
 
+    // Fantosi DAO Treasury 컨트랙트
+    address fantosiDAOExecutor;
+
+    modifier onlyAdmin() {
+        require(msg.sender == admin, "FANTOSI: ACCESS_ERROR");
+        _;
+    }
+
     function initialize(
         IFantosiToken _fantosiToken,
         address _wBNB,
@@ -58,14 +63,15 @@ contract FantosiAuctionHouse is
         uint256 _reservePrice,
         uint8 _minBidIncrementPercentage,
         uint256 _totalDuration,
-        uint256 _finalAuctionPoint
+        uint256 _finalAuctionPoint,
+        address _fantosiDAOExecutor
     ) external initializer {
         __Pausable_init();
         __ReentrancyGuard_init();
-        __Ownable_init();
 
         _pause();
 
+        admin = msg.sender;
         fantosiToken = _fantosiToken;
         wBNB = _wBNB;
         timeBuffer = _timeBuffer;
@@ -73,6 +79,7 @@ contract FantosiAuctionHouse is
         minBidIncrementPercentage = _minBidIncrementPercentage;
         totalDuration = _totalDuration;
         finalAuctionPoint = _finalAuctionPoint;
+        fantosiDAOExecutor = _fantosiDAOExecutor;
     }
 
     function settleCurrentAndCreateNewAuction() external override nonReentrant whenNotPaused {
@@ -122,31 +129,36 @@ contract FantosiAuctionHouse is
     }
 
     // 관리자 호출 기능
-    function pause() external override onlyOwner {
+    function pause() external override onlyAdmin {
         _pause();
     }
 
-    function unpause() external override onlyOwner {
+    function unpause() external override onlyAdmin {
         _unpause();
 
         if (auction.startTime == 0 || auction.settled) {
             _createAuction();
+            transferAdmin(fantosiDAOExecutor);
         }
     }
 
-    function setTimeBuffer(uint256 _timeBuffer) external override onlyOwner {
+    function transferAdmin(address newAdmin) public onlyAdmin {
+        admin = newAdmin;
+    }
+
+    function setTimeBuffer(uint256 _timeBuffer) external override onlyAdmin {
         timeBuffer = _timeBuffer;
 
         emit AuctionTimeBufferUpdated(_timeBuffer);
     }
 
-    function setReservePrice(uint256 _reservePrice) external override onlyOwner {
+    function setReservePrice(uint256 _reservePrice) external override onlyAdmin {
         reservePrice = _reservePrice;
 
         emit AuctionReservePriceUpdated(_reservePrice);
     }
 
-    function setMinBidIncrementPercentage(uint8 _minBidIncrementPercentage) external override onlyOwner {
+    function setMinBidIncrementPercentage(uint8 _minBidIncrementPercentage) external override onlyAdmin {
         minBidIncrementPercentage = _minBidIncrementPercentage;
 
         emit AuctionMinBidIncrementPercentageUpdated(_minBidIncrementPercentage);
@@ -216,7 +228,7 @@ contract FantosiAuctionHouse is
         }
 
         if (_auction.amount > 0) {
-            _safeTransferBNBWithFallback(owner(), _auction.amount);
+            _safeTransferBNBWithFallback(admin, _auction.amount);
         }
 
         // 마감된 Auction을 auctionHistory에 저장

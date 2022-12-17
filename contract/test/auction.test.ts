@@ -4,7 +4,7 @@ import { BigNumber } from "ethers";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
 import { deployArtist, DeployParams } from "./deploy/deployArtist";
-import { auctionInfo, photoCardInfo } from "./deploy/constants";
+import { auctionInfoTest, photoCardInfoTest } from "./deploy/constants";
 import { blockTimeStamp, passNSeconds } from "./util/hardhat.util";
 
 describe("Daily Auction 테스트", () => {
@@ -19,9 +19,9 @@ describe("Daily Auction 테스트", () => {
     const deployAllArtists = async () => {
         // Newjeans
         const newjeansParams: DeployParams = {
-            name: photoCardInfo.NEWJEANS.name,
-            symbol: photoCardInfo.NEWJEANS.symbol,
-            contractURIHash: photoCardInfo.NEWJEANS.contractURIHash,
+            name: photoCardInfoTest.NEWJEANS.name,
+            symbol: photoCardInfoTest.NEWJEANS.symbol,
+            contractURIHash: photoCardInfoTest.NEWJEANS.contractURIHash,
             admin: admin,
             artist: newjeans,
         };
@@ -43,7 +43,7 @@ describe("Daily Auction 테스트", () => {
         const auction = await fantosiAuctionHouse.auction();
         const duration = auction.endTime.sub(auction.startTime);
 
-        expect(duration).to.equal(BigNumber.from(auctionInfo.totalDuration));
+        expect(duration).to.equal(BigNumber.from(auctionInfoTest.totalDuration));
     });
 
     it("테스트: 입찰 시도 로직이 정상적으로 작동하는가?", async () => {
@@ -84,7 +84,7 @@ describe("Daily Auction 테스트", () => {
             await fantosiAuctionHouse.connect(user[0]).createBid(BigNumber.from(1), { value: user0BidAmount });
 
             /* 23시간 53분 경과 */
-            await passNSeconds(auctionInfo.finalDurationPoint.toNumber() - 120 - 1);
+            await passNSeconds(auctionInfoTest.finalDurationPoint.toNumber() - 120 - 1);
 
             /* 1.05 BNB로 user1가 입찰 */
             const user1BidAmount = ethers.utils.parseEther("1.05");
@@ -132,7 +132,7 @@ describe("Daily Auction 테스트", () => {
         await fantosiAuctionHouse.connect(user[0]).createBid(BigNumber.from(1), { value: user0BidAmount });
 
         /* 24시간 경과 */
-        await passNSeconds(auctionInfo.totalDuration.toNumber() - 1);
+        await passNSeconds(auctionInfoTest.totalDuration.toNumber() - 1);
 
         /* Settlement 진행 */
         await fantosiAuctionHouse.connect(admin).settleCurrentAndCreateNewAuction();
@@ -149,8 +149,8 @@ describe("Daily Auction 테스트", () => {
 
         expect(newAuction.photoCardId).to.equal(BigNumber.from(2));
         expect(newAuction.startTime).to.equal(prevAuction.endTime);
-        expect(newAuction.finalAuctionTime).to.equal(prevAuction.endTime.add(auctionInfo.finalDurationPoint));
-        expect(newAuction.endTime).to.equal(prevAuction.endTime.add(auctionInfo.totalDuration));
+        expect(newAuction.finalAuctionTime).to.equal(prevAuction.endTime.add(auctionInfoTest.finalDurationPoint));
+        expect(newAuction.endTime).to.equal(prevAuction.endTime.add(auctionInfoTest.totalDuration));
         expect(newAuction.amount).to.equal(BigNumber.from(0));
     });
 });

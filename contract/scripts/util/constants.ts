@@ -1,6 +1,6 @@
 import { ethers, BigNumber } from "ethers";
 
-export const auctionInfoTest: {
+export const auctionInfo: {
     wBNBAddress: string;
     timeBuffer: BigNumber;
     reservePrice: BigNumber;
@@ -16,7 +16,7 @@ export const auctionInfoTest: {
     finalDurationPoint: BigNumber.from(86100), // after 23 hours and 55 min, only in test case
 };
 
-export const governanceInfoTest: {
+export const governanceInfo: {
     timeLockDelay: BigNumber;
     proposalThresholdBPS: BigNumber;
     quorumVotesBPS: BigNumber;
@@ -30,16 +30,20 @@ export const governanceInfoTest: {
     votingDelay: BigNumber.from(1), // 1 block
 };
 
-export const photoCardInfoTest: {
+export const photoCardInfo: {
     [artist: string]: {
+        address: string;
         name: string;
         symbol: string;
         contractURIHash: string;
     };
 } = {
     NEWJEANS: {
+        address: "0x3A6528E50DB65Ac99555DD45C16a14853Db0F48a",
         name: "NEWJEANS PHOTOCARD",
         symbol: "NEWJEANS",
         contractURIHash: "QmWJUHeeSYUQMyX695ntnjUzh3MY3tT6PBCWxhM8ngVP6n",
     },
 };
+
+export const testnetWBNBAddr = "0x5B3E2Bc1da86ff6235D9eAd4504d598caE77DBCB";

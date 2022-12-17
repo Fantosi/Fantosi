@@ -17,10 +17,8 @@
     "node:hardhat": "export $(cat env/.hardhat.env | xargs) && npx hardhat node --network hardhat --export ./deployments/hardhat.json",
     "deploy:hardhat": "export $(cat env/.hardhat.env | xargs) && npx hardhat deploy --network hardhat --watch --export ./deployments/hardhat.json",
     "start:hardhat": "export $(cat env/.hardhat.env | xargs) && npx ts-node",
-    "deploy:baobab": "export $(cat env/.baobab.env | xargs) && npx hardhat deploy --network baobab --export ./deployments/baobab.json",
-    "start:baobab": "export $(cat env/.baobab.env | xargs) && npx ts-node",
-    "deploy:cypress": "export $(cat env/.cypress.env | xargs) && npx hardhat deploy --network cypress --export ./deployments/cypress.json",
-    "start:cypress": "export $(cat env/.cypress.env | xargs) && npx ts-node",
+    "deploy:testnet": "export $(cat env/.bnb_testnet.env | xargs) && npx hardhat deploy --network bnb_testnet --export ./deployments/bnb_testnet.json",
+    "start:testnet": "export $(cat env/.bnb_testnet.env | xargs) && npx ts-node",
     "run:hardhat": "export $(cat env/.hardhat.env | xargs) && npx hardhat run --network localhost"
   },
   "dependencies": {

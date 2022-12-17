@@ -51,10 +51,10 @@ contract FantosiView is Initializable {
 
     function getAllArtistInfo() external view returns (Artist[] memory artistsInfo) {
         string[] memory artistsLocal = artists;
-        uint256 length = artistsLocal.length;
 
+        uint256 length = artistsLocal.length;
         artistsInfo = new Artist[](length);
-        
+
         for (uint256 i = 0; i < length; i++) {
             artistsInfo[i].artistKey = artistsLocal[i];
             artistsInfo[i].fantosiTokenAddr = fantosiTokenList[artistsLocal[i]];

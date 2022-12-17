@@ -4,7 +4,7 @@ import { BigNumber } from "ethers";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
 import { deployArtist, DeployParams } from "./deploy/deployArtist";
-import { auctionInfo, photoCardInfo } from "./deploy/constants";
+import { auctionInfoTest, photoCardInfoTest } from "./deploy/constants";
 import { blockTimeStamp, passNSeconds } from "./util/hardhat.util";
 
 describe.only("View 테스트", () => {
@@ -44,7 +44,7 @@ describe.only("View 테스트", () => {
     });
 
     it("테스트: getArtistPhotoCardInfo 테스트", async () => {
-        const data = await fantosiView.getArtistPhotoCardInfo(photoCardInfo.NEWJEANS.symbol);
+        const data = await fantosiView.getArtistPhotoCardInfo(photoCardInfoTest.NEWJEANS.symbol);
         console.log("metadataURI: ", data.metadataURI);
         console.log("photoCardId: ", data.currentAuction.photoCardId.toString());
         console.log("amount: ", data.currentAuction.amount.toString());
@@ -71,7 +71,7 @@ describe.only("View 테스트", () => {
 
     it("테스트: getArtistPhotoCardHistoryInfo 테스트", async () => {
         /* 24시간 경과 */
-        await passNSeconds(auctionInfo.totalDuration.toNumber() - 1);
+        await passNSeconds(auctionInfoTest.totalDuration.toNumber() - 1);
 
         /* Settlement 진행 */
         await fantosiAuctionHouse.connect(admin).settleCurrentAndCreateNewAuction();
@@ -81,7 +81,7 @@ describe.only("View 테스트", () => {
         await fantosiAuctionHouse.connect(user[1]).createBid(BigNumber.from(2), { value: user1BidAmount });
 
         /* 24시간 경과 */
-        await passNSeconds(auctionInfo.totalDuration.toNumber() - 1);
+        await passNSeconds(auctionInfoTest.totalDuration.toNumber() - 1);
 
         /* Settlement 진행 */
         await fantosiAuctionHouse.connect(admin).settleCurrentAndCreateNewAuction();
@@ -90,7 +90,7 @@ describe.only("View 테스트", () => {
         const user2BidAmount = ethers.utils.parseEther("1.3");
         await fantosiAuctionHouse.connect(user[2]).createBid(BigNumber.from(3), { value: user2BidAmount });
 
-        const data = await fantosiView.getArtistPhotoCardHistoryInfo(photoCardInfo.NEWJEANS.symbol);
+        const data = await fantosiView.getArtistPhotoCardHistoryInfo(photoCardInfoTest.NEWJEANS.symbol);
 
         for (let i = 0; i < data.length; i++) {
             console.log(`======= ${i + 1}번째 포토카드 🧚🏻‍♀️ =======`);
@@ -106,7 +106,7 @@ describe.only("View 테스트", () => {
         }
     });
 
-    it.only("테스트: getAllArtistInfo 테스트", async () => {
+    it("테스트: getAllArtistInfo 테스트", async () => {
         const data = await fantosiView.getAllArtistInfo();
         console.log(data);
     });

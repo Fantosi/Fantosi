@@ -1,7 +1,7 @@
 import { ethers, upgrades } from "hardhat";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { FantosiAuctionHouse, FantosiDAOExecutor, FantosiToken, FantosiView, WBNB } from "../../typechain";
-import { auctionInfo, governanceInfo } from "./constants";
+import { auctionInfoTest, governanceInfoTest } from "./constants";
 
 export interface DeployParams {
     name: string;
@@ -28,42 +28,8 @@ export const deployArtist = async (params: DeployParams): Promise<RT> => {
 
     /// View 컨트랙트 배포
     const FantosiViewContract = await ethers.getContractFactory("FantosiView");
-    const fantosiView = (await upgrades.deployProxy(FantosiViewContract, []
-        )) as FantosiView;
+    const fantosiView = (await upgrades.deployProxy(FantosiViewContract, [])) as FantosiView;
     await fantosiView.deployed();
-
-    /// Fantosi Token 컨트랙트 배포
-    const FantosiTokenContract = await ethers.getContractFactory("FantosiToken");
-    const fantosiToken = (await FantosiTokenContract.deploy(
-        params.admin.address,
-        params.artist.address,
-        params.name,
-        params.symbol,
-        params.contractURIHash,
-    )) as FantosiToken;
-    await fantosiToken.deployed();
-    
-    // View 컨트랙트에 저장
-    await fantosiView.connect(params.admin).setFantosiTokenAddress(params.symbol, fantosiToken.address);
-
-    /// Fantosi Auction 컨트랙트 배포
-    const FantosiAuctionHouseContract = await ethers.getContractFactory("FantosiAuctionHouse");
-    const fantosiAuctionHouse = (await upgrades.deployProxy(FantosiAuctionHouseContract, [
-        fantosiToken.address,
-        wBNB.address,
-        auctionInfo.timeBuffer,
-        auctionInfo.reservePrice,
-        auctionInfo.minBidIncrementPercentage,
-        auctionInfo.totalDuration,
-        auctionInfo.finalDurationPoint,
-    ])) as FantosiAuctionHouse;
-    await fantosiAuctionHouse.deployed();
-
-    // View 컨트랙트에 저장
-    await fantosiView.connect(params.admin).setFantosiTokenAuctionHouse(fantosiToken.address, fantosiAuctionHouse.address);
-
-    /// 포토카드 Minter 설정
-    await fantosiToken.connect(params.admin).setMinter(fantosiAuctionHouse.address);
 
     /// Fantosi DAO Executor 배포
     /* Gov Delegator Address 계산 */
@@ -76,12 +42,48 @@ export const deployArtist = async (params: DeployParams): Promise<RT> => {
     const FantosiDAOExecutorContract = await ethers.getContractFactory("FantosiDAOExecutor");
     const fantosiDAOExecutor = (await FantosiDAOExecutorContract.deploy(
         calculatedGovDelegatorAddress,
-        governanceInfo.timeLockDelay,
+        governanceInfoTest.timeLockDelay,
         {
             gasLimit: "30000000",
         },
     )) as FantosiDAOExecutor;
     await fantosiDAOExecutor.deployed();
+
+    /// Fantosi Token 컨트랙트 배포
+    const FantosiTokenContract = await ethers.getContractFactory("FantosiToken");
+    const fantosiToken = (await FantosiTokenContract.deploy(
+        params.admin.address,
+        params.artist.address,
+        params.name,
+        params.symbol,
+        params.contractURIHash,
+    )) as FantosiToken;
+    await fantosiToken.deployed();
+
+    // View 컨트랙트에 저장
+    await fantosiView.connect(params.admin).setFantosiTokenAddress(params.symbol, fantosiToken.address);
+
+    /// Fantosi Auction 컨트랙트 배포
+    const FantosiAuctionHouseContract = await ethers.getContractFactory("FantosiAuctionHouse");
+    const fantosiAuctionHouse = (await upgrades.deployProxy(FantosiAuctionHouseContract, [
+        fantosiToken.address,
+        wBNB.address,
+        auctionInfoTest.timeBuffer,
+        auctionInfoTest.reservePrice,
+        auctionInfoTest.minBidIncrementPercentage,
+        auctionInfoTest.totalDuration,
+        auctionInfoTest.finalDurationPoint,
+        fantosiDAOExecutor.address,
+    ])) as FantosiAuctionHouse;
+    await fantosiAuctionHouse.deployed();
+
+    // View 컨트랙트에 저장
+    await fantosiView
+        .connect(params.admin)
+        .setFantosiTokenAuctionHouse(fantosiToken.address, fantosiAuctionHouse.address);
+
+    /// 포토카드 Minter 설정
+    await fantosiToken.connect(params.admin).setMinter(fantosiAuctionHouse.address);
 
     // TODO: DAO 배포 스크립트 추가
 
@@ -90,7 +92,7 @@ export const deployArtist = async (params: DeployParams): Promise<RT> => {
     await fantosiAuctionHouse.connect(params.admin).unpause();
 
     /// DAO Treasury로 Ownership 이동
-    await fantosiAuctionHouse.connect(params.admin).transferOwnership(fantosiDAOExecutor.address);
+    // await fantosiAuctionHouse.connect(params.admin).transferOwnership(fantosiDAOExecutor.address);
 
     return {
         fantosiToken,
