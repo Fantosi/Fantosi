@@ -1,15 +1,18 @@
 import { useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import "../css/ArtistPage.css";
+
 import { STATUS } from "../types";
 import Carousel from "./Carousel";
 import ProposalModal from "./ProposalModal";
 import TreasuryCard from "./TreasuryCard";
 
-const ArtistPage = () => {
+const ArtistPage = (props: any) => {
   const { artistPageToken } = useParams();
   const [cardIndex, setCardIndex] = useState(4);
   const [showModal, setShowModal] = useState(false);
+
+  const web3 = props.web3;
 
   if (artistPageToken === undefined) {
     return <div></div>;
@@ -84,6 +87,11 @@ const ArtistPage = () => {
       );
     };
 
+    const handlePlaceBid = async () => {
+      await web3.createBid(1, 0.0001);
+
+    }
+
     return (
       <>
         <div className="artistcards">
@@ -101,7 +109,7 @@ const ArtistPage = () => {
               {renderBiddingInfo()}
               <div className="input-wrapper">
                 <input placeholder="" />
-                <div className="input-btn">PLACE BID</div>
+                <div className="input-btn" onClick={handlePlaceBid}>PLACE BID</div>
               </div>
             </div>
           </div>

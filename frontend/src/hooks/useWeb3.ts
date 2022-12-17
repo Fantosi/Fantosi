@@ -19,6 +19,8 @@ const useWeb3 = () => {
   const [account, setAccount] = useState<string>("");
   const [wallets, setWallets] = useState<WalletState[]>([]);
 
+  console.log(auctionHouseContract);
+
   const getOnboard = async () => {
     if (!web3) {
       await getWeb3();
@@ -74,8 +76,6 @@ const useWeb3 = () => {
     const connectedWallet = await onboard.connectWallet();
     setWallets(connectedWallet);
 
-    console.log(connectedWallet);
-
     if (connectedWallet[0]) {
       const address = connectedWallet[0].accounts[0].address;
       // create an ethers provider with the last connected wallet provider
@@ -120,9 +120,11 @@ const useWeb3 = () => {
       getWeb3();
       return;
     }
+
     const abi = AuctionHouseArtifact.abi as AbiItem[];
     const ca: string = AUCTION_HOUSE_ADDR;
     const instance = new web3.eth.Contract(abi, ca);
+    console.log(instance);
     setAuctionHouseContract(instance);
   };
 
@@ -138,11 +140,13 @@ const useWeb3 = () => {
   };
 
   const createBid = async (photoCardId: number, bidAmount: number) => {
-    if (!web3) {
+    if (web3 === undefined) {
       throw new Error("createBid ::: not initiated web3");
     }
 
-    if (!auctionHouseContract) {
+    console.log(auctionHouseContract);
+
+    if (auctionHouseContract === undefined) {
       throw new Error("createBid ::: not initiated auction house contract");
     }
     const weiAmount = web3.utils.toWei(bidAmount.toString(), "ether");
