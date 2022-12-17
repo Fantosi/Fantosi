@@ -205,9 +205,13 @@
   background-color: black;
   padding: 43px 39px;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .treasury-wrapper-title {
+  width: 100%;
   font-weight: 800;
   font-size: 15px;
   line-height: 18px;
@@ -238,6 +242,7 @@
   font-size: 15px;
 }
 .makeproposal-btn {
+  cursor: pointer;
   width: 142px;
   height: 29px;
 
@@ -251,8 +256,14 @@
   font-weight: 800;
   font-size: 15px;
   font-family: "Apple SD Gothic Neo";
-
-  line-height: 30px;
+  vertical-align: middle;
+}
+.makeproposal-btn:hover {
+  background: #ffffff;
+  mix-blend-mode: normal;
+  border: 1px solid #ffffff;
+  border-radius: 43.5px;
+  color: black;
 }
 
 .pagination {

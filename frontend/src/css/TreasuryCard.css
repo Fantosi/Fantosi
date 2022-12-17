@@ -46,11 +46,23 @@
   font-size: 15px;
   color: white;
 }
-.artist-icon {
-  margin-left: 5px;
-  width: 33px;
-  height: 33px;
-  background-image: url("../svg/charactor_icon.svg");
+.artist-pick {
+  box-sizing: border-box;
+  width: 97px;
+  height: 26px;
+  border: 1px solid #ffffff;
+  filter: drop-shadow(0px 0px 4px rgba(255, 255, 255, 0.6));
+  border-radius: 13px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-family: "Chonburi";
+  font-weight: 400;
+  font-size: 13px;
+  color: #ffffff;
+  margin-right: 7px;
 }
 
 .treasury-expireddate {

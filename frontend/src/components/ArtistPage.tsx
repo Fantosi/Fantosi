@@ -3,16 +3,26 @@ import { useParams } from "react-router-dom";
 import "../css/ArtistPage.css";
 import { STATUS } from "../types";
 import Carousel from "./Carousel";
+import ProposalModal from "./ProposalModal";
 import TreasuryCard from "./TreasuryCard";
 
 const ArtistPage = () => {
   const { artistPageToken } = useParams();
   const [cardIndex, setCardIndex] = useState(4);
+  const [showModal, setShowModal] = useState(false);
 
   if (artistPageToken === undefined) {
     return <div></div>;
   }
   const [artistId, cardId] = artistPageToken.split("-");
+
+  const openModal = () => {
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+  };
 
   const renderArtistInfo = () => {
     return (
@@ -170,13 +180,16 @@ const ArtistPage = () => {
     return (
       <>
         <div className="treasury-wrapper">
-          <div className="treasury-wrapper-title">TREASURY</div>
+          <div className="treasury-wrapper-title">WE'VE COLLECTED.</div>
           <div className="treasury-history" />
           <div className="treasury-header">
             <div className="treasury-header-title">
-              커뮤니티에 올라온 제안을 살펴보고, 자유롭게 제안해보세요.
+              커뮤니티에서 함께하고 싶은 아이디어에 투표하고, 당신의 제안도
+              올려주세요!
             </div>
-            <div className="makeproposal-btn">MAKE PROPOSAL</div>
+            <div className="makeproposal-btn" onClick={openModal}>
+              MAKE PROPOSAL
+            </div>
           </div>
           <div className="treasury-cards">
             {datas.map((data, index) => {
@@ -200,12 +213,15 @@ const ArtistPage = () => {
   };
 
   return (
-    <div className="artistpage">
-      {renderArtistInfo()}
-      {renderArtistPhotoCards()}
-      {renderFantosiHouseBtnBar()}
-      {renderTreasury()}
-    </div>
+    <>
+      <div className="artistpage">
+        {renderArtistInfo()}
+        {renderArtistPhotoCards()}
+        {renderFantosiHouseBtnBar()}
+        {renderTreasury()}
+      </div>
+      {showModal ? <ProposalModal closeModal={closeModal} /> : <></>}
+    </>
   );
 };
 

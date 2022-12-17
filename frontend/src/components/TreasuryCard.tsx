@@ -22,8 +22,12 @@ const TreasuryCard = ({
       <div>
         <div className="treasury-index">{id}</div>
         <div className="treasury-title">
+          {likedByArtist ? (
+            <div className="artist-pick">artist pick!</div>
+          ) : (
+            <></>
+          )}
           {title}
-          {likedByArtist ? <div className="artist-icon" /> : <></>}
         </div>
       </div>
       <div>
