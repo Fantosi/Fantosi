@@ -1,14 +1,14 @@
-export type UserInfo = {
+export interface UserInfo {
   role: "ADMIN" | "USER";
   address: string;
-};
+}
 
-export type CardInfo = {
+export interface CardInfo {
   key: number;
   likeCnt: number;
   artist: string;
   bidDone: boolean;
-};
+}
 
 export enum STATUS {
   EXECUTED = "EXECUTED",
