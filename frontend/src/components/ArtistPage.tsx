@@ -36,6 +36,42 @@ const ArtistPage = () => {
   };
 
   const renderArtistPhotoCards = () => {
+    const address = "0X3864fffaefweaf";
+    const renderBiddingInfo = () => {
+      return (
+        <div className="biddinginfo-wrapper">
+          <div className="row-wrapper">
+            <div className="left-wrapper">
+              <div className="header">CURRENT BID</div>
+              <div className="value">
+                120 <div className="bnb_icon" />
+              </div>
+            </div>
+            <div className="right-wrapper">
+              <div className="header">AUCTION ENDS IN</div>
+              <div className="value">02:12:39</div>
+            </div>
+          </div>
+          <div className="row-wrapper">
+            <div className="left-wrapper">
+              <div className="header high">CURRENT BID</div>
+              <div className="value">
+                <div className="charactor_icon" />
+                <div className="address">{address.slice(0, 6) + "..."}</div>
+              </div>
+            </div>
+            <div className="right-wrapper">
+              <div className="header"></div>
+              <div className="value">
+                120
+                <div className="bnb_icon" />
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    };
+
     return (
       <>
         <div className="artistcards">
@@ -43,6 +79,18 @@ const ArtistPage = () => {
           <div className="artistcards-wrapper">
             <div className="cards-wrapper">
               <Carousel setCardIndex={setCardIndex} />
+            </div>
+            <div className="cardinfo-wrapper">
+              <div className="title">Photocard #21</div>
+              <div className="sub-title">
+                첫 번째 앨범 “NewJeans”의 다니엘 미공개 컷.
+              </div>
+              <div className="line" />
+              {renderBiddingInfo()}
+              <div className="input-wrapper">
+                <input placeholder="" />
+                <div className="input-btn">PLACE BID</div>
+              </div>
             </div>
           </div>
         </div>

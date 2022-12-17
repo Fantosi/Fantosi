@@ -52,6 +52,7 @@
   background-color: black;
   color: white;
   padding: 43px 39px;
+  padding-right: 64px;
   box-sizing: border-box;
 }
 .artistcards-title {
@@ -62,7 +63,8 @@
 .artistcards-wrapper {
   width: 100%;
   height: 341px;
-  /* background-color: antiquewhite; */
+  display: flex;
+  justify-content: space-between;
 }
 .cards-wrapper {
   width: 533px;
@@ -93,6 +95,104 @@
   font-size: 11px;
   line-height: 13px;
   color: white;
+}
+
+.cardinfo-wrapper {
+  width: 321px;
+  height: 327;
+  display: flex;
+  flex-direction: column;
+}
+
+.cardinfo-wrapper .title {
+  font-family: "Chonburi";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 33px;
+  padding-bottom: 5px;
+}
+
+.cardinfo-wrapper .sub-title {
+  font-weight: 700;
+  font-size: 13px;
+  padding-bottom: 39px;
+}
+
+.cardinfo-wrapper .line {
+  background-image: url("../svg/white_line.svg");
+  height: 1px;
+  width: 321px;
+  margin-bottom: 23px;
+}
+.row-wrapper {
+  display: flex;
+  margin-bottom: 19px;
+}
+.cardinfo-wrapper .left-wrapper {
+  width: 188px;
+}
+.cardinfo-wrapper .header {
+  height: 16px;
+  font-weight: 700;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.49);
+  margin-bottom: 10px;
+}
+.header.high {
+  height: 25pxx;
+}
+.cardinfo-wrapper .value {
+  font-weight: 700;
+  font-size: 20px;
+  display: flex;
+}
+.bnb_icon {
+  margin: 0 2px;
+  transform: translateY(2px);
+  width: 18px;
+  height: 18px;
+  background-image: url("../svg/bnb_icon.svg");
+}
+.charactor_icon {
+  width: 33px;
+  height: 33px;
+  background-image: url("../svg/charactor_icon.svg");
+}
+.address {
+  padding-left: 8px;
+  transform: translateY(2px);
+}
+
+.input-wrapper {
+  background-color: rgb(20, 67, 109);
+  display: flex;
+  justify-content: space-between;
+}
+.input-btn {
+  width: 111px;
+  height: 40px;
+  left: 825px;
+  top: 383px;
+  background: #727272;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.input-wrapper input {
+  width: 200px;
+  height: 40px;
+  left: 615px;
+  top: 383px;
+  background: #ffffff;
+  color: black;
+  font-weight: 800;
+  font-size: 20px;
+  padding: 7px 16px;
+  box-sizing: border-box;
 }
 
 /* 
