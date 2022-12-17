@@ -9,6 +9,9 @@ import { BigNumber, ethers } from "ethers";
 import AuctionHouseArtifact from "../contract/abi/FantosiAuctionHouse.json";
 import ViewArtifact from "../contract/abi/FantosiView.json";
 
+const AUCTION_HOUSE_ADDR = "0xA659B98a2569c4cD2dD255a16c4f1d8a37420596";
+const AUCTION_VIEW_ADDR = "0x8fF60cd85F6c0870C56BF71efe51D25E2BE3deD9";
+
 const useWeb3 = () => {
   const [web3, setWeb3] = useState<Web3 | undefined>(undefined);
   const [auctionHouseContract, setAuctionHouseContract] = useState<Contract>();
@@ -118,7 +121,7 @@ const useWeb3 = () => {
       return;
     }
     const abi = AuctionHouseArtifact.abi as AbiItem[];
-    const ca: string = "";
+    const ca: string = AUCTION_HOUSE_ADDR;
     const instance = new web3.eth.Contract(abi, ca);
     setAuctionHouseContract(instance);
   };
@@ -129,7 +132,7 @@ const useWeb3 = () => {
       return;
     }
     const abi = ViewArtifact.abi as AbiItem[];
-    const ca: string = "";
+    const ca: string = AUCTION_VIEW_ADDR;
     const instance = new web3.eth.Contract(abi, ca);
     setAuctionViewContract(instance);
   };
