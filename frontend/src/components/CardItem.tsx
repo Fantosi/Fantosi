@@ -53,7 +53,7 @@ const CardItem = ({ card, clickedCardKey, selectCard }: CardItemProps) => {
             className={classNames("hovered_card_img", {
               biddone: card.bidDone,
             })}
-            src="img/dummy-artist.png"
+            src={require("../img/dummy-artist.png")}
             alt="error"
           />
         </div>
@@ -84,7 +84,7 @@ const CardItem = ({ card, clickedCardKey, selectCard }: CardItemProps) => {
             className={classNames("clicked_card_img", {
               biddone: card.bidDone,
             })}
-            src="img/dummy-artist.png"
+            src={require("../img/dummy-artist.png")}
             alt="error"
           />
         </div>
@@ -113,7 +113,7 @@ const CardItem = ({ card, clickedCardKey, selectCard }: CardItemProps) => {
     return (
       <img
         className={classNames("card_img", { biddone: card.bidDone })}
-        src="img/dummy-artist.png"
+        src={require("../img/dummy-artist.png")}
         alt="error"
       />
     );
