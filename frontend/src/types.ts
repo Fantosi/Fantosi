@@ -9,3 +9,11 @@ export type CardInfo = {
   artist: string;
   bidDone: boolean;
 };
+
+export enum STATUS {
+  EXECUTED = "EXECUTED",
+  ACTIVE = "ACTIVE",
+  CANCELED = "CANCELED",
+  DEFEATED = "DEFEATED",
+  QUEUED = "QUEUED",
+}

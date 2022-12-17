@@ -203,4 +203,63 @@
   width: 1000px;
   height: 1089px;
   background-color: black;
+  padding: 43px 39px;
+  box-sizing: border-box;
+}
+
+.treasury-wrapper-title {
+  font-weight: 800;
+  font-size: 15px;
+  line-height: 18px;
+  color: white;
+  margin-bottom: 33px;
+}
+
+.treasury-history {
+  width: 880px;
+  height: 87px;
+  background-image: url("../svg/treasury_history.svg");
+  margin-bottom: 47px;
+}
+
+.treasury-header {
+  width: 880px;
+  height: 18px;
+  display: flex;
+  justify-content: space-between;
+  padding: 0px 17px;
+  box-sizing: border-box;
+  color: white;
+  margin-bottom: 26px;
+}
+
+.treasury-header-title {
+  font-weight: 500;
+  font-size: 15px;
+}
+.makeproposal-btn {
+  width: 142px;
+  height: 29px;
+
+  background: rgba(255, 255, 255, 0.3);
+  mix-blend-mode: normal;
+  border: 1px solid #ffffff;
+  border-radius: 43.5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 15px;
+  font-family: "Apple SD Gothic Neo";
+
+  line-height: 30px;
+}
+
+.pagination {
+  width: 162px;
+  height: 18px;
+  background-image: url("../svg/pagination_dummy.svg");
+  background-repeat: no-repeat;
+  margin: auto;
+  margin-top: 33px;
 }

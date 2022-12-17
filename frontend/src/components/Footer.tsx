@@ -1,6 +1,6 @@
 import "../css/Footer.css";
 
-const Footer = () => {
+const CatInTheBox = () => {
   return (
     <div className="footer">
       <div className="main_title">Fantosi</div>
@@ -12,4 +12,4 @@ const Footer = () => {
   );
 };
 
-export default Footer;
+export default CatInTheBox;
