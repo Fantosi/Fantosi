@@ -29,3 +29,17 @@ export const governanceInfo: {
     votingPeriod: BigNumber.from(5760), // About 24 hours with 15s blocks
     votingDelay: BigNumber.from(1), // 1 block
 };
+
+export const photoCardInfo: {
+    [artist: string]: {
+        name: string;
+        symbol: string;
+        contractURIHash: string;
+    };
+} = {
+    NEWJEANS: {
+        name: "NEWJEANS PHOTOCARD",
+        symbol: "NEWJEANS",
+        contractURIHash: "QmWJUHeeSYUQMyX695ntnjUzh3MY3tT6PBCWxhM8ngVP6n",
+    },
+};

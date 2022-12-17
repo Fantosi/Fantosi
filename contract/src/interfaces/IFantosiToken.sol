@@ -39,4 +39,8 @@ interface IFantosiToken is IERC721 {
     function setMinter(address minter) external;
 
     function lockMinter() external;
+
+    function getTokenURI(uint256 tokenId) external view returns (string memory);
+
+    function getSymbol() external returns (string memory);
 }
