@@ -10,6 +10,19 @@ import { Initializable } from "./upgrade/higherversion/Initializable.sol";
 import "hardhat/console.sol";
 
 contract FantosiView is Initializable {
+    struct PhotoCardInfo {
+        string metadataURI;
+        IFantosiAuctionHouse.Auction currentAuction;
+    }
+
+    struct Artist {
+        string artistKey;
+        IFantosiToken fantosiTokenAddr;
+        IFantosiAuctionHouse auctionHouseAddr;
+    }
+
+    // All Artist
+    string[] public artists;
     // All Fantosi Tokens
     IFantosiToken[] public fantosiTokens;
     // key => fantosiTokenAddress
@@ -25,6 +38,8 @@ contract FantosiView is Initializable {
 
     function setFantosiTokenAddress(string memory key, IFantosiToken fantosiToken) external {
         fantosiTokenList[key] = fantosiToken;
+
+        artists.push(fantosiToken.getSymbol());
         fantosiTokens.push(fantosiToken);
     }
 
@@ -34,9 +49,17 @@ contract FantosiView is Initializable {
         auctionMap[fantosiToken] = fantosiAuctionHouse;
     }
 
-    struct PhotoCardInfo {
-        string metadataURI;
-        IFantosiAuctionHouse.Auction currentAuction;
+    function getAllArtistInfo() external view returns (Artist[] memory artistsInfo) {
+        string[] memory artistsLocal = artists;
+        uint256 length = artistsLocal.length;
+
+        artistsInfo = new Artist[](length);
+        
+        for (uint256 i = 0; i < length; i++) {
+            artistsInfo[i].artistKey = artistsLocal[i];
+            artistsInfo[i].fantosiTokenAddr = fantosiTokenList[artistsLocal[i]];
+            artistsInfo[i].auctionHouseAddr = auctionMap[artistsInfo[i].fantosiTokenAddr];
+        }
     }
 
     function getArtistPhotoCardInfo(string memory key) public view returns (PhotoCardInfo memory photoCardInfo) {
