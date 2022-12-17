@@ -67,6 +67,10 @@ contract FantosiToken is IFantosiToken, Ownable, ERC721Checkpointable {
         return tokenURI(tokenId);
     }
 
+    function getSymbol() public view returns (string memory) {
+        return symbol();
+    }
+
     function setContractURIHash(string memory newContractURIHash) external onlyOwner {
         _contractURIHash = newContractURIHash;
     }
@@ -101,7 +105,7 @@ contract FantosiToken is IFantosiToken, Ownable, ERC721Checkpointable {
         emit MinterLocked();
     }
 
-    function _baseURI() internal override view returns (string memory) {
+    function _baseURI() internal view override returns (string memory) {
         return string(abi.encodePacked("ipfs://", _contractURIHash));
     }
 
