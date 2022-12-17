@@ -1,1 +1,3 @@
-# Fantosi
+### 명령어
+
+`build`, `test`
