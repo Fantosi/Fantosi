@@ -105,4 +105,9 @@ describe.only("View 테스트", () => {
             console.log("settled: ", data[i].currentAuction.settled);
         }
     });
+
+    it.only("테스트: getAllArtistInfo 테스트", async () => {
+        const data = await fantosiView.getAllArtistInfo();
+        console.log(data);
+    });
 });
