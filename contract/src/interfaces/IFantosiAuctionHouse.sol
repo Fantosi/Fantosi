@@ -73,4 +73,10 @@ interface IFantosiAuctionHouse {
     function setReservePrice(uint256 reservePrice) external;
 
     function setMinBidIncrementPercentage(uint8 minBidIncrementPercentage) external;
+
+    function getCurrentAuction() external view returns (Auction memory);
+
+    function getAuctionHistory() external view returns (Auction[] memory);
+
+    function getAuctionHistoryLength() external view returns (uint256);
 }

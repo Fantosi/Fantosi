@@ -1,0 +1,33 @@
+{
+  "name": "fantosi",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Fantosi/Fantosi.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Fantosi/Fantosi/issues"
+  },
+  "homepage": "https://github.com/Fantosi/Fantosi#readme",
+  "dependencies": {
+    "@openzeppelin/contracts": "4.6.0",
+    "@openzeppelin/contracts-upgradeable": "4.7.3",
+    "@openzeppelin/hardhat-upgrades": "1.17.0",
+    "@openzeppelin/truffle-upgrades": "1.15.0",
+    "hardhat": "2.9.3",
+    "hardhat-contract-sizer": "2.6.1",
+    "hardhat-deploy": "0.11.4",
+    "hardhat-deploy-ethers": "0.3.0-beta.13",
+    "hardhat-gas-reporter": "1.0.4",
+    "hardhat-log-remover": "2.0.2"
+  }
+}
