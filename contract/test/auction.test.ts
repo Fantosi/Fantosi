@@ -4,7 +4,7 @@ import { BigNumber } from "ethers";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
 import { deployArtist, DeployParams } from "./deploy/deployArtist";
-import { auctionInfo } from "./deploy/constants";
+import { auctionInfo, photoCardInfo } from "./deploy/constants";
 import { blockTimeStamp, passNSeconds } from "./util/hardhat.util";
 
 describe("Daily Auction 테스트", () => {
@@ -19,9 +19,9 @@ describe("Daily Auction 테스트", () => {
     const deployAllArtists = async () => {
         // Newjeans
         const newjeansParams: DeployParams = {
-            name: "NEWJEANS PHOTOCARD",
-            symbol: "NEWJEANS",
-            contractURIHash: "QmWJUHeeSYUQMyX695ntnjUzh3MY3tT6PBCWxhM8ngVP6n",
+            name: photoCardInfo.NEWJEANS.name,
+            symbol: photoCardInfo.NEWJEANS.symbol,
+            contractURIHash: photoCardInfo.NEWJEANS.contractURIHash,
             admin: admin,
             artist: newjeans,
         };
