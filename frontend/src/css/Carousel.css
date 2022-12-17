@@ -1,0 +1,57 @@
+.carousel-wrapper {
+  height: 341px;
+  width: 494px;
+  position: absolute;
+}
+
+.card-wrapper {
+  height: 341px;
+  width: 228px;
+
+  border: 5px solid #000000;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.card-wrapper img {
+  height: 341px;
+  width: 228px;
+  filter: grayscale(1);
+}
+
+.card-wrapper.last img {
+  filter: unset;
+}
+
+.carousel-controller {
+  height: 341px;
+  width: 494px;
+  position: absolute;
+  top: 0px;
+  z-index: 20;
+}
+.carosel-btn {
+  position: absolute;
+  top: 155px;
+  width: 17px;
+  height: 31px;
+  background-image: url("../svg/carousel-btn.svg");
+}
+
+.carosel-btn.left {
+  transform: rotate(180deg);
+  left: unset;
+}
+
+.btn-wrapper {
+  cursor: pointer;
+  left: 377px;
+  position: absolute;
+  height: 341px;
+  width: 20px;
+}
+
+.btn-wrapper.left {
+  left: unset;
+  right: 377px;
+}

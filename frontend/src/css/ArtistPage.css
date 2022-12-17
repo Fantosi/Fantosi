@@ -50,6 +50,23 @@
   width: 1000px;
   height: 445px;
   background-color: black;
+  color: white;
+  padding: 43px 39px;
+  box-sizing: border-box;
+}
+.artistcards-title {
+  font-weight: 800;
+  font-size: 15px;
+  line-height: 18px;
+}
+.artistcards-wrapper {
+  width: 100%;
+  height: 341px;
+  /* background-color: antiquewhite; */
+}
+.cards-wrapper {
+  width: 533px;
+  height: 100%;
 }
 
 .fantosihouse-wrapper {

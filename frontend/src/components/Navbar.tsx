@@ -44,7 +44,7 @@ const Navbar = () => {
       <div className="navbar_right_items">
         <Link
           key={"artist"}
-          to={"/"}
+          to={"/artist-page/newjeans-0"}
           className={`nav_btn link ${
             location.pathname.includes("/artist") ? "navbar_active" : ""
           }`}
