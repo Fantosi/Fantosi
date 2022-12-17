@@ -2,7 +2,6 @@ import { useState } from "react";
 import "../css/Dashboard.css";
 import { CardInfo } from "../types";
 import CardList from "./CardList";
-import Footer from "./Footer";
 import Vision from "./Vision";
 
 const Dashboard = () => {
@@ -58,7 +57,6 @@ const Dashboard = () => {
         />
         <Vision />
       </div>
-      <Footer />
     </>
   );
 };
