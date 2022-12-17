@@ -1,0 +1,43 @@
+.section_header {
+  margin: 20px;
+  width: 796px;
+  height: 82px;
+
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+#taken_section {
+  margin-top: 100px;
+}
+
+#fresh_section .header_text {
+  width: 261px;
+  height: 74px;
+  background-image: url("../svg/header_text_commingup.svg");
+}
+
+#fresh_section .header_line {
+  background-image: url("../svg/basic_line.svg");
+  width: 458px;
+  height: 2px;
+}
+
+#taken_section .header_text {
+  width: 276px;
+  height: 73px;
+  background-image: url("../svg/header_text_alreadytaken.svg");
+}
+
+#taken_section .header_line {
+  background-image: url("../svg/basic_line.svg");
+  width: 443px;
+  height: 2px;
+}
+
+.header_star {
+  background-image: url("../svg/black_star.svg");
+  width: 33px;
+  height: 33px;
+}

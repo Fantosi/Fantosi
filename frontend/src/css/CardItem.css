@@ -1,0 +1,252 @@
+.card_item {
+  width: 166px;
+  height: 253px;
+  border: 0.75px solid #000000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.card_img {
+  object-fit: fill;
+  width: 152px;
+  height: 241px;
+  border: 0.5px solid #000000;
+  box-sizing: border-box;
+}
+
+.card_img.biddone {
+  filter: grayscale(1);
+}
+
+/* 
+ *
+  [ hovered card ]
+ *
+ */
+.hovered_card_wrapper {
+  width: 152px;
+  height: 241px;
+  margin: 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.hovered_card_wrapper .img_crop {
+  overflow: hidden;
+  width: 152px;
+  height: 207px;
+  border: 0.5px solid #000000;
+  box-sizing: border-box;
+}
+
+.hovered_card_img {
+  object-fit: cover;
+  width: 152px;
+  height: 241px;
+}
+.hovered_card_img.biddone {
+  filter: grayscale(1);
+}
+
+.hovered_card_desc {
+  width: 152px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 2px;
+}
+
+.hovered_card_text #artist {
+  font-family: "Apple SD Gothic Neo";
+  font-style: normal;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 22px;
+  height: 20px;
+}
+
+.hovered_card_text #likes {
+  font-family: "Apple SD Gothic Neo";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 13px;
+  text-decoration-line: underline;
+}
+
+.heart {
+  width: 16px;
+  height: 14px;
+  background-image: url("../svg/red_heart.svg");
+}
+.heart.biddone {
+  filter: grayscale(1);
+}
+
+/* 
+ *
+  [ clicked card ]
+ *
+ */
+
+.clicked_card_wrapper {
+  width: 152px;
+  height: 241px;
+  margin: 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+.clicked_card_header {
+  height: 19px;
+  width: 152px;
+  background-color: black;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: white;
+  padding: 0px 6px;
+  box-sizing: border-box;
+
+  font-family: "Apple SD Gothic Neo";
+  font-style: normal;
+  font-weight: 600;
+  font-size: 11px;
+}
+
+.clicked_card_header .artist {
+}
+.clicked_card_header .key {
+}
+
+.clicked_card_wrapper .img_crop {
+  overflow: hidden;
+  width: 152px;
+  height: 145px;
+}
+
+.clicked_card_img {
+  object-fit: cover;
+  width: 152px;
+  height: 241px;
+}
+.clicked_card_img.biddone {
+  filter: grayscale(1);
+}
+
+.auction_info {
+  width: 130px;
+  font-family: "Apple SD Gothic Neo";
+  font-style: normal;
+  font-weight: 500;
+  font-size: 7.5px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.auction_time {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.aution_left_time {
+  font-weight: 600;
+  font-size: 10px;
+}
+
+.bidding_info {
+  width: 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.bidding_val {
+  font-weight: 600;
+  font-size: 10px;
+}
+
+.vertical_line {
+  width: 1px;
+  height: 24px;
+  background-image: url("../svg/vertical_line.svg");
+}
+
+.discover_btn {
+  width: 152px;
+  height: 41px;
+  background-color: black;
+  color: white;
+  font-family: "Apple SD Gothic Neo";
+  font-style: normal;
+  font-weight: 600;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 
+ *
+  [ frame ]
+ *
+ */
+/* .frame_wrapper {
+  position: absolute;
+  height: 0px;
+  width: 0px;
+}
+
+.top_frame {
+  display: flex;
+  justify-content: space-between;
+}
+.bottom_frame {
+  display: flex;
+  justify-content: space-between;
+} */
+
+.topleft_frame {
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  width: 22px;
+  height: 22px;
+  background-image: url("../svg/frame_topleft.svg");
+}
+.topright_frame {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  width: 22px;
+  height: 22px;
+  background-image: url("../svg/frame_topleft.svg");
+  transform: rotate(90deg);
+}
+.bottomleft_frame {
+  position: absolute;
+  bottom: -3px;
+  left: -5px;
+  width: 22px;
+  height: 22px;
+  background-image: url("../svg/frame_topleft.svg");
+  transform: rotate(270deg);
+}
+.bottomright_frame {
+  position: absolute;
+  bottom: -3px;
+  right: -5px;
+  width: 22px;
+  height: 22px;
+  background-image: url("../svg/frame_topleft.svg");
+  transform: rotate(180deg);
+}

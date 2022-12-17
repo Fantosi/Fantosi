@@ -1,0 +1,30 @@
+.footer {
+  height: 81px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0px 39px;
+}
+
+.footer .main_title {
+  font-family: "Chonburi";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 21px;
+}
+
+.footer_right_items {
+  display: flex;
+  gap: 24px;
+}
+
+.footer_btn {
+  font-family: "Apple SD Gothic Neo";
+  font-style: normal;
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 18px;
+  text-decoration-line: underline;
+
+  cursor: pointer;
+}

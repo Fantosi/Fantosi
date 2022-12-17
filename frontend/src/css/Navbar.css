@@ -1,0 +1,85 @@
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 1000px;
+  height: 61px;
+  padding: 18px 37px;
+  box-sizing: border-box;
+}
+
+.link.navbar_active {
+  font-weight: 800;
+}
+
+.navbar.isArtistPage {
+  position: absolute;
+  color: white;
+}
+
+.navbar_left_items {
+  display: flex;
+  gap: 19px;
+  position: relative;
+}
+
+.navbar_right_items {
+  display: flex;
+  gap: 38px;
+  font-family: "AppleSDGothicNeo", "Noto Sans KR", sans-serif;
+}
+
+.navbar_left_items input {
+  all: unset;
+  border: 1px solid #000000;
+  border-radius: 27px;
+  padding: 10px;
+  width: 408px;
+  height: 24px;
+  box-sizing: border-box;
+
+  font-family: "Apple SD Gothic Neo";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 13px;
+  letter-spacing: -0.02em;
+}
+
+input.isArtistPage {
+  border: 1px solid white;
+  background: rgba(255, 255, 255, 0.35);
+}
+
+input.isArtistPage::placeholder {
+  color: rgba(255, 255, 255, 0.54);
+}
+
+.navbar .main_title {
+  font-family: "Chonburi";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 21px;
+}
+
+#search_icon {
+  width: 17px;
+  height: 16px;
+  background-image: url("../svg/nav_search.svg");
+  position: absolute;
+  left: 488px;
+  top: 4px;
+  cursor: pointer;
+}
+
+.isArtistPage #search_icon {
+  background-image: url("../svg/nav_search_white.svg");
+}
+
+.nav_btn {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 18px;
+  text-decoration-line: underline;
+}

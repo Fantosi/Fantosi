@@ -1,0 +1,44 @@
+.section_cards {
+  width: 936px;
+  height: 255px;
+  margin-top: 40px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#left_side_arrow {
+  background-image: url("../svg/section_left_side_arrow.svg");
+  width: 17px;
+  height: 31px;
+  margin: 23px;
+  cursor: pointer;
+}
+#left_side_arrow.disable {
+  opacity: 0.2;
+  cursor: unset;
+}
+
+#right_side_arrow {
+  background-image: url("../svg/section_right_side_arrow.svg");
+  width: 17px;
+  height: 31px;
+  margin: 23px;
+  cursor: pointer;
+}
+#right_side_arrow.disable {
+  opacity: 0.2;
+  cursor: unset;
+}
+
+.cards_wrapper {
+  padding: 5px;
+  overflow: hidden;
+  width: 796px;
+  height: 100%;
+  /* background-color: rgb(166, 207, 243); */
+
+  display: flex;
+  gap: 44px;
+}

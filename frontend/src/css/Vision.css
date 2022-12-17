@@ -1,0 +1,36 @@
+.vision {
+  margin-top: 90px;
+  padding: 106px 126px;
+  width: 1000px;
+  height: 400px;
+  background-color: black;
+  box-sizing: border-box;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.vision .wrapper {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 26px;
+}
+
+.vision .header_text {
+  width: 460px;
+  height: 148px;
+  background-image: url("../svg/header_text_wecreate.svg");
+}
+
+.vision .header_star {
+  background-image: url("../svg/white_star.svg");
+  width: 33px;
+  height: 33px;
+}
+
+.vision .header_line {
+  background-image: url("../svg/dashed_line.svg");
+  width: 747px;
+  height: 2px;
+}

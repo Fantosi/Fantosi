@@ -1,0 +1,53 @@
+.artistinfo {
+  display: flex;
+  width: 100%;
+}
+
+/* 
+*
+ [ artist info ]
+* 
+*/
+
+.artistinfo_text {
+  background-color: black;
+  width: 428px;
+  display: flex;
+  flex-direction: column;
+  padding: 96px 43px;
+  box-sizing: border-box;
+  color: white;
+}
+
+.artistinfo_text .title {
+  font-family: "Chonburi";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 33px;
+}
+
+.artistinfo_text .line {
+  width: 321px;
+  height: 2px;
+  stroke: white;
+  background-image: url("../svg/white_line.svg");
+  margin-top: 19px;
+  margin-bottom: 26px;
+}
+
+.artistinfo_bar {
+  width: 1000px;
+  height: 81px;
+  background-image: url("../svg/artistinfo-bar.svg");
+}
+
+/* 
+*
+ [ artist info ]
+* 
+*/
+.artistcards {
+  width: 1000px;
+  height: 445px;
+  background-color: black;
+}
