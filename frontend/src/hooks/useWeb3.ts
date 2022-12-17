@@ -1,13 +1,18 @@
+import { ArtistInfo } from "./../types";
 import { useEffect, useState } from "react";
 import Web3 from "web3";
 import { Contract } from "web3-eth-contract";
+import { AbiItem } from "web3-utils";
 import injectedModule from "@web3-onboard/injected-wallets";
 import Onboard, { WalletState } from "@web3-onboard/core";
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
+import AuctionHouseArtifact from "../contract/abi/FantosiAuctionHouse.json";
+import { FantosiAuctionHouse } from "../contract/typechain/FantosiAuctionHouse";
 
 const useWeb3 = () => {
   const [web3, setWeb3] = useState<Web3 | undefined>(undefined);
-  const [auctionHouseContract, serAuctionHouseContract] = useState<Contract>();
+  const [auctionHouseContract, setAuctionHouseContract] = useState<Contract>();
+  const [auctionViewContract, setAuctionViewContract] = useState();
   const [account, setAccount] = useState<string>("");
   const [wallets, setWallets] = useState<WalletState[]>([]);
 
@@ -82,6 +87,7 @@ const useWeb3 = () => {
       console.log("ethersProvider", ethersProvider);
       console.log("signer", signer);
       setAccount(address);
+      setContracts();
 
       return address;
     }
@@ -101,11 +107,64 @@ const useWeb3 = () => {
     console.log("sign out result: ", result);
   };
 
+  const setContracts = () => {
+    getAuctionHouse();
+    // TODO : add view contract
+  };
+
+  const getAuctionHouse = () => {
+    if (!web3) {
+      getWeb3();
+      return;
+    }
+    const abi = AuctionHouseArtifact.abi as AbiItem[];
+    const ca: string = "";
+    const instance = new web3.eth.Contract(abi, ca);
+    setAuctionHouseContract(instance);
+  };
+
+  const createBid = async (photoCardId: number, bidAmount: number) => {
+    if (!web3) {
+      throw new Error("createBid ::: not initiated web3");
+    }
+
+    if (!auctionHouseContract) {
+      throw new Error("createBid ::: not initiated auction house contract");
+    }
+
+    const weiAmount = web3.utils.toWei(bidAmount.toString(), "ether");
+    await auctionHouseContract.methods
+      .createBid(photoCardId)
+      .send({
+        from: account,
+        value: weiAmount,
+      })
+      .on("transactionHash", (hash: string) => {
+        console.log(`transactionHash: ${hash}`);
+      })
+      .on("receipt", (receipt: any) => {
+        console.log(`receipt: ${receipt}`);
+      })
+      .on("confirmation", (confirmationNumber: number, receipt: any) => {
+        console.log(`confirmation: ${confirmationNumber}`);
+      })
+      .on("error", (error: any, receipt: any) => {
+        console.log(`error: ${error}`);
+      });
+  };
+
+  const getAllArtistInfo = async (): Promise<ArtistInfo[]> => {
+    const res: ArtistInfo[] = [];
+    // TODO
+
+    return res;
+  };
+
   useEffect(() => {
     getWeb3();
   }, []);
 
-  return { signInWithWeb3Onboard, signOutWithWeb3Onboard, account };
+  return { signInWithWeb3Onboard, signOutWithWeb3Onboard, account, createBid };
 };
 
 export default useWeb3;
