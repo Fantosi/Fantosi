@@ -1,18 +1,42 @@
-import { MouseEventHandler, SyntheticEvent, useState } from "react";
+import { MouseEventHandler, SyntheticEvent, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "../css/CardItem.css";
 import { CardInfo } from "../types";
 import classNames from "classnames";
+import useWeb3 from "../hooks/useWeb3";
 
 type CardItemProps = {
   card: CardInfo;
   clickedCardKey: number | undefined;
   selectCard: (key: number | undefined) => void;
+  src?: string;
 };
 
-const CardItem = ({ card, clickedCardKey, selectCard }: CardItemProps) => {
+const CardItem = ({ card, clickedCardKey, selectCard, src }: CardItemProps) => {
   const { likeCnt, artist, key } = card;
   const [hover, setHover] = useState<boolean>(false);
+  const [remainTime, setRemainTime] = useState<{
+    hour: number;
+    min: number;
+    sec: number;
+  }>({ hour: 7, min: 40, sec: 20 });
+
+  const setRemainTimeInterval = () => {
+    const { endtime } = card;
+    if (endtime === undefined) return;
+    const getTime = () => {
+      const currentDate = Date.now() / 1000;
+      const diff = endtime - currentDate;
+      if (typeof Math.round(diff / 3600) === "number")
+        setRemainTime({
+          hour: Math.round(diff / 3600),
+          min: Math.round((diff % 3600) / 60),
+          sec: Math.round((diff % 3600) % 60),
+        });
+    };
+    getTime();
+    setInterval(getTime, 1000);
+  };
 
   const onMouseEnter = () => {
     setHover(true);
@@ -53,7 +77,7 @@ const CardItem = ({ card, clickedCardKey, selectCard }: CardItemProps) => {
             className={classNames("hovered_card_img", {
               biddone: card.bidDone,
             })}
-            src={require("../img/dummy-artist.png")}
+            src={src ? src : require("../img/dummy-artist.png")}
             alt="error"
           />
         </div>
@@ -72,7 +96,14 @@ const CardItem = ({ card, clickedCardKey, selectCard }: CardItemProps) => {
     );
   };
 
+  useEffect(() => {
+    setRemainTimeInterval();
+  }, []);
   const renderClickedCard = () => {
+    const displayTime = (time: number) => {
+      return time < 10 ? `0${time}` : time;
+    };
+
     return (
       <div className="clicked_card_wrapper">
         <div className="clicked_card_header">
@@ -84,19 +115,25 @@ const CardItem = ({ card, clickedCardKey, selectCard }: CardItemProps) => {
             className={classNames("clicked_card_img", {
               biddone: card.bidDone,
             })}
-            src={require("../img/dummy-artist.png")}
+            src={src ? src : require("../img/dummy-artist.png")}
             alt="error"
           />
         </div>
         <div className="auction_info">
           <div className="auction_time">
             <div className="aution_time_title">auction ends in</div>
-            <div className="aution_left_time">04:05:10</div>
+            <div className="aution_left_time">{`${displayTime(
+              remainTime.hour
+            )}:${displayTime(remainTime.min)}:${displayTime(
+              remainTime.sec
+            )}`}</div>
           </div>
           <div className="vertical_line" />
           <div className="bidding_info">
             <div className="bidding_title">current bid</div>
-            <div className="bidding_val">42000</div>
+            <div className="bidding_val">
+              {card.currentBid ? card.currentBid : 23.22}
+            </div>
           </div>
         </div>
         <Link
@@ -113,7 +150,7 @@ const CardItem = ({ card, clickedCardKey, selectCard }: CardItemProps) => {
     return (
       <img
         className={classNames("card_img", { biddone: card.bidDone })}
-        src={require("../img/dummy-artist.png")}
+        src={src ? src : require("../img/dummy-artist.png")}
         alt="error"
       />
     );

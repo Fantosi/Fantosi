@@ -17,9 +17,9 @@ import AuctionHouseArtifact from "../contract/abi/FantosiAuctionHouse.json";
 import ViewArtifact from "../contract/abi/FantosiView.json";
 import FantosiDAOLogicArtifact from "../contract/abi/FantosiDAOLogic.json";
 
-const AUCTION_HOUSE_ADDR = "0x2163Fd4335e307DCB0258B4f6849A5c6E9F6E1cA";
-const AUCTION_VIEW_ADDR = "0x6432123245e989338588fceC0BDD6B90d3EE4D62";
-const FANTOSI_DAO_LOGIC_ADDR = "0x9c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c";
+const AUCTION_HOUSE_ADDR = "0xcC02C64af16Aa1cF1D4ec62Dd23fB5e095b210e9";
+const AUCTION_VIEW_ADDR = "0x275Db7fa150aB961f621BBdB034848A5F3fF4b03";
+const FANTOSI_DAO_LOGIC_ADDR = "0xcd916b963717edaE1D946Cc01EFD747b8E1052Bc";
 const BINANCE_TESTNET_RPC = "https://data-seed-prebsc-1-s1.binance.org:8545";
 
 const useWeb3 = (): Web3Type => {
@@ -188,9 +188,6 @@ const useWeb3 = (): Web3Type => {
         })
         .on("error", (error: any, receipt: any) => {
           console.log(`error: ${error}`);
-          // if (error.code === 4001) {
-          //   alert("거래를 취소했습니다.");
-          // }
           reject();
         });
     });
@@ -292,6 +289,7 @@ const useWeb3 = (): Web3Type => {
     const ls = await auctionViewContract.methods
       .getArtistAllProposalInfo(artistKey)
       .call();
+    console.log("ls", ls);
 
     if (ls) {
       res.push(...ls);
@@ -300,10 +298,10 @@ const useWeb3 = (): Web3Type => {
     return res;
   };
 
-  const propose = async (
+  const submitPropose = async (
     targetAddress: string,
     amount: string,
-    description: string
+    idea: string
   ) => {
     if (fantosiDAOLogicContract === undefined) {
       throw new Error("propose ::: not initiated fantosi dao logic contract");
@@ -315,7 +313,7 @@ const useWeb3 = (): Web3Type => {
       calldatas: [
         encodeParameters(["address", "uint256"], [targetAddress, amount]),
       ],
-      description,
+      idea,
     };
 
     await fantosiDAOLogicContract.methods
@@ -324,7 +322,7 @@ const useWeb3 = (): Web3Type => {
         makeProposal.values,
         makeProposal.signatures,
         makeProposal.calldatas,
-        makeProposal.description
+        makeProposal.idea
       )
       .send({
         from: account,
@@ -387,7 +385,7 @@ const useWeb3 = (): Web3Type => {
     getArtistPhotoCardHistoryInfo,
     web3Utils: web3?.utils,
     getArtistAllProposalInfo,
-    propose,
+    submitPropose,
     castVote,
   };
 };

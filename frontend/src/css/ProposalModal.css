@@ -140,3 +140,8 @@ input.price {
   margin-top: 51px;
   margin-left: 132px;
 }
+
+.submit-btn.ready {
+  background: black;
+  cursor: pointer;
+}

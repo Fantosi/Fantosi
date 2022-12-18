@@ -41,6 +41,7 @@ const CardList = ({ cardList, clickedCardKey, selectCard }: CardListProps) => {
                 card={card}
                 clickedCardKey={clickedCardKey}
                 selectCard={selectCard}
+                src={card.src}
               />
             </div>
           );

@@ -13,7 +13,10 @@ interface MainRoutesProps {
 
 const MainRoutes = ({ web3, user, signIn }: MainRoutesProps) => (
   <Routes>
-    <Route path="/" element={<Dashboard web3={web3} user={user} />} />
+    <Route
+      path="/"
+      element={<Dashboard web3={web3} user={user} signIn={signIn} />}
+    />
     <Route
       path="artist-page/:artistPageToken"
       element={<ArtistPage web3={web3} user={user} signIn={signIn} />}

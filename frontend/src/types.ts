@@ -12,6 +12,9 @@ export interface CardInfo {
   likeCnt: number;
   artist: string;
   bidDone: boolean;
+  src?: string;
+  currentBid?: string;
+  endtime?: number;
 }
 
 export enum STATUS {
@@ -32,6 +35,7 @@ export interface ArtistInfo {
 export interface PhotoCardInfo {
   metadataURI: string;
   currentAuction: AuctionInfo;
+  imageInfo: ImageInfo;
 }
 
 export interface AuctionInfo {
@@ -58,7 +62,7 @@ export interface Web3Type {
   ) => Promise<PhotoCardInfo[]>;
   web3Utils: Utils | undefined;
   getArtistAllProposalInfo: (artistKey: string) => Promise<ProposalInfo[]>;
-  propose: (
+  submitPropose: (
     targetAddress: string,
     amount: string,
     description: string
@@ -91,7 +95,7 @@ export interface MakeProposal {
   values: BigNumber[];
   signatures: string[];
   calldatas: string[];
-  description: string;
+  idea: string;
 }
 
 export enum VoteKind {
@@ -104,4 +108,12 @@ export enum VotingState {
   AGREE = "AGREE",
   DISAGREE = "DISAGREE",
   SOSO = "SOSO",
+}
+
+export interface ImageInfo {
+  artist: string;
+  descriptions: string;
+  edition: number;
+  image: string;
+  name: string;
 }

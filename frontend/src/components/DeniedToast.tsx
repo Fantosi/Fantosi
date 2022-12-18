@@ -12,7 +12,7 @@ const DeniedToast = ({ isDenied, closeDeniedToast }: DeniedToastProps) => {
       className={classNames("toast_wrapper", { display: isDenied })}
       onClick={closeDeniedToast}
     >
-      <img src={require("../img/finished.gif")} alt="" />
+      <img src={require("../img/canceled.gif")} alt="" />
     </div>
   );
 };

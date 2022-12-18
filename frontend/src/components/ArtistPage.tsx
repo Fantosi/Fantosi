@@ -2,7 +2,8 @@ import { BigNumber } from "ethers";
 import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import "../css/ArtistPage.css";
-import { STATUS, UserInfo, Web3Type, PhotoCardInfo } from "../types";
+import { STATUS, UserInfo, Web3Type, PhotoCardInfo, ImageInfo } from "../types";
+import { getNftImgInfos } from "../utils/handleNft";
 import Carousel from "./Carousel";
 import DeniedToast from "./DeniedToast";
 import FinishedToast from "./FinishedToast";
@@ -18,7 +19,6 @@ interface ArtistPageProps {
 
 const ArtistPage = ({ web3, user, signIn }: ArtistPageProps) => {
   const { artistPageToken } = useParams();
-  const [cardIndex, setCardIndex] = useState(4);
   const [showModal, setShowModal] = useState(false);
   const [biddingVal, setBiddingVal] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -32,6 +32,12 @@ const ArtistPage = ({ web3, user, signIn }: ArtistPageProps) => {
     min: number;
     sec: number;
   }>({ hour: 0, min: 0, sec: 0 });
+  const [photoCardInfos, setPhotoCardInfos] = useState<PhotoCardInfo[]>([]);
+  const [cardIndex, setCardIndex] = useState(0);
+
+  const changeCardIndex = (index: number) => {
+    setCardIndex(index);
+  };
 
   const closeFinishedToast = () => {
     setIsFinished(false);
@@ -40,7 +46,9 @@ const ArtistPage = ({ web3, user, signIn }: ArtistPageProps) => {
     setIsDenied(false);
   };
 
-  const setRemainTimeInterval = (endTime: number) => {
+  const setRemainTimeInterval = () => {
+    if (photoCardInfos.length === 0) return;
+    const endTime = photoCardInfos[cardIndex].currentAuction.finalAuctionTime;
     const getTime = () => {
       const currentDate = Date.now() / 1000;
       const diff = Number(endTime) - currentDate;
@@ -55,49 +63,53 @@ const ArtistPage = ({ web3, user, signIn }: ArtistPageProps) => {
     setInterval(getTime, 1000);
   };
 
+  const getArtistAllProposalInfo = async () => {
+    console.log("getArtistAllProposalInfo");
+    const response = await web3.getArtistAllProposalInfo("NEWJEANS");
+    console.log("response", response);
+  };
+
   const getArtistPhotoCardHistoryInfo = async () => {
     const responseFromContract = await web3.getArtistPhotoCardHistoryInfo(
       "NEWJEANS"
     );
-    if (responseFromContract && responseFromContract.length > 0) {
-      const { currentAuction, metadataURI } = responseFromContract[0];
-      setRemainTimeInterval(Number(currentAuction.endTime));
+    const imageInfos = await getNftImgInfos(responseFromContract);
+    console.log(
+      "successfully get imageinfos from getnftimginfos, imageInfos: ",
+      imageInfos
+    );
 
-      setPhotocardInfo({
-        currentAuction: {
-          amount: currentAuction.amount as BigNumber,
-          photoCardId: currentAuction.photoCardId as BigNumber,
-          startTime: currentAuction.startTime as BigNumber,
-          finalAuctionTime: currentAuction.finalAuctionTime as BigNumber,
-          endTime: currentAuction.endTime as BigNumber,
-          bidder: currentAuction.bidder,
-          isFinalBid: currentAuction.isFinalBid,
-          settled: currentAuction.settled,
-        },
-        metadataURI,
-      });
+    if (
+      responseFromContract &&
+      responseFromContract.length > 0 &&
+      imageInfos.length === responseFromContract.length
+    ) {
+      const newPhotoCardInfos = [];
+      for (let i = 0; i < imageInfos.length; i++) {
+        const { currentAuction, metadataURI } = responseFromContract[i];
+        const imageInfo = imageInfos[i];
+        const photoCardInfo: PhotoCardInfo = {
+          currentAuction,
+          metadataURI,
+          imageInfo,
+        };
+        newPhotoCardInfos.push(photoCardInfo);
+      }
+      setPhotoCardInfos(newPhotoCardInfos);
+      setCardIndex(newPhotoCardInfos.length - 1);
     }
   };
 
   const getArtistPhotoCardInfo = async () => {
     const photoCardInfo = await web3.getArtistPhotoCardInfo("NEWJEANS");
-    console.log("photoCardInfo", photoCardInfo);
 
     if (photoCardInfo) {
       const { currentAuction, metadataURI } = photoCardInfo;
-      setPhotocardInfo({
-        currentAuction: {
-          amount: currentAuction.amount as BigNumber,
-          photoCardId: currentAuction.photoCardId as BigNumber,
-          startTime: currentAuction.startTime as BigNumber,
-          finalAuctionTime: currentAuction.finalAuctionTime as BigNumber,
-          endTime: currentAuction.endTime as BigNumber,
-          bidder: currentAuction.bidder,
-          isFinalBid: currentAuction.isFinalBid,
-          settled: currentAuction.settled,
-        },
-        metadataURI,
-      });
+      const [imageInfo] = await getNftImgInfos([photoCardInfo]);
+      setPhotoCardInfos([
+        { currentAuction, metadataURI, imageInfo },
+        ...photoCardInfos.slice(1),
+      ]);
     }
   };
 
@@ -107,8 +119,13 @@ const ArtistPage = ({ web3, user, signIn }: ArtistPageProps) => {
       return;
     } else {
       getArtistPhotoCardHistoryInfo();
+      getArtistAllProposalInfo();
     }
   }, [user]);
+
+  useEffect(() => {
+    setRemainTimeInterval();
+  }, [photoCardInfos]);
 
   if (artistPageToken === undefined) {
     return <div></div>;
@@ -147,17 +164,11 @@ const ArtistPage = ({ web3, user, signIn }: ArtistPageProps) => {
   };
 
   const getBidAmount = () => {
-    if (photocardInfo === undefined) return "0.15";
-
-    const stringifyAmount = photocardInfo?.currentAuction
-      .amount as unknown as string;
-    const lenDiff = 18 - stringifyAmount.length;
-
     const web3Utils = web3?.web3Utils;
-    if (web3Utils) {
-      return web3Utils.fromWei(stringifyAmount, "ether");
-    }
-    return 0.15;
+    if (photoCardInfos[cardIndex] === undefined || !web3Utils) return "0.15";
+    const test = photoCardInfos[cardIndex]?.currentAuction.amount;
+    const stringifyAmount = test as unknown as string;
+    return web3Utils.fromWei(stringifyAmount, "ether");
   };
 
   const getMinBidAmount = () => {
@@ -166,12 +177,11 @@ const ArtistPage = ({ web3, user, signIn }: ArtistPageProps) => {
 
   const renderArtistPhotoCards = () => {
     const displayTime = (time: number) => {
-      return time < 10 ? `0${time}` : time;
+      return time < 0 ? "00" : time < 10 ? `0${time}` : time;
     };
 
     const renderBiddingInfo = () => {
       const bidAmount = getBidAmount();
-
       return (
         <div className="biddinginfo-wrapper">
           <div className="row-wrapper">
@@ -199,10 +209,14 @@ const ArtistPage = ({ web3, user, signIn }: ArtistPageProps) => {
               <div className="value">
                 <div className="charactor_icon" />
                 <div className="address">
-                  {photocardInfo
-                    ? photocardInfo?.currentAuction.bidder.slice(0, 6) +
+                  {photoCardInfos[cardIndex] &&
+                  photoCardInfos[cardIndex].currentAuction.bidder
+                    ? photoCardInfos[cardIndex].currentAuction.bidder.slice(
+                        0,
+                        6
+                      ) +
                       "..." +
-                      photocardInfo?.currentAuction.bidder.slice(-4)
+                      photoCardInfos[cardIndex].currentAuction.bidder.slice(-4)
                     : "loading..."}
                 </div>
               </div>
@@ -252,13 +266,17 @@ const ArtistPage = ({ web3, user, signIn }: ArtistPageProps) => {
           <div className="artistcards-title">Auction</div>
           <div className="artistcards-wrapper">
             <div className="cards-wrapper">
-              <Carousel setCardIndex={setCardIndex} />
+              <Carousel
+                changeCardIndex={changeCardIndex}
+                photoCardInfos={photoCardInfos}
+              />
             </div>
             <div className="cardinfo-wrapper">
               <div className="title">
                 {`Photocard #${
-                  photocardInfo
-                    ? photocardInfo?.currentAuction.photoCardId
+                  photoCardInfos[cardIndex] &&
+                  photoCardInfos[cardIndex].currentAuction.photoCardId
+                    ? photoCardInfos[cardIndex].currentAuction.photoCardId
                     : "loading..."
                 }`}
               </div>

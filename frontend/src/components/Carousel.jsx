@@ -1,16 +1,17 @@
 import classNames from "classnames";
 import { Component, useRef } from "react";
 import ReactCardCarousel from "react-card-carousel";
+import { PhotoCardInfo } from "../types";
 import "../css/Carousel.css";
 
-const Carousel = ({ setCardIndex }) => {
-  const carouselCards = [
-    { key: 1 },
-    { key: 2 },
-    { key: 3 },
-    { key: 4 },
-    { key: 5 },
-  ];
+const Carousel = ({ changeCardIndex, photoCardInfos }) => {
+  const carouselCards = photoCardInfos.map((photoCardInfo) => {
+    const { imageInfo } = photoCardInfo;
+    return {
+      key: imageInfo.name,
+      imageSrc: imageInfo.image,
+    };
+  });
 
   let ref;
 
@@ -20,7 +21,10 @@ const Carousel = ({ setCardIndex }) => {
         <div
           className="btn-wrapper left"
           onClick={() => {
-            if (ref.getCurrentIndex() <= 0) return;
+            const currentIndex = ref.getCurrentIndex();
+            console.log(currentIndex);
+            if (currentIndex <= 1) return;
+            changeCardIndex(currentIndex - 2);
             ref.prev();
           }}
         >
@@ -29,36 +33,42 @@ const Carousel = ({ setCardIndex }) => {
         <div
           className="btn-wrapper right"
           onClick={() => {
-            if (ref.getCurrentIndex() >= carouselCards.length - 1) return;
+            const currentIndex = ref.getCurrentIndex();
+            console.log(currentIndex);
+            if (currentIndex >= carouselCards.length) return;
+            changeCardIndex(currentIndex);
             ref.next();
           }}
         >
           <div className="carosel-btn right" />
         </div>
       </div>
-
-      <ReactCardCarousel
-        initial_index={4}
-        autoplay={false}
-        autoplay_speed={2500}
-        spread={"wide"}
-        disable_keydown={true}
-        ref={(Carousel) => (ref = Carousel)}
-      >
-        {carouselCards.map((_, index) => {
-          return (
-            <div
-              className={classNames("card-wrapper", {
-                last: index === carouselCards.length - 1,
-              })}
-              key={index}
-            >
-              <img src={require("../img/dummy-card.png")} />
-            </div>
-          );
-        })}
-        <div style={{}}></div>
-      </ReactCardCarousel>
+      {photoCardInfos.length > 0 ? (
+        <ReactCardCarousel
+          initial_index={photoCardInfos.length}
+          autoplay={false}
+          spread={"wide"}
+          disable_keydown={true}
+          ref={(Carousel) => (ref = Carousel)}
+        >
+          <div></div>
+          {carouselCards.map(({ imageSrc }, index) => {
+            return (
+              <div
+                className={classNames("card-wrapper", {
+                  last: index === carouselCards.length - 1,
+                })}
+                key={index}
+              >
+                <img src={imageSrc} />
+              </div>
+            );
+          })}
+          <div></div>
+        </ReactCardCarousel>
+      ) : (
+        <></>
+      )}
     </div>
   );
 };
