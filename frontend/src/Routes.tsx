@@ -23,7 +23,7 @@ const MainRoutes = ({ web3, user, signIn }: MainRoutesProps) => (
     />
     <Route
       path="treasury-page/:treasuryId"
-      element={<TreasuryPage user={user} signIn={signIn} />}
+      element={<TreasuryPage web3={web3} user={user} signIn={signIn} />}
     />
   </Routes>
 );

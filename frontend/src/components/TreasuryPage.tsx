@@ -1,16 +1,23 @@
 import { useParams } from "react-router-dom";
-import { STATUS, UserInfo, VotingState, Web3Type } from "../types";
+import {
+  ProposalInfo,
+  STATUS,
+  UserInfo,
+  VotingState,
+  Web3Type,
+} from "../types";
 import { Link } from "react-router-dom";
 import classNames from "classnames";
 import "../css/TreasuryPage.css";
 import { useEffect, useState } from "react";
 
 interface TreasuryPageProps {
+  web3: Web3Type;
   user: UserInfo | undefined;
   signIn: () => Promise<void>;
 }
 
-const TreasuryPage = ({ user, signIn }: TreasuryPageProps) => {
+const TreasuryPage = ({ web3, user, signIn }: TreasuryPageProps) => {
   const dummyProps = {
     bnb: 300,
     totalCnt: 100,
@@ -161,12 +168,17 @@ const TreasuryPage = ({ user, signIn }: TreasuryPageProps) => {
     );
   };
 
+  const getArtistAllProposalInfo = async () => {
+    const response = await web3.getArtistAllProposalInfo("NEWJEANS");
+    console.log("treasuryPage - getArtistAllProposalInfo response", response);
+  };
+
   useEffect(() => {
     if (user === undefined) {
       signIn();
       return;
     } else {
-      //   getArtistPhotoCardHistoryInfo();
+      getArtistAllProposalInfo();
     }
   }, [user]);
 
@@ -179,6 +191,13 @@ const TreasuryPage = ({ user, signIn }: TreasuryPageProps) => {
       <div className="main_contents_wrapper">
         {renderLeftSideContent()}
         {renderRightSideContent()}
+      </div>
+      <div
+        className={classNames("submit_btn_wrapper", {
+          selected: votingState !== undefined,
+        })}
+      >
+        SUBMIT
       </div>
     </div>
   );

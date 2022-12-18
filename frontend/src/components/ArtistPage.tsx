@@ -99,6 +99,7 @@ const ArtistPage = ({ web3, user, signIn }: ArtistPageProps) => {
       const newPhotoCardInfos = [];
       for (let i = 0; i < imageInfos.length; i++) {
         const { currentAuction, metadataURI } = responseFromContract[i];
+
         const imageInfo = imageInfos[i];
         const photoCardInfo: PhotoCardInfo = {
           currentAuction,

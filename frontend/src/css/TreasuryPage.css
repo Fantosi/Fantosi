@@ -232,3 +232,28 @@
   height: 18px;
   background-image: url("../svg/voting_btn.svg");
 }
+
+.submit_btn_wrapper {
+  margin-left: 630px;
+  box-sizing: border-box;
+
+  width: 99px;
+  height: 36px;
+
+  background: #000000;
+  border: 1px solid #ffffff;
+  font-style: normal;
+  font-weight: 800;
+  font-size: 16px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 6px;
+}
+
+.submit_btn_wrapper.selected {
+  background: #ffffff;
+  mix-blend-mode: normal;
+  border: 1px solid #ffffff;
+  color: black;
+}
