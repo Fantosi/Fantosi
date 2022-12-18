@@ -57,6 +57,47 @@ export interface Web3Type {
     artistKey: string
   ) => Promise<PhotoCardInfo[]>;
   web3Utils: Utils | undefined;
+  getArtistAllProposalInfo: (artistKey: string) => Promise<ProposalInfo[]>;
+  propose: (
+    targetAddress: string,
+    amount: string,
+    description: string
+  ) => Promise<void>;
+  castVote: (proposalId: number, vote: VoteKind) => Promise<void>;
+}
+
+export interface ProposalInfo {
+  id: BigNumber;
+  proposer: string;
+  proposalThreshold: BigNumber;
+  quorumVotes: BigNumber;
+  eta: BigNumber;
+  startBlock: BigNumber;
+  endBlock: BigNumber;
+  forVotes: BigNumber;
+  againstVotes: BigNumber;
+  abstainVotes: BigNumber;
+  canceled: boolean;
+  vetoed: boolean;
+  executed: boolean;
+  totalSupply: BigNumber;
+  creationBlock: BigNumber;
+  targets: string[];
+  values: BigNumber[];
+}
+
+export interface MakeProposal {
+  targets: string[];
+  values: BigNumber[];
+  signatures: string[];
+  calldatas: string[];
+  description: string;
+}
+
+export enum VoteKind {
+  AGAINST = "0",
+  FOR = "1",
+  ABSTAIN = "2",
 }
 
 export enum VotingState {

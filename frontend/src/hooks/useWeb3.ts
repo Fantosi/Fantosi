@@ -1,4 +1,11 @@
-import { ArtistInfo, PhotoCardInfo, Web3Type } from "./../types";
+import {
+  ArtistInfo,
+  PhotoCardInfo,
+  ProposalInfo,
+  Web3Type,
+  MakeProposal,
+  VoteKind,
+} from "./../types";
 import { useEffect, useState } from "react";
 import Web3 from "web3";
 import { Contract } from "web3-eth-contract";
@@ -8,15 +15,19 @@ import Onboard, { WalletState } from "@web3-onboard/core";
 import { BigNumber, ethers } from "ethers";
 import AuctionHouseArtifact from "../contract/abi/FantosiAuctionHouse.json";
 import ViewArtifact from "../contract/abi/FantosiView.json";
+import FantosiDAOLogicArtifact from "../contract/abi/FantosiDAOLogic.json";
 
 const AUCTION_HOUSE_ADDR = "0x2163Fd4335e307DCB0258B4f6849A5c6E9F6E1cA";
 const AUCTION_VIEW_ADDR = "0x6432123245e989338588fceC0BDD6B90d3EE4D62";
+const FANTOSI_DAO_LOGIC_ADDR = "0x9c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c";
 const BINANCE_TESTNET_RPC = "https://data-seed-prebsc-1-s1.binance.org:8545";
 
 const useWeb3 = (): Web3Type => {
   const [web3, setWeb3] = useState<Web3 | undefined>(undefined);
   const [auctionHouseContract, setAuctionHouseContract] = useState<Contract>();
   const [auctionViewContract, setAuctionViewContract] = useState<Contract>();
+  const [fantosiDAOLogicContract, setFantosiDAOLogicContract] =
+    useState<Contract>();
   const [account, setAccount] = useState<string>("");
   const [wallets, setWallets] = useState<WalletState[]>([]);
 
@@ -107,6 +118,7 @@ const useWeb3 = (): Web3Type => {
   const setContracts = () => {
     getAuctionHouse();
     getViewContract();
+    getDAOLogicContract();
   };
 
   const getAuctionHouse = () => {
@@ -132,6 +144,20 @@ const useWeb3 = (): Web3Type => {
     const ca: string = AUCTION_VIEW_ADDR;
     const instance = new web3.eth.Contract(abi, ca);
     setAuctionViewContract(instance);
+  };
+
+  const getDAOLogicContract = () => {
+    try {
+      if (window.ethereum) {
+        const sendWeb3 = new Web3(window.ethereum as any);
+        const abi = FantosiDAOLogicArtifact.abi as AbiItem[];
+        const ca: string = FANTOSI_DAO_LOGIC_ADDR;
+        const instance = new sendWeb3.eth.Contract(abi, ca);
+        setFantosiDAOLogicContract(instance);
+      }
+    } catch (e) {
+      throw new Error(`getAuctionHouse ::: ERROR ${e}`);
+    }
   };
 
   const createBid = async (photoCardId: number, bidAmount: number) =>
@@ -249,6 +275,97 @@ const useWeb3 = (): Web3Type => {
     return res;
   };
 
+  const getArtistAllProposalInfo = async (
+    artistKey: string
+  ): Promise<ProposalInfo[]> => {
+    if (web3 === undefined) {
+      throw new Error("getArtistPhotoCardHistoryInfo ::: not initiated web3");
+    }
+
+    if (auctionViewContract === undefined) {
+      throw new Error(
+        "getArtistPhotoCardHistoryInfo ::: not initiated auction view contract"
+      );
+    }
+
+    const res: ProposalInfo[] = [];
+    const ls = await auctionViewContract.methods
+      .getArtistAllProposalInfo(artistKey)
+      .call();
+
+    if (ls) {
+      res.push(...ls);
+    }
+
+    return res;
+  };
+
+  const propose = async (
+    targetAddress: string,
+    amount: string,
+    description: string
+  ) => {
+    if (fantosiDAOLogicContract === undefined) {
+      throw new Error("propose ::: not initiated fantosi dao logic contract");
+    }
+    const makeProposal: MakeProposal = {
+      targets: [targetAddress],
+      values: [BigNumber.from(amount)],
+      signatures: ["transfer(address,uint256)"],
+      calldatas: [
+        encodeParameters(["address", "uint256"], [targetAddress, amount]),
+      ],
+      description,
+    };
+
+    await fantosiDAOLogicContract.methods
+      .propose(
+        makeProposal.targets,
+        makeProposal.values,
+        makeProposal.signatures,
+        makeProposal.calldatas,
+        makeProposal.description
+      )
+      .send({
+        from: account,
+      })
+      .on("transactionHash", (hash: string) => {
+        console.log(`transactionHash: ${hash}`);
+      })
+      .on("receipt", (receipt: any) => {
+        console.log(`receipt: ${receipt}`);
+      })
+      .on("confirmation", (confirmationNumber: number, receipt: any) => {
+        console.log(`confirmation: ${confirmationNumber}`);
+      });
+  };
+
+  const encodeParameters = (types: string[], values: unknown[]): string => {
+    const abi = new ethers.utils.AbiCoder();
+    return abi.encode(types, values);
+  };
+
+  const castVote = async (proposalId: number, voteKind: VoteKind) => {
+    if (fantosiDAOLogicContract === undefined) {
+      throw new Error("castVote ::: not initiated fantosi dao logic contract");
+    }
+
+    await fantosiDAOLogicContract.methods
+      .castVote(proposalId, voteKind.valueOf())
+      .send({
+        from: account,
+      })
+      .on("transactionHash", (hash: string) => {
+        console.log(`transactionHash: ${hash}`);
+      })
+      .on("receipt", (receipt: any) => {
+        console.log(`receipt: ${receipt}`);
+      })
+      .on("confirmation", (confirmationNumber: number, receipt: any) => {
+        console.log(`confirmation ${confirmationNumber}`);
+      });
+  };
+
   useEffect(() => {
     getWeb3();
   }, [account]);
@@ -269,6 +386,9 @@ const useWeb3 = (): Web3Type => {
     getArtistPhotoCardInfo,
     getArtistPhotoCardHistoryInfo,
     web3Utils: web3?.utils,
+    getArtistAllProposalInfo,
+    propose,
+    castVote,
   };
 };
 
