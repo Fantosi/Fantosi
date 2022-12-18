@@ -12,7 +12,7 @@ function App() {
 
   const web3 = useWeb3();
 
-  const onClickSignIn = async () => {
+  const signIn = async () => {
     const address = await web3.signInWithWeb3Onboard();
     if (address) {
       const userInfo = { role: "USER", address } as UserInfo;
@@ -32,10 +32,10 @@ function App() {
       <Navbar
         web3={web3}
         user={user}
-        onClickSignIn={onClickSignIn}
+        signIn={signIn}
         onClickSignOut={onClickSignOut}
       />
-      <MainRoutes web3={web3} user={user} onClickSignIn={onClickSignIn} />
+      <MainRoutes web3={web3} user={user} signIn={signIn} />
       <CatInTheBox />
     </div>
   );

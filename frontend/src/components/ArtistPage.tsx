@@ -10,10 +10,10 @@ import TreasuryCard from "./TreasuryCard";
 interface ArtistPageProps {
   web3: Web3Type;
   user: UserInfo | undefined;
-  onClickSignIn: () => Promise<void>;
+  signIn: () => Promise<void>;
 }
 
-const ArtistPage = ({ web3, user, onClickSignIn }: ArtistPageProps) => {
+const ArtistPage = ({ web3, user, signIn }: ArtistPageProps) => {
   const { artistPageToken } = useParams();
   const [cardIndex, setCardIndex] = useState(4);
   const [showModal, setShowModal] = useState(false);
@@ -90,7 +90,7 @@ const ArtistPage = ({ web3, user, onClickSignIn }: ArtistPageProps) => {
 
   useEffect(() => {
     if (user === undefined) {
-      onClickSignIn();
+      signIn();
       return;
     } else {
       getArtistPhotoCardHistoryInfo();
@@ -186,9 +186,11 @@ const ArtistPage = ({ web3, user, onClickSignIn }: ArtistPageProps) => {
               <div className="value">
                 <div className="charactor_icon" />
                 <div className="address">
-                  {photocardInfo?.currentAuction.bidder.slice(0, 6) +
-                    "..." +
-                    photocardInfo?.currentAuction.bidder.slice(-4)}
+                  {photocardInfo
+                    ? photocardInfo?.currentAuction.bidder.slice(0, 6) +
+                      "..." +
+                      photocardInfo?.currentAuction.bidder.slice(-4)
+                    : "loading..."}
                 </div>
               </div>
             </div>

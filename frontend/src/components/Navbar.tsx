@@ -6,22 +6,24 @@ import { UserInfo, Web3Type } from "../types";
 interface NavbarProps {
   web3: Web3Type;
   user: UserInfo | undefined;
-  onClickSignIn: () => Promise<void>;
+  signIn: () => Promise<void>;
   onClickSignOut: () => Promise<void>;
 }
 
-const Navbar = ({ user, onClickSignIn, onClickSignOut }: NavbarProps) => {
+const Navbar = ({ user, signIn, onClickSignOut }: NavbarProps) => {
   const location = useLocation();
-  const isArtistPage = location.pathname.includes("/artist-page");
+  const transparent =
+    location.pathname.includes("/artist-page") ||
+    location.pathname.includes("/treasury-page");
 
   return (
-    <div className={classNames("navbar", { isArtistPage })}>
+    <div className={classNames("navbar", { transparent })}>
       <div className="navbar_left_items">
         <Link to={"/"} className="link">
           <div className="main_title">Fantosi</div>
         </Link>
         <input
-          className={classNames({ isArtistPage })}
+          className={classNames({ transparent })}
           placeholder="Tell me your Fantosi ;"
         />
         <div id="search_icon" />
@@ -52,7 +54,7 @@ const Navbar = ({ user, onClickSignIn, onClickSignOut }: NavbarProps) => {
             SIGN OUT
           </div>
         ) : (
-          <div className="nav_btn link" onClick={onClickSignIn}>
+          <div className="nav_btn link" onClick={signIn}>
             SIGN UP
           </div>
         )}

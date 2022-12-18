@@ -273,12 +273,15 @@
   border: 1px solid #ffffff;
   border-radius: 43.5px;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
   font-weight: 800;
   font-size: 15px;
   font-family: "Apple SD Gothic Neo";
   vertical-align: middle;
+
+  box-sizing: border-box;
+  padding-bottom: 3px;
 }
 .makeproposal-btn:hover {
   background: #ffffff;

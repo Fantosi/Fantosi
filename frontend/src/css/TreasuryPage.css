@@ -1,0 +1,35 @@
+.treasurypage_wrapper {
+  width: 1000px;
+  min-height: 100vh;
+  background-color: black;
+  color: white;
+  padding: 68px 39px;
+  box-sizing: border-box;
+}
+
+.goback_btn_wrapper {
+  width: 922px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+}
+
+.goback_btn_wrapper .txt {
+  font-family: "Apple SD Gothic Neo";
+  font-weight: 800;
+  font-size: 15px;
+  margin-left: 19px;
+}
+
+.goback_btn {
+  width: 36px;
+  height: 36px;
+  background-image: url("../svg/goback_btn.svg");
+}
+
+.main_contents_wrapper {
+  margin: 38px 59px;
+  width: 804px;
+  height: 328px;
+  background-color: gray;
+}

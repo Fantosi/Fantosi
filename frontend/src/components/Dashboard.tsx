@@ -7,7 +7,6 @@ import Vision from "./Vision";
 interface DashboardProps {
   web3: Web3Type;
   user: UserInfo | undefined;
-  onClickSignIn: () => Promise<void>;
 }
 
 const Dashboard = (propse: DashboardProps) => {

@@ -12,7 +12,7 @@
   font-weight: 800;
 }
 
-.navbar.isArtistPage {
+.navbar.transparent {
   position: absolute;
   color: white;
 }
@@ -33,7 +33,8 @@
   all: unset;
   border: 1px solid #000000;
   border-radius: 27px;
-  padding: 10px;
+  padding: 0 10px;
+  padding-top: 3px;
   width: 408px;
   height: 24px;
   box-sizing: border-box;
@@ -46,12 +47,12 @@
   letter-spacing: -0.02em;
 }
 
-input.isArtistPage {
+input.transparent {
   border: 1px solid white;
   background: rgba(255, 255, 255, 0.35);
 }
 
-input.isArtistPage::placeholder {
+input.transparent::placeholder {
   color: rgba(255, 255, 255, 0.54);
 }
 
@@ -72,7 +73,7 @@ input.isArtistPage::placeholder {
   cursor: pointer;
 }
 
-.isArtistPage #search_icon {
+.transparent #search_icon {
   background-image: url("../svg/nav_search_white.svg");
 }
 
