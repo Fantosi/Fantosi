@@ -195,7 +195,17 @@ const ArtistPage = ({ web3, user, onClickSignIn }: ArtistPageProps) => {
             <div className="right-wrapper">
               <div className="header"></div>
               <div className="value">
-                <div className="outlink_icon" />
+                {photocardInfo ? (
+                  <a
+                    className="outlink_icon"
+                    href={`https://bscscan.com/address/${photocardInfo.currentAuction.bidder}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  />
+                ) : (
+                  <></>
+                )}
+                <div className="whiteline" />
               </div>
             </div>
           </div>
@@ -222,7 +232,11 @@ const ArtistPage = ({ web3, user, onClickSignIn }: ArtistPageProps) => {
             </div>
             <div className="cardinfo-wrapper">
               <div className="title">
-                {`Photocard #${photocardInfo?.currentAuction.photoCardId}`}
+                {`Photocard #${
+                  photocardInfo
+                    ? photocardInfo?.currentAuction.photoCardId
+                    : "loading..."
+                }`}
               </div>
               <div className="sub-title">
                 첫 번째 앨범 “NewJeans”의 다니엘 미공개 컷.
@@ -261,10 +275,10 @@ const ArtistPage = ({ web3, user, onClickSignIn }: ArtistPageProps) => {
       <div className="fantosihouse-wrapper">
         <div className="fantosihouse-btn" />
         <div className="fantosihouse-txt">
-          FANTOSI는 Nouns DAO에서 사용한 Daily Auction(하루에 하나씩, 경매를
-          통하여 NFT가 발행) 방식을 사용합니다. <br />
-          FANTOSI의 Membership NFT는 스마트 컨트랙트에 의하여 24시간에 하나씩
-          발행되며, 경매 방식을 통하여 구매할 수 있습니다.
+          하루에 하나씩 발행되는 포토 카드의 주인이 되어보세요! 수익금 전액은
+          We've collected..에서 확인할 수 있으며 community에 의해 <br />
+          관리되고 사용됩니다. Fantosi House는 아티스트, 포토카드 holder,
+          커뮤니티 참여자 모두가 함께하는 공간입니다.
         </div>
       </div>
     );

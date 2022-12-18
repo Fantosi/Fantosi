@@ -162,6 +162,28 @@
   padding-left: 8px;
   transform: translateY(2px);
 }
+.value {
+  position: relative;
+}
+.outlink_icon {
+  all: unset;
+  cursor: pointer;
+  position: absolute;
+  right: -133px;
+  bottom: -23px;
+  width: 18px;
+  height: 18px;
+  background-image: url("../svg/outlink_icon.svg");
+}
+.whiteline {
+  position: absolute;
+  right: -133px;
+  bottom: -30px;
+
+  width: 280px;
+  height: 2px;
+  background-image: url("../svg/white_line.svg");
+}
 
 .input-wrapper {
   display: flex;
