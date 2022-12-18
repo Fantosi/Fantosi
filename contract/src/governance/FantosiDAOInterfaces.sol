@@ -162,10 +162,10 @@ contract FantosiDAOStorageV1 is FantosiDAOProxyStorage {
     /// @notice The total number of proposals
     uint256 public proposalCount;
 
-    /// @notice The address of the Nouns DAO Executor FantosiDAOExecutor
+    /// @notice The address of the FantosiDAOExecutor
     IFantosiDAOExecutor public timelock;
 
-    /// @notice The address of the Nouns tokens
+    /// @notice The address of the Fantosi Photocard
     FantosiTokenLike public fantosiToken;
 
     /// @notice The official record of all proposals ever proposed
@@ -443,4 +443,15 @@ interface FantosiTokenLike {
     function getPriorVotes(address account, uint256 blockNumber) external view returns (uint96);
 
     function totalSupply() external view returns (uint256);
+}
+
+interface IFantosiDAOLogic {
+    struct ProposalDto {
+        uint256 proposalNum;
+        uint256 endVote;
+    }
+
+    function getProposal(uint256 num) external view returns (ProposalDto memory);
+
+    function getProposalCount() external view returns (uint256);
 }

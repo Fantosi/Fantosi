@@ -1075,6 +1075,14 @@ contract FantosiDAOLogic is FantosiDAOStorageV2, FantosiDAOEventsV2 {
         return chainId;
     }
 
+    // function getProposal(uint256 num) external view returns (Proposal memory proposal) {
+    //     return _proposals[num];
+    // }
+
+    function getProposalCount() external view returns (uint256) {
+        return proposalCount;
+    }
+
     function safe32(uint256 n, string memory errorMessage) internal pure returns (uint32) {
         require(n <= type(uint32).max, errorMessage);
         return uint32(n);

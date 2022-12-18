@@ -1,6 +1,14 @@
 import { ethers, upgrades } from "hardhat";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { FantosiAuctionHouse, FantosiDAOExecutor, FantosiToken, FantosiView, WBNB } from "../../typechain";
+import {
+    FantosiAuctionHouse,
+    FantosiDAOExecutor,
+    FantosiDAOLogic,
+    FantosiDAOProxy,
+    FantosiToken,
+    FantosiView,
+    WBNB,
+} from "../../typechain";
 import { auctionInfoTest, governanceInfoTest } from "./constants";
 
 export interface DeployParams {
@@ -15,8 +23,20 @@ export interface RT {
     fantosiToken: FantosiToken;
     fantosiAuctionHouse: FantosiAuctionHouse;
     fantosiDAOExecutor: FantosiDAOExecutor;
+    fantosiDAOProxy: FantosiDAOProxy;
+    fantosiDAOLogic: FantosiDAOLogic;
     fantosiView: FantosiView;
 }
+
+let firstDeployment = true;
+
+const calculateNonce = (): number => {
+    if (firstDeployment === true) {
+        return 8;
+    } else {
+        return 7;
+    }
+};
 
 // 배포 순서 참고
 // https://github.com/nounsDAO/nouns-monorepo/blob/master/packages/nouns-contracts/test/end2end.test.ts
@@ -35,7 +55,7 @@ export const deployArtist = async (params: DeployParams): Promise<RT> => {
     /* Gov Delegator Address 계산 */
     const calculatedGovDelegatorAddress = ethers.utils.getContractAddress({
         from: params.admin.address,
-        nonce: (await params.admin.getTransactionCount()) + 2,
+        nonce: (await params.admin.getTransactionCount()) + calculateNonce(),
     });
 
     /* Executor(Treasury) 컨트랙트 배포 */
@@ -86,11 +106,33 @@ export const deployArtist = async (params: DeployParams): Promise<RT> => {
     /// 포토카드 Minter 설정
     await fantosiToken.connect(params.admin).setMinter(fantosiAuctionHouse.address);
 
-    // TODO: DAO 배포 스크립트 추가
+    /// Fantosi DAO Logic 배포
+    const FantosiDAOLogic = await ethers.getContractFactory("FantosiDAOLogic");
+    const fantosiDAOLogic = (await FantosiDAOLogic.deploy()) as FantosiDAOLogic;
+    await fantosiDAOLogic.deployed();
+
+    /// Fantosi DAO Proxy 배포
+    const FantosiDAOProxy = await ethers.getContractFactory("FantosiDAOProxy");
+    const fantosiDAOProxy = (await FantosiDAOProxy.deploy(
+        fantosiDAOExecutor.address,
+        fantosiToken.address,
+        params.artist.address, // Artist is Vetoer
+        fantosiDAOExecutor.address,
+        fantosiDAOLogic.address,
+        governanceInfoTest.votingPeriod,
+        governanceInfoTest.votingDelay,
+        governanceInfoTest.proposalThresholdBPS,
+        governanceInfoTest.dynamicQuorum,
+    )) as FantosiDAOProxy;
+
+    await fantosiDAOProxy.deployed();
 
     /// AuctionHouse 정지 해제 => Daily Auction 시작
     // TODO: 컨트랙에 특정 시간에 시작하도록 설정하는 로직 추가
     await fantosiAuctionHouse.connect(params.admin).unpause();
+
+    // Nonce 계산을 위한 first deployment 설정
+    firstDeployment = false;
 
     /// DAO Treasury로 Ownership 이동
     // await fantosiAuctionHouse.connect(params.admin).transferOwnership(fantosiDAOExecutor.address);
@@ -99,6 +141,8 @@ export const deployArtist = async (params: DeployParams): Promise<RT> => {
         fantosiToken,
         fantosiAuctionHouse,
         fantosiDAOExecutor,
+        fantosiDAOProxy,
+        fantosiDAOLogic,
         fantosiView,
     };
 };

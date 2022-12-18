@@ -4,6 +4,7 @@ pragma solidity ^0.8.6;
 
 import { IFantosiAuctionHouse } from "./interfaces/IFantosiAuctionHouse.sol";
 import { IFantosiToken } from "./interfaces/IFantosiToken.sol";
+import { FantosiDAOStorageV1, IFantosiDAOLogic } from "./governance/FantosiDAOInterfaces.sol";
 import { Initializable } from "./upgrade/higherversion/Initializable.sol";
 
 // TODO: 테스트 완료 후 제거
@@ -29,6 +30,8 @@ contract FantosiView is Initializable {
     mapping(string => IFantosiToken) public fantosiTokenList;
     // fantosiTokenAddress => fantosiAuctionHouse
     mapping(IFantosiToken => IFantosiAuctionHouse) public auctionMap;
+    // key => fantosiDAOLogic
+    mapping(string => IFantosiDAOLogic) public fantosiDAOLogicList;
 
     function initialize() public initializer {}
 
@@ -36,17 +39,21 @@ contract FantosiView is Initializable {
         return fantosiTokenList[key];
     }
 
-    function setFantosiTokenAddress(string memory key, IFantosiToken fantosiToken) external {
-        fantosiTokenList[key] = fantosiToken;
-
-        artists.push(fantosiToken.getSymbol());
-        fantosiTokens.push(fantosiToken);
+    function setFantosiDAOLogic(string memory key, IFantosiDAOLogic fantosiDAOLogic) external {
+        fantosiDAOLogicList[key] = fantosiDAOLogic;
     }
 
     function setFantosiTokenAuctionHouse(IFantosiToken fantosiToken, IFantosiAuctionHouse fantosiAuctionHouse)
         external
     {
         auctionMap[fantosiToken] = fantosiAuctionHouse;
+    }
+
+    function setFantosiTokenAddress(string memory key, IFantosiToken fantosiToken) external {
+        fantosiTokenList[key] = fantosiToken;
+
+        artists.push(fantosiToken.getSymbol());
+        fantosiTokens.push(fantosiToken);
     }
 
     function getAllArtistInfo() external view returns (Artist[] memory artistsInfo) {
@@ -110,4 +117,19 @@ contract FantosiView is Initializable {
 
         allPhotoCardInfo[length] = _getArtistPhotoCardInfo(fantosiToken);
     }
+
+    // function getArtistAllProposalInfo(string memory key)
+    //     external
+    //     view
+    //     returns (FantosiDAOStorageV1.Proposal[] memory allProposalInfo)
+    // {
+    //     IFantosiDAOLogic fantosiDAOLogic = fantosiDAOLogicList[key];
+    //     uint256 proposalCount = fantosiDAOLogic.getProposalCount();
+
+    //     allProposalInfo = new FantosiDAOStorageV1.Proposal[](proposalCount);
+
+    //     for (uint256 i = 1; i <= proposalCount; i++) {
+    //         allProposalInfo[i - 1] = fantosiDAOLogic.getProposal(i);
+    //     }
+    // }
 }

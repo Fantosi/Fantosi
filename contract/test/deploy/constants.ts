@@ -21,13 +21,21 @@ export const auctionInfoTest: {
 export const governanceInfoTest: {
     timeLockDelay: BigNumber;
     proposalThresholdBPS: BigNumber;
-    quorumVotesBPS: BigNumber;
+    dynamicQuorum: {
+        minQuorumVotesBPS: BigNumber;
+        maxQuorumVotesBPS: BigNumber;
+        quorumCoefficient: BigNumber;
+    };
     votingPeriod: BigNumber;
     votingDelay: BigNumber;
 } = {
     timeLockDelay: BigNumber.from(172800), // 2 days
     proposalThresholdBPS: BigNumber.from(500), // 5%
-    quorumVotesBPS: BigNumber.from(1000), // 10%
+    dynamicQuorum: {
+        minQuorumVotesBPS: BigNumber.from(1000), // 10.00%
+        maxQuorumVotesBPS: BigNumber.from(2000), // 20.00%
+        quorumCoefficient: BigNumber.from(1),
+    },
     votingPeriod: BigNumber.from(5760), // About 24 hours with 15s blocks
     votingDelay: BigNumber.from(1), // 1 block
 };

@@ -4,10 +4,7 @@ import { contracts as bnbContracts } from "../../deployments/bnb_testnet.json";
 import { FantosiAuctionHouse } from "../../typechain";
 import { unixToTimeString } from "../util/date";
 
-// Bid Amount
-const bidAmount = ethers.utils.parseEther("0.0001");
-
-export const bid = async () => {
+export const settle = async () => {
     const fantosiAuctionHouse = new ethers.Contract(
         bnbContracts.FantosiAuctionHouse.address,
         bnbContracts.FantosiAuctionHouse.abi,
@@ -16,7 +13,7 @@ export const bid = async () => {
 
     const auction = await fantosiAuctionHouse.auction();
 
-    console.log("========= 현재 Auction 정보 확인 =========");
+    console.log("========= Settlement 실행 전 Auction 정보 확인 =========");
 
     const blockNumber = await provider.getBlockNumber();
     const currentBlock = await provider.getBlock(blockNumber);
@@ -38,15 +35,14 @@ export const bid = async () => {
     console.log("\n");
 
     await (
-        await fantosiAuctionHouse.connect(wallet).createBid(auction.photoCardId, {
+        await fantosiAuctionHouse.connect(wallet).settleCurrentAndCreateNewAuction({
             gasLimit: 10000000,
-            value: bidAmount,
         })
     ).wait();
 
-    console.log("🤑 입찰을 완료하였습니다. 🤑\n");
+    console.log("🤑 Settlement 실행을 완료하였습니다. 🤑\n");
 
-    console.log("========= 입찰 후 Auction 정보 확인 =========");
+    console.log("========= Settlement 실행 후 Auction 정보 확인 =========");
 
     const newBlockNumber = await provider.getBlockNumber();
     const newCurrentBlock = await provider.getBlock(newBlockNumber);
@@ -70,4 +66,4 @@ export const bid = async () => {
     console.log("\n");
 };
 
-bid();
+settle();

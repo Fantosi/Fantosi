@@ -85,6 +85,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
                         auctionInfo.timeBuffer,
                         auctionInfo.reservePrice,
                         auctionInfo.minBidIncrementPercentage,
+                        auctionInfo.initialStartTime,
                         auctionInfo.totalDuration,
                         auctionInfo.finalDurationPoint,
                         FantosiDAOExecutor.address,
@@ -116,8 +117,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     /// DAO Treasury로 Ownership 이동
     // await (await fantosiAuctionHouse.connect(wallet).transferOwnership(FantosiDAOExecutor.address)).wait();
 
-    /// AuctionHouse 정지 해제 => Daily Auction 시작
-    // TODO: 컨트랙에 특정 시간에 시작하도록 설정하는 로직 추가
+    /// AuctionHouse 정지 해제 => 지정된 시간에 Daily Auction 시작
     await (await fantosiAuctionHouse.connect(wallet).unpause()).wait();
 };
 
