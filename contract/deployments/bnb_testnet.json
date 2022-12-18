@@ -3,7 +3,7 @@
   "chainId": "97",
   "contracts": {
     "FantosiView_Implementation": {
-      "address": "0x02d59b1bE76cf7c91c32344868EE5Bf9a8924902",
+      "address": "0x6EF692Efd1ACE0D52Bbd6b1d55B1060Fdaf4841b",
       "abi": [
         {
           "anonymous": false,
@@ -304,11 +304,21 @@
                 },
                 {
                   "internalType": "uint256[]",
-                  "name": "values",
+                  "name": "sendValues",
                   "type": "uint256[]"
+                },
+                {
+                  "internalType": "string",
+                  "name": "description",
+                  "type": "string"
+                },
+                {
+                  "internalType": "string",
+                  "name": "state",
+                  "type": "string"
                 }
               ],
-              "internalType": "struct IFantosiDAOLogic.ProposalCondensedDto[]",
+              "internalType": "struct FantosiDAOStorageV2.ProposalCondensed[]",
               "name": "allProposalInfo",
               "type": "tuple[]"
             }
@@ -545,7 +555,7 @@
       ]
     },
     "FantosiView_Proxy": {
-      "address": "0x6432123245e989338588fceC0BDD6B90d3EE4D62",
+      "address": "0xFf1134D9A4A61776543F3ec3b3B4aA461176D496",
       "abi": [
         {
           "inputs": [
@@ -693,7 +703,7 @@
       ]
     },
     "FantosiView": {
-      "address": "0x6432123245e989338588fceC0BDD6B90d3EE4D62",
+      "address": "0xFf1134D9A4A61776543F3ec3b3B4aA461176D496",
       "abi": [
         {
           "anonymous": false,
@@ -1116,11 +1126,21 @@
                 },
                 {
                   "internalType": "uint256[]",
-                  "name": "values",
+                  "name": "sendValues",
                   "type": "uint256[]"
+                },
+                {
+                  "internalType": "string",
+                  "name": "description",
+                  "type": "string"
+                },
+                {
+                  "internalType": "string",
+                  "name": "state",
+                  "type": "string"
                 }
               ],
-              "internalType": "struct IFantosiDAOLogic.ProposalCondensedDto[]",
+              "internalType": "struct FantosiDAOStorageV2.ProposalCondensed[]",
               "name": "allProposalInfo",
               "type": "tuple[]"
             }
@@ -1378,7 +1398,7 @@
       ]
     },
     "FantosiDAOExecutor": {
-      "address": "0xd4c32A3e9f1Cb195D302d62a32a7a7f3F1Bd5D7B",
+      "address": "0x4803415CB75417FbF7340daD4FEE1dce84D2f0B5",
       "abi": [
         {
           "inputs": [
@@ -1816,7 +1836,7 @@
       ]
     },
     "FantosiToken": {
-      "address": "0x7fFa39f158c4D1cf55CD5ed23AD17578f01419ad",
+      "address": "0xd2d8Df034F5F171acEBc8c83c6b24c943eFcDbBD",
       "abi": [
         {
           "inputs": [
@@ -2805,7 +2825,7 @@
       ]
     },
     "FantosiAuctionHouse_Implementation": {
-      "address": "0x2F01208fF3411062A4495913D6Bd8256e33966D3",
+      "address": "0xA0eE17498318ad51e1b6776C4051C31412108Ed4",
       "abi": [
         {
           "anonymous": false,
@@ -3489,7 +3509,7 @@
       ]
     },
     "FantosiAuctionHouse_Proxy": {
-      "address": "0x2163Fd4335e307DCB0258B4f6849A5c6E9F6E1cA",
+      "address": "0x6CCaC669392404755f2fB82889613E7Fe11B2c39",
       "abi": [
         {
           "inputs": [
@@ -3637,7 +3657,7 @@
       ]
     },
     "FantosiAuctionHouse": {
-      "address": "0x2163Fd4335e307DCB0258B4f6849A5c6E9F6E1cA",
+      "address": "0x6CCaC669392404755f2fB82889613E7Fe11B2c39",
       "abi": [
         {
           "anonymous": false,

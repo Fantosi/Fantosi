@@ -30,6 +30,7 @@ export const checkAuction = async () => {
     console.log("종료 시간: ", unixToTimeString(auction.endTime.toNumber()));
     console.log("\n");
 
+    console.log("현재 입찰 중인 번호: ", auction.photoCardId.toString());
     console.log("현재 입찰자: ", auction.bidder);
     console.log("현재 입찰자의 입찰 금액: ", auction.amount.toString());
     console.log("\n");

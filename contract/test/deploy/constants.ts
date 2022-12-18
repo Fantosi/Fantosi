@@ -65,13 +65,13 @@ export const exampleSenderAmount = ethers.utils.parseEther("0.00001");
 
 export const proposalExampleTest: {
     targets: string[];
-    values: string[];
+    sendValues: BigNumber[];
     signatures: string[];
     calldatas: string[];
     description: string;
 } = {
     targets: [exampleSenderAddress],
-    values: ["0"],
+    sendValues: [ethers.utils.parseEther("0.00001")],
     signatures: ["transfer(address,uint256)"],
     calldatas: [encodeParameters(["address", "uint256"], [exampleSenderAddress, exampleSenderAmount])],
     description: "뉴진스한테 돈주기 가보자고-!",

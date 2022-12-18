@@ -77,9 +77,6 @@ export const deployArtist = async (params: DeployParams): Promise<RT> => {
         params.contractURIHash,
     )) as FantosiToken;
     await fantosiToken.deployed();
-    
-    // View 컨트랙트에 저장
-    await fantosiView.connect(params.admin).setFantosiTokenAddress(params.symbol, fantosiToken.address);
 
     // View 컨트랙트에 저장
     await fantosiView.connect(params.admin).setFantosiTokenAddress(params.symbol, fantosiToken.address);

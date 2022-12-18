@@ -196,7 +196,7 @@ contract FantosiDAOLogic is FantosiDAOStorageV2, FantosiDAOEventsV2 {
     /**
      * @notice Function used to propose a new proposal. Sender must have delegates above the proposal threshold
      * @param targets Target addresses for proposal calls
-     * @param values Eth values for proposal calls
+     * @param sendValues Eth values for proposal calls
      * @param signatures Function signatures for proposal calls
      * @param calldatas Calldatas for proposal calls
      * @param description String description of the proposal
@@ -204,7 +204,7 @@ contract FantosiDAOLogic is FantosiDAOStorageV2, FantosiDAOEventsV2 {
      */
     function propose(
         address[] memory targets,
-        uint256[] memory values,
+        uint256[] memory sendValues,
         string[] memory signatures,
         bytes[] memory calldatas,
         string memory description
@@ -220,7 +220,7 @@ contract FantosiDAOLogic is FantosiDAOStorageV2, FantosiDAOEventsV2 {
             "FantosiDAO::propose: proposer votes below proposal threshold"
         );
         require(
-            targets.length == values.length &&
+            targets.length == sendValues.length &&
                 targets.length == signatures.length &&
                 targets.length == calldatas.length,
             "FantosiDAO::propose: proposal function information arity mismatch"
@@ -230,13 +230,13 @@ contract FantosiDAOLogic is FantosiDAOStorageV2, FantosiDAOEventsV2 {
 
         temp.latestProposalId = latestProposalIds[msg.sender];
         if (temp.latestProposalId != 0) {
-            ProposalState proposersLatestProposalState = state(temp.latestProposalId);
+            string memory proposersLatestProposalState = state(temp.latestProposalId);
             require(
-                proposersLatestProposalState != ProposalState.Active,
+                compareString(proposersLatestProposalState, "Active") == false,
                 "FantosiDAO::propose: one live proposal per proposer, found an already active proposal"
             );
             require(
-                proposersLatestProposalState != ProposalState.Pending,
+                compareString(proposersLatestProposalState, "Pending") == false,
                 "FantosiDAO::propose: one live proposal per proposer, found an already pending proposal"
             );
         }
@@ -251,7 +251,7 @@ contract FantosiDAOLogic is FantosiDAOStorageV2, FantosiDAOEventsV2 {
         newProposal.proposalThreshold = temp.proposalThreshold;
         newProposal.eta = 0;
         newProposal.targets = targets;
-        newProposal.values = values;
+        newProposal.sendValues = sendValues;
         newProposal.signatures = signatures;
         newProposal.calldatas = calldatas;
         newProposal.startBlock = temp.startBlock;
@@ -264,6 +264,8 @@ contract FantosiDAOLogic is FantosiDAOStorageV2, FantosiDAOEventsV2 {
         newProposal.vetoed = false;
         newProposal.totalSupply = temp.totalSupply;
         newProposal.creationBlock = block.number;
+        newProposal.description = description;
+        newProposal.state = state(proposalCount);
 
         latestProposalIds[newProposal.proposer] = newProposal.id;
 
@@ -272,7 +274,7 @@ contract FantosiDAOLogic is FantosiDAOStorageV2, FantosiDAOEventsV2 {
             newProposal.id,
             msg.sender,
             targets,
-            values,
+            sendValues,
             signatures,
             calldatas,
             newProposal.startBlock,
@@ -286,7 +288,7 @@ contract FantosiDAOLogic is FantosiDAOStorageV2, FantosiDAOEventsV2 {
             newProposal.id,
             msg.sender,
             targets,
-            values,
+            sendValues,
             signatures,
             calldatas,
             newProposal.startBlock,
@@ -305,7 +307,7 @@ contract FantosiDAOLogic is FantosiDAOStorageV2, FantosiDAOEventsV2 {
      */
     function queue(uint256 proposalId) external {
         require(
-            state(proposalId) == ProposalState.Succeeded,
+            compareString(state(proposalId), "Succeeded") == true,
             "FantosiDAO::queue: proposal can only be queued if it is succeeded"
         );
         Proposal storage proposal = _proposals[proposalId];
@@ -313,7 +315,7 @@ contract FantosiDAOLogic is FantosiDAOStorageV2, FantosiDAOEventsV2 {
         for (uint256 i = 0; i < proposal.targets.length; i++) {
             queueOrRevertInternal(
                 proposal.targets[i],
-                proposal.values[i],
+                proposal.sendValues[i],
                 proposal.signatures[i],
                 proposal.calldatas[i],
                 eta
@@ -325,16 +327,16 @@ contract FantosiDAOLogic is FantosiDAOStorageV2, FantosiDAOEventsV2 {
 
     function queueOrRevertInternal(
         address target,
-        uint256 value,
+        uint256 sendValue,
         string memory signature,
         bytes memory data,
         uint256 eta
     ) internal {
         require(
-            !timelock.queuedTransactions(keccak256(abi.encode(target, value, signature, data, eta))),
+            !timelock.queuedTransactions(keccak256(abi.encode(target, sendValue, signature, data, eta))),
             "FantosiDAO::queueOrRevertInternal: identical proposal action already queued at eta"
         );
-        timelock.queueTransaction(target, value, signature, data, eta);
+        timelock.queueTransaction(target, sendValue, signature, data, eta);
     }
 
     /**
@@ -343,7 +345,7 @@ contract FantosiDAOLogic is FantosiDAOStorageV2, FantosiDAOEventsV2 {
      */
     function execute(uint256 proposalId) external {
         require(
-            state(proposalId) == ProposalState.Queued,
+            compareString(state(proposalId), "Queued") == true,
             "FantosiDAO::execute: proposal can only be executed if it is queued"
         );
         Proposal storage proposal = _proposals[proposalId];
@@ -351,7 +353,7 @@ contract FantosiDAOLogic is FantosiDAOStorageV2, FantosiDAOEventsV2 {
         for (uint256 i = 0; i < proposal.targets.length; i++) {
             timelock.executeTransaction(
                 proposal.targets[i],
-                proposal.values[i],
+                proposal.sendValues[i],
                 proposal.signatures[i],
                 proposal.calldatas[i],
                 proposal.eta
@@ -365,7 +367,7 @@ contract FantosiDAOLogic is FantosiDAOStorageV2, FantosiDAOEventsV2 {
      * @param proposalId The id of the proposal to cancel
      */
     function cancel(uint256 proposalId) external {
-        if (state(proposalId) == ProposalState.Executed) {
+        if (compareString(state(proposalId), "Executed")) {
             revert CantCancelExecutedProposal();
         }
 
@@ -380,7 +382,7 @@ contract FantosiDAOLogic is FantosiDAOStorageV2, FantosiDAOEventsV2 {
         for (uint256 i = 0; i < proposal.targets.length; i++) {
             timelock.cancelTransaction(
                 proposal.targets[i],
-                proposal.values[i],
+                proposal.sendValues[i],
                 proposal.signatures[i],
                 proposal.calldatas[i],
                 proposal.eta
@@ -403,7 +405,7 @@ contract FantosiDAOLogic is FantosiDAOStorageV2, FantosiDAOEventsV2 {
             revert VetoerOnly();
         }
 
-        if (state(proposalId) == ProposalState.Executed) {
+        if (compareString(state(proposalId), "Executed") == true) {
             revert CantVetoExecutedProposal();
         }
 
@@ -413,7 +415,7 @@ contract FantosiDAOLogic is FantosiDAOStorageV2, FantosiDAOEventsV2 {
         for (uint256 i = 0; i < proposal.targets.length; i++) {
             timelock.cancelTransaction(
                 proposal.targets[i],
-                proposal.values[i],
+                proposal.sendValues[i],
                 proposal.signatures[i],
                 proposal.calldatas[i],
                 proposal.eta
@@ -427,7 +429,7 @@ contract FantosiDAOLogic is FantosiDAOStorageV2, FantosiDAOEventsV2 {
      * @notice Gets actions of a proposal
      * @param proposalId the id of the proposal
      * @return targets
-     * @return values
+     * @return sendValues
      * @return signatures
      * @return calldatas
      */
@@ -436,13 +438,13 @@ contract FantosiDAOLogic is FantosiDAOStorageV2, FantosiDAOEventsV2 {
         view
         returns (
             address[] memory targets,
-            uint256[] memory values,
+            uint256[] memory sendValues,
             string[] memory signatures,
             bytes[] memory calldatas
         )
     {
         Proposal storage p = _proposals[proposalId];
-        return (p.targets, p.values, p.signatures, p.calldatas);
+        return (p.targets, p.sendValues, p.signatures, p.calldatas);
     }
 
     /**
@@ -460,27 +462,29 @@ contract FantosiDAOLogic is FantosiDAOStorageV2, FantosiDAOEventsV2 {
      * @param proposalId The id of the proposal
      * @return Proposal state
      */
-    function state(uint256 proposalId) public view returns (ProposalState) {
+    function state(uint256 proposalId) public view returns (string memory) {
         require(proposalCount >= proposalId, "FantosiDAO::state: invalid proposal id");
+
         Proposal storage proposal = _proposals[proposalId];
+
         if (proposal.vetoed) {
-            return ProposalState.Vetoed;
+            return "Vetoed";
         } else if (proposal.canceled) {
-            return ProposalState.Canceled;
+            return "Canceled";
         } else if (block.number <= proposal.startBlock) {
-            return ProposalState.Pending;
+            return "Pending";
         } else if (block.number <= proposal.endBlock) {
-            return ProposalState.Active;
+            return "Active";
         } else if (proposal.forVotes <= proposal.againstVotes || proposal.forVotes < quorumVotes(proposal.id)) {
-            return ProposalState.Defeated;
+            return "Defeated";
         } else if (proposal.eta == 0) {
-            return ProposalState.Succeeded;
+            return "Succeeded";
         } else if (proposal.executed) {
-            return ProposalState.Executed;
+            return "Executed";
         } else if (block.timestamp >= proposal.eta + timelock.GRACE_PERIOD()) {
-            return ProposalState.Expired;
+            return "Expired";
         } else {
-            return ProposalState.Queued;
+            return "Queued";
         }
     }
 
@@ -510,7 +514,9 @@ contract FantosiDAOLogic is FantosiDAOStorageV2, FantosiDAOEventsV2 {
                 totalSupply: proposal.totalSupply,
                 creationBlock: proposal.creationBlock,
                 targets: proposal.targets,
-                values: proposal.values
+                sendValues: proposal.sendValues,
+                description: proposal.description,
+                state: proposal.state
             });
     }
 
@@ -623,7 +629,7 @@ contract FantosiDAOLogic is FantosiDAOStorageV2, FantosiDAOEventsV2 {
         uint256 proposalId,
         uint8 support
     ) internal returns (uint96) {
-        require(state(proposalId) == ProposalState.Active, "FantosiDAO::castVoteInternal: voting is closed");
+        require(compareString(state(proposalId), "Active") == true, "FantosiDAO::castVoteInternal: voting is closed");
         require(support <= 2, "FantosiDAO::castVoteInternal: invalid vote type");
         Proposal storage proposal = _proposals[proposalId];
         Receipt storage receipt = proposal.receipts[voter];
@@ -1083,6 +1089,10 @@ contract FantosiDAOLogic is FantosiDAOStorageV2, FantosiDAOEventsV2 {
             chainId := chainid()
         }
         return chainId;
+    }
+
+    function compareString(string memory a, string memory b) internal view returns (bool) {
+        return (keccak256(abi.encodePacked((a))) == keccak256(abi.encodePacked((b))));
     }
 
     // function getProposal(uint256 num) external view returns (Proposal memory proposal) {
