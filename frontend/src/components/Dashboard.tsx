@@ -105,7 +105,6 @@ const Dashboard = ({ web3, user, signIn }: DashboardProps) => {
 
   const bidDoneCardList = cardList.filter((card) => card.bidDone);
 
-  console.log(photoCardInfo);
   const biddingCardList = photoCardInfo
     ? [
         {

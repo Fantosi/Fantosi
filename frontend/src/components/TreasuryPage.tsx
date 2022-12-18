@@ -193,9 +193,11 @@ const TreasuryPage = ({ web3, user, signIn }: TreasuryPageProps) => {
 
   const getArtistAllProposalInfo = async () => {
     const proposals = await web3.getArtistAllProposalInfo("NEWJEANS");
+    let flag = false;
     [...proposals, ...dummyProposals].forEach((proposal) => {
-      if (treasuryId && Number(proposal.id) === Number(treasuryId)) {
+      if (!flag && treasuryId && Number(proposal.id) === Number(treasuryId)) {
         setProposal(proposal as ProposalInfo);
+        flag = true;
       }
     });
   };
@@ -215,7 +217,6 @@ const TreasuryPage = ({ web3, user, signIn }: TreasuryPageProps) => {
       if (voteKind === undefined) return;
       setIsLoading(true);
       const isSubmited = await web3.castVote(Number(proposal.id), voteKind);
-      console.log("isSubmited", isSubmited);
       if (isSubmited) {
         setIsSubmited(true);
         setIsFinished(true);

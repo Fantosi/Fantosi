@@ -3,7 +3,7 @@ import { ProposalInfo, STATUS } from "../types";
 
 export const dummyProposals: ProposalInfo[] = [
   {
-    id: BigNumber.from("4"),
+    id: BigNumber.from("1"),
     proposer: "0x7d61dA044aA8059ffFC37b873b344ae2F163cA98",
     proposalThreshold: BigNumber.from("1"),
     quorumVotes: BigNumber.from("50"),
@@ -24,9 +24,10 @@ export const dummyProposals: ProposalInfo[] = [
       "추운 날씨에도 사녹 와주는 고마운\n우리 버니즈를 위한 맛난 도시락 역조공!",
     state: STATUS.EXECUTED,
     likedByArtist: true,
+    isDummy: true,
   },
   {
-    id: BigNumber.from("5"),
+    id: BigNumber.from("2"),
     proposer: "0x7d61dA044aA8059ffFC37b873b344ae2F163cA98",
     proposalThreshold: BigNumber.from("1"),
     quorumVotes: BigNumber.from("200"),
@@ -45,9 +46,10 @@ export const dummyProposals: ProposalInfo[] = [
     sendValues: [BigNumber.from("60")],
     description: "뉴진스 \n[인기가요 데뷔] 첫방 기념 밥차 서포트",
     state: STATUS.DEFEATED,
+    isDummy: true,
   },
   {
-    id: BigNumber.from("6"),
+    id: BigNumber.from("3"),
     proposer: "0x7d61dA044aA8059ffFC37b873b344ae2F163cA98",
     proposalThreshold: BigNumber.from("1"),
     quorumVotes: BigNumber.from("200"),
@@ -67,9 +69,10 @@ export const dummyProposals: ProposalInfo[] = [
     description:
       "뉴진스 프리 싱글 [Ditto] 발매 기념\n멜론 300곡 스트리밍권 100장",
     state: STATUS.EXECUTED,
+    isDummy: true,
   },
   {
-    id: BigNumber.from("7"),
+    id: BigNumber.from("4"),
     proposer: "0x7d61dA044aA8059ffFC37b873b344ae2F163cA98",
     proposalThreshold: BigNumber.from("1"),
     quorumVotes: BigNumber.from("50"),
@@ -89,5 +92,6 @@ export const dummyProposals: ProposalInfo[] = [
     description:
       "[뉴진스 & 버니즈] 이름으로 \n[초록우산 기부재단] 2100만원 기부",
     state: STATUS.QUEUED,
+    isDummy: true,
   },
 ];

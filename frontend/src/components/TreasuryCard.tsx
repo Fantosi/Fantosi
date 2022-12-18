@@ -9,6 +9,8 @@ interface TreasuryCardProps {
   status: STATUS;
   title: string;
   likedByArtist: boolean;
+  addNum: number;
+  isDummy?: boolean;
 }
 
 const TreasuryCard = ({
@@ -16,8 +18,11 @@ const TreasuryCard = ({
   expiredIn,
   status,
   title,
+  addNum,
   likedByArtist,
+  isDummy,
 }: TreasuryCardProps) => {
+  const titles = title.split("\\n");
   return (
     <div>
       <Link
@@ -25,14 +30,14 @@ const TreasuryCard = ({
         className={classNames("treasury-cards-wrapper link", { likedByArtist })}
       >
         <div>
-          <div className="treasury-index">{id}</div>
+          <div className="treasury-index">{isDummy ? id + addNum : id}</div>
           <div className="treasury-title">
             {likedByArtist ? (
               <div className="artist-pick">artist pick!</div>
             ) : (
               <></>
             )}
-            {title}
+            {titles.join(" ")}
           </div>
         </div>
         <div>

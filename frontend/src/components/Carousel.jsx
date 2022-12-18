@@ -22,7 +22,6 @@ const Carousel = ({ changeCardIndex, photoCardInfos }) => {
           className="btn-wrapper left"
           onClick={() => {
             const currentIndex = ref.getCurrentIndex();
-            console.log(currentIndex);
             if (currentIndex <= 1) return;
             changeCardIndex(currentIndex - 2);
             ref.prev();

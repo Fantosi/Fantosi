@@ -91,6 +91,7 @@ export interface ProposalInfo {
   description: string;
   state: string;
   likedByArtist?: boolean;
+  isDummy?: boolean;
 }
 
 export interface MakeProposal {

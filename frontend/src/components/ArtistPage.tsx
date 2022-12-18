@@ -388,21 +388,21 @@ const ArtistPage = ({ web3, user, signIn }: ArtistPageProps) => {
             </div>
           </div>
           <div className="treasury-cards">
-            {[...proposals.reverse(), ...dummyProposals].map(
-              (proposal, index) => {
-                const { id, state, description, likedByArtist } = proposal;
-                return (
-                  <TreasuryCard
-                    key={index}
-                    id={Number(id)}
-                    expiredIn={28 - index * 2}
-                    status={state as STATUS}
-                    title={description}
-                    likedByArtist={likedByArtist ? true : false}
-                  />
-                );
-              }
-            )}
+            {[...proposals, ...dummyProposals].map((proposal, index) => {
+              const { id, state, description, likedByArtist } = proposal;
+              return (
+                <TreasuryCard
+                  addNum={proposals.length}
+                  isDummy={proposal.isDummy}
+                  key={index}
+                  id={Number(id)}
+                  expiredIn={28 - index * 2}
+                  status={state as STATUS}
+                  title={description}
+                  likedByArtist={likedByArtist ? true : false}
+                />
+              );
+            })}
           </div>
           <div className="pagination" />
         </div>
