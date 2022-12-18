@@ -3,7 +3,7 @@
   "chainId": "97",
   "contracts": {
     "FantosiView_Implementation": {
-      "address": "0x1BF408069F903FcFe672Fc3290996b311F38F66f",
+      "address": "0x02d59b1bE76cf7c91c32344868EE5Bf9a8924902",
       "abi": [
         {
           "anonymous": false,
@@ -204,6 +204,112 @@
               ],
               "internalType": "struct FantosiView.PhotoCardInfo[]",
               "name": "allPhotoCardInfo",
+              "type": "tuple[]"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "string",
+              "name": "key",
+              "type": "string"
+            }
+          ],
+          "name": "getArtistAllProposalInfo",
+          "outputs": [
+            {
+              "components": [
+                {
+                  "internalType": "uint256",
+                  "name": "id",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "address",
+                  "name": "proposer",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "proposalThreshold",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "quorumVotes",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "eta",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "startBlock",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "endBlock",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "forVotes",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "againstVotes",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "abstainVotes",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "bool",
+                  "name": "canceled",
+                  "type": "bool"
+                },
+                {
+                  "internalType": "bool",
+                  "name": "vetoed",
+                  "type": "bool"
+                },
+                {
+                  "internalType": "bool",
+                  "name": "executed",
+                  "type": "bool"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "totalSupply",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "creationBlock",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "address[]",
+                  "name": "targets",
+                  "type": "address[]"
+                },
+                {
+                  "internalType": "uint256[]",
+                  "name": "values",
+                  "type": "uint256[]"
+                }
+              ],
+              "internalType": "struct IFantosiDAOLogic.ProposalCondensedDto[]",
+              "name": "allProposalInfo",
               "type": "tuple[]"
             }
           ],
@@ -439,7 +545,7 @@
       ]
     },
     "FantosiView_Proxy": {
-      "address": "0xcB33f355359c7c5Adc71b51d45865B8cab484415",
+      "address": "0x6432123245e989338588fceC0BDD6B90d3EE4D62",
       "abi": [
         {
           "inputs": [
@@ -587,7 +693,7 @@
       ]
     },
     "FantosiView": {
-      "address": "0xcB33f355359c7c5Adc71b51d45865B8cab484415",
+      "address": "0x6432123245e989338588fceC0BDD6B90d3EE4D62",
       "abi": [
         {
           "anonymous": false,
@@ -910,6 +1016,112 @@
               ],
               "internalType": "struct FantosiView.PhotoCardInfo[]",
               "name": "allPhotoCardInfo",
+              "type": "tuple[]"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "string",
+              "name": "key",
+              "type": "string"
+            }
+          ],
+          "name": "getArtistAllProposalInfo",
+          "outputs": [
+            {
+              "components": [
+                {
+                  "internalType": "uint256",
+                  "name": "id",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "address",
+                  "name": "proposer",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "proposalThreshold",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "quorumVotes",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "eta",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "startBlock",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "endBlock",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "forVotes",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "againstVotes",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "abstainVotes",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "bool",
+                  "name": "canceled",
+                  "type": "bool"
+                },
+                {
+                  "internalType": "bool",
+                  "name": "vetoed",
+                  "type": "bool"
+                },
+                {
+                  "internalType": "bool",
+                  "name": "executed",
+                  "type": "bool"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "totalSupply",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "creationBlock",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "address[]",
+                  "name": "targets",
+                  "type": "address[]"
+                },
+                {
+                  "internalType": "uint256[]",
+                  "name": "values",
+                  "type": "uint256[]"
+                }
+              ],
+              "internalType": "struct IFantosiDAOLogic.ProposalCondensedDto[]",
+              "name": "allProposalInfo",
               "type": "tuple[]"
             }
           ],
@@ -1166,7 +1378,7 @@
       ]
     },
     "FantosiDAOExecutor": {
-      "address": "0xeD20CB1136d30241aA15D22187B48Fc14d8690C3",
+      "address": "0xd4c32A3e9f1Cb195D302d62a32a7a7f3F1Bd5D7B",
       "abi": [
         {
           "inputs": [
@@ -1604,7 +1816,7 @@
       ]
     },
     "FantosiToken": {
-      "address": "0xd2ec382E2A4d7FF8d6D35B560686f9aE3576dd04",
+      "address": "0x7fFa39f158c4D1cf55CD5ed23AD17578f01419ad",
       "abi": [
         {
           "inputs": [
@@ -2593,7 +2805,7 @@
       ]
     },
     "FantosiAuctionHouse_Implementation": {
-      "address": "0x2C040750dB0f494681BebA4e72F47E68d25A046b",
+      "address": "0x2F01208fF3411062A4495913D6Bd8256e33966D3",
       "abi": [
         {
           "anonymous": false,
@@ -3277,7 +3489,7 @@
       ]
     },
     "FantosiAuctionHouse_Proxy": {
-      "address": "0xf9cb33FB8060F081fc77CB9a7b3f1Beb32324a60",
+      "address": "0x2163Fd4335e307DCB0258B4f6849A5c6E9F6E1cA",
       "abi": [
         {
           "inputs": [
@@ -3425,7 +3637,7 @@
       ]
     },
     "FantosiAuctionHouse": {
-      "address": "0xf9cb33FB8060F081fc77CB9a7b3f1Beb32324a60",
+      "address": "0x2163Fd4335e307DCB0258B4f6849A5c6E9F6E1cA",
       "abi": [
         {
           "anonymous": false,
