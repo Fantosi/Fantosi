@@ -54,6 +54,9 @@ pragma solidity ^0.8.6;
 
 import "./FantosiDAOInterfaces.sol";
 
+// TODO: 테스트 완료 후 제거
+import "hardhat/console.sol";
+
 contract FantosiDAOLogic is FantosiDAOStorageV2, FantosiDAOEventsV2 {
     /// @notice The name of this contract
     string public constant name = "FANTOSI FAN COMMUNITY";
@@ -132,19 +135,21 @@ contract FantosiDAOLogic is FantosiDAOStorageV2, FantosiDAOEventsV2 {
      * @param proposalThresholdBPS_ The initial proposal threshold in basis points
      * @param dynamicQuorumParams_ The initial dynamic quorum parameters
      */
-    function initialize(
+    constructor(
         address timelock_,
         address fantosiToken_,
         address vetoer_,
+        address admin_,
         uint256 votingPeriod_,
         uint256 votingDelay_,
         uint256 proposalThresholdBPS_,
-        DynamicQuorumParams calldata dynamicQuorumParams_
-    ) public virtual {
+        DynamicQuorumParams memory dynamicQuorumParams_
+    ) {
         require(address(timelock) == address(0), "FantosiDAO::initialize: can only initialize once");
-        if (msg.sender != admin) {
-            revert AdminOnly();
-        }
+
+        // Proxy 구조 변경으로 인하여, admin을 여기서 세팅
+        admin = msg.sender;
+
         require(timelock_ != address(0), "FantosiDAO::initialize: invalid timelock address");
         require(fantosiToken_ != address(0), "FantosiDAO::initialize: invalid nouns address");
         require(
@@ -175,6 +180,9 @@ contract FantosiDAOLogic is FantosiDAOStorageV2, FantosiDAOEventsV2 {
             dynamicQuorumParams_.maxQuorumVotesBPS,
             dynamicQuorumParams_.quorumCoefficient
         );
+
+        // 배포 완료 후, DAOExecutor로 admin 이동
+        admin = admin_;
     }
 
     struct ProposalTemp {
@@ -482,7 +490,7 @@ contract FantosiDAOLogic is FantosiDAOStorageV2, FantosiDAOEventsV2 {
      * @param proposalId the proposal id to get the data for
      * @return A `ProposalCondensed` struct with the proposal data
      */
-    function proposals(uint256 proposalId) external view returns (ProposalCondensed memory) {
+    function proposals(uint256 proposalId) public view returns (ProposalCondensed memory) {
         Proposal storage proposal = _proposals[proposalId];
         return
             ProposalCondensed({
@@ -500,7 +508,9 @@ contract FantosiDAOLogic is FantosiDAOStorageV2, FantosiDAOEventsV2 {
                 vetoed: proposal.vetoed,
                 executed: proposal.executed,
                 totalSupply: proposal.totalSupply,
-                creationBlock: proposal.creationBlock
+                creationBlock: proposal.creationBlock,
+                targets: proposal.targets,
+                values: proposal.values
             });
     }
 
@@ -1073,6 +1083,14 @@ contract FantosiDAOLogic is FantosiDAOStorageV2, FantosiDAOEventsV2 {
             chainId := chainid()
         }
         return chainId;
+    }
+
+    // function getProposal(uint256 num) external view returns (Proposal memory proposal) {
+    //     return _proposals[num];
+    // }
+
+    function getProposalCount() external view returns (uint256) {
+        return proposalCount;
     }
 
     function safe32(uint256 n, string memory errorMessage) internal pure returns (uint32) {

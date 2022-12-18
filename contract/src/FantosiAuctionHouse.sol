@@ -9,7 +9,7 @@ pragma solidity ^0.8.6;
 
 import { PausableUpgradeable } from "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
 import { ReentrancyGuardUpgradeable } from "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
-import { OwnableUpgradeable } from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+// import { OwnableUpgradeable } from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import { IFantosiAuctionHouse } from "./interfaces/IFantosiAuctionHouse.sol";
 import { IFantosiToken } from "./interfaces/IFantosiToken.sol";
@@ -18,12 +18,10 @@ import { IWBNB } from "./interfaces/IWBNB.sol";
 // TODO: 테스트 완료 후 제거
 import "hardhat/console.sol";
 
-contract FantosiAuctionHouse is
-    IFantosiAuctionHouse,
-    PausableUpgradeable,
-    ReentrancyGuardUpgradeable,
-    OwnableUpgradeable
-{
+contract FantosiAuctionHouse is IFantosiAuctionHouse, PausableUpgradeable, ReentrancyGuardUpgradeable {
+    // 컨트랙트 admin
+    address admin;
+
     // Fantosi 토큰 컨트랙트
     IFantosiToken public fantosiToken;
 
@@ -39,6 +37,9 @@ contract FantosiAuctionHouse is
     // 새로운 Bid를 제시할 때 필요한 이전 Bid와의 최소 가격 차(%)
     uint8 public minBidIncrementPercentage;
 
+    // 첫 Daily Auction이 시작되는 시간
+    uint256 public initialStartTime;
+
     // Auction이 진행되는 라운드 시간
     uint256 public totalDuration;
 
@@ -51,28 +52,40 @@ contract FantosiAuctionHouse is
     // 현재 진행되고 있는 Auction
     IFantosiAuctionHouse.Auction public auction;
 
+    // Fantosi DAO Treasury 컨트랙트
+    address public fantosiDAOExecutor;
+
+    modifier onlyAdmin() {
+        require(msg.sender == admin, "FANTOSI: ACCESS_ERROR");
+        _;
+    }
+
     function initialize(
         IFantosiToken _fantosiToken,
         address _wBNB,
         uint256 _timeBuffer,
         uint256 _reservePrice,
         uint8 _minBidIncrementPercentage,
+        uint256 _initialStartTime,
         uint256 _totalDuration,
-        uint256 _finalAuctionPoint
+        uint256 _finalAuctionPoint,
+        address _fantosiDAOExecutor
     ) external initializer {
         __Pausable_init();
         __ReentrancyGuard_init();
-        __Ownable_init();
 
         _pause();
 
+        admin = msg.sender;
         fantosiToken = _fantosiToken;
         wBNB = _wBNB;
         timeBuffer = _timeBuffer;
         reservePrice = _reservePrice;
         minBidIncrementPercentage = _minBidIncrementPercentage;
+        initialStartTime = _initialStartTime;
         totalDuration = _totalDuration;
         finalAuctionPoint = _finalAuctionPoint;
+        fantosiDAOExecutor = _fantosiDAOExecutor;
     }
 
     function settleCurrentAndCreateNewAuction() external override nonReentrant whenNotPaused {
@@ -88,6 +101,7 @@ contract FantosiAuctionHouse is
         IFantosiAuctionHouse.Auction memory _auction = auction;
 
         require(_auction.photoCardId == photoCardId, "FANTOSI: INVALID_ID_ERROR");
+        require(msg.value >= reservePrice, "FANTOSI: RESERVE_PRICE_ERROR");
         require(
             block.timestamp < _auction.endTime && block.timestamp < _auction.finalAuctionTime,
             "FANTOSI: EXPIRED_AUCTION_ERROR"
@@ -122,31 +136,36 @@ contract FantosiAuctionHouse is
     }
 
     // 관리자 호출 기능
-    function pause() external override onlyOwner {
+    function pause() external override onlyAdmin {
         _pause();
     }
 
-    function unpause() external override onlyOwner {
+    function unpause() external override onlyAdmin {
         _unpause();
 
         if (auction.startTime == 0 || auction.settled) {
             _createAuction();
+            transferAdmin(fantosiDAOExecutor);
         }
     }
 
-    function setTimeBuffer(uint256 _timeBuffer) external override onlyOwner {
+    function transferAdmin(address newAdmin) public onlyAdmin {
+        admin = newAdmin;
+    }
+
+    function setTimeBuffer(uint256 _timeBuffer) external override onlyAdmin {
         timeBuffer = _timeBuffer;
 
         emit AuctionTimeBufferUpdated(_timeBuffer);
     }
 
-    function setReservePrice(uint256 _reservePrice) external override onlyOwner {
+    function setReservePrice(uint256 _reservePrice) external override onlyAdmin {
         reservePrice = _reservePrice;
 
         emit AuctionReservePriceUpdated(_reservePrice);
     }
 
-    function setMinBidIncrementPercentage(uint8 _minBidIncrementPercentage) external override onlyOwner {
+    function setMinBidIncrementPercentage(uint8 _minBidIncrementPercentage) external override onlyAdmin {
         minBidIncrementPercentage = _minBidIncrementPercentage;
 
         emit AuctionMinBidIncrementPercentageUpdated(_minBidIncrementPercentage);
@@ -168,8 +187,13 @@ contract FantosiAuctionHouse is
         try fantosiToken.mint() returns (uint256 photoCardId) {
             uint256 startTime;
             if (photoCardId == 1) {
-                // 컬렉션에 대한 최초 경매 시, block.timestamp를 기준으로 startTime과 endTime 세팅
-                startTime = block.timestamp;
+                // 컬렉션에 대한 최초 경매 시, initialStartTime를 기준으로 startTime과 endTime 세팅
+                // 단, initialStartTime이 0일 시 현재 시간을 기준으로 startTime과 endTime 세팅
+                if (initialStartTime == 0) {
+                    startTime = block.timestamp;
+                } else {
+                    startTime = initialStartTime;
+                }
             } else {
                 // 이전 경매가 존재할 시, 이전 경매를 기준으로 startTime과 endTime 세팅
                 startTime = auction.endTime;
@@ -216,7 +240,7 @@ contract FantosiAuctionHouse is
         }
 
         if (_auction.amount > 0) {
-            _safeTransferBNBWithFallback(owner(), _auction.amount);
+            _safeTransferBNBWithFallback(admin, _auction.amount);
         }
 
         // 마감된 Auction을 auctionHistory에 저장

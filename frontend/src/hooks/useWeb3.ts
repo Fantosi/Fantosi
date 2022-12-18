@@ -9,8 +9,8 @@ import { BigNumber, ethers } from "ethers";
 import AuctionHouseArtifact from "../contract/abi/FantosiAuctionHouse.json";
 import ViewArtifact from "../contract/abi/FantosiView.json";
 
-const AUCTION_HOUSE_ADDR = "0xf9cb33FB8060F081fc77CB9a7b3f1Beb32324a60";
-const AUCTION_VIEW_ADDR = "0xcB33f355359c7c5Adc71b51d45865B8cab484415";
+const AUCTION_HOUSE_ADDR = "0x2163Fd4335e307DCB0258B4f6849A5c6E9F6E1cA";
+const AUCTION_VIEW_ADDR = "0x6432123245e989338588fceC0BDD6B90d3EE4D62";
 const BINANCE_TESTNET_RPC = "https://data-seed-prebsc-1-s1.binance.org:8545";
 
 const useWeb3 = (): Web3Type => {

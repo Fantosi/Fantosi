@@ -162,10 +162,10 @@ contract FantosiDAOStorageV1 is FantosiDAOProxyStorage {
     /// @notice The total number of proposals
     uint256 public proposalCount;
 
-    /// @notice The address of the Nouns DAO Executor FantosiDAOExecutor
+    /// @notice The address of the FantosiDAOExecutor
     IFantosiDAOExecutor public timelock;
 
-    /// @notice The address of the Nouns tokens
+    /// @notice The address of the Fantosi Photocard
     FantosiTokenLike public fantosiToken;
 
     /// @notice The official record of all proposals ever proposed
@@ -402,6 +402,10 @@ contract FantosiDAOStorageV2 is FantosiDAOStorageV1Adjusted {
         uint256 totalSupply;
         /// @notice The block at which this proposal was created
         uint256 creationBlock;
+        /// @notice The address that sends money after the proposal has been executed
+        address[] targets;
+        /// @notice The sending amount after the proposal has been executed
+        uint256[] values;
     }
 }
 
@@ -443,4 +447,37 @@ interface FantosiTokenLike {
     function getPriorVotes(address account, uint256 blockNumber) external view returns (uint96);
 
     function totalSupply() external view returns (uint256);
+}
+
+interface IFantosiDAOLogic {
+    struct ProposalDto {
+        uint256 proposalNum;
+        uint256 endVote;
+    }
+
+    struct ProposalCondensedDto {
+        uint256 id;
+        address proposer;
+        uint256 proposalThreshold;
+        uint256 quorumVotes;
+        uint256 eta;
+        uint256 startBlock;
+        uint256 endBlock;
+        uint256 forVotes;
+        uint256 againstVotes;
+        uint256 abstainVotes;
+        bool canceled;
+        bool vetoed;
+        bool executed;
+        uint256 totalSupply;
+        uint256 creationBlock;
+        address[] targets;
+        uint256[] values;
+    }
+
+    function getProposal(uint256 num) external view returns (ProposalDto memory);
+
+    function getProposalCount() external view returns (uint256);
+
+    function proposals(uint256 proposalId) external view returns (ProposalCondensedDto memory);
 }
