@@ -96,7 +96,7 @@ const config: HardhatUserConfig = {
         bnb_testnet: {
             url: PUBLIC_PROVIDER_URL || "",
             chainId: +(CHAIN_ID || 0),
-            gasPrice: 20000000000,
+            gasPrice: "auto",
             accounts: [DEPLOYER_PRIVATE_KEY || "0"],
         },
     },
