@@ -53,7 +53,7 @@ const Carousel = ({ setCardIndex }) => {
               })}
               key={index}
             >
-              <img src="/img/dummy-card.png" />
+              <img src={require("../img/dummy-card.png")} />
             </div>
           );
         })}
