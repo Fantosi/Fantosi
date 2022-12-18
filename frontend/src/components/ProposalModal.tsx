@@ -1,22 +1,33 @@
 import classNames from "classnames";
 import { useState } from "react";
 import "../css/ProposalModal.css";
+import { Web3Type } from "../types";
 
 interface ProposalModalProps {
   closeModal: () => void;
+  updateProposal: () => void;
+  web3: Web3Type;
 }
 
-const ProposalModal = ({ closeModal }: ProposalModalProps) => {
+const ProposalModal = ({
+  closeModal,
+  web3,
+  updateProposal,
+}: ProposalModalProps) => {
   const [idea, setIdea] = useState("");
   const [address, setAddress] = useState("");
   const [price, setPrice] = useState("");
 
-  const onClickSubmitBtn = () => {
+  const onClickSubmitBtn = async () => {
     setIdea("");
     setAddress("");
     setPrice("");
     console.log(idea, address, price);
     closeModal();
+
+    const response = await web3.submitPropose(address, price, idea);
+    console.log("response of submitPropose", response);
+    updateProposal();
   };
 
   return (

@@ -65,7 +65,7 @@ export interface Web3Type {
   submitPropose: (
     targetAddress: string,
     amount: string,
-    description: string
+    idea: string
   ) => Promise<void>;
   castVote: (proposalId: number, vote: VoteKind) => Promise<void>;
 }

@@ -2,7 +2,13 @@ import { BigNumber } from "ethers";
 import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import "../css/ArtistPage.css";
-import { STATUS, UserInfo, Web3Type, PhotoCardInfo, ImageInfo } from "../types";
+import {
+  STATUS,
+  UserInfo,
+  Web3Type,
+  PhotoCardInfo,
+  ProposalInfo,
+} from "../types";
 import { getNftImgInfos } from "../utils/handleNft";
 import Carousel from "./Carousel";
 import DeniedToast from "./DeniedToast";
@@ -24,6 +30,8 @@ const ArtistPage = ({ web3, user, signIn }: ArtistPageProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isFinished, setIsFinished] = useState<boolean>(false);
   const [isDenied, setIsDenied] = useState<boolean>(false);
+  const [proposals, setProposals] = useState<ProposalInfo[]>([]);
+  const [proposalUpdateCnt, setProposalUpdateCnt] = useState<number>(0);
   const [photocardInfo, setPhotocardInfo] = useState<PhotoCardInfo | undefined>(
     undefined
   );
@@ -34,6 +42,10 @@ const ArtistPage = ({ web3, user, signIn }: ArtistPageProps) => {
   }>({ hour: 0, min: 0, sec: 0 });
   const [photoCardInfos, setPhotoCardInfos] = useState<PhotoCardInfo[]>([]);
   const [cardIndex, setCardIndex] = useState(0);
+
+  const updateProposal = () => {
+    setProposalUpdateCnt(proposalUpdateCnt + 1);
+  };
 
   const changeCardIndex = (index: number) => {
     setCardIndex(index);
@@ -64,9 +76,9 @@ const ArtistPage = ({ web3, user, signIn }: ArtistPageProps) => {
   };
 
   const getArtistAllProposalInfo = async () => {
-    console.log("getArtistAllProposalInfo");
     const response = await web3.getArtistAllProposalInfo("NEWJEANS");
-    console.log("response", response);
+    console.log("getArtistAllProposalInfo response", response);
+    setProposals(response as ProposalInfo[]);
   };
 
   const getArtistPhotoCardHistoryInfo = async () => {
@@ -122,6 +134,10 @@ const ArtistPage = ({ web3, user, signIn }: ArtistPageProps) => {
       getArtistAllProposalInfo();
     }
   }, [user]);
+
+  useEffect(() => {
+    if (user) getArtistAllProposalInfo();
+  }, [proposalUpdateCnt]);
 
   useEffect(() => {
     setRemainTimeInterval();
@@ -331,7 +347,8 @@ const ArtistPage = ({ web3, user, signIn }: ArtistPageProps) => {
     );
   };
 
-  const renderTreasury = () => {
+  const renderProposals = () => {
+    // console.log("proposals", proposals);
     const datas = [
       {
         id: 116,
@@ -425,9 +442,17 @@ const ArtistPage = ({ web3, user, signIn }: ArtistPageProps) => {
         {renderArtistInfo()}
         {renderArtistPhotoCards()}
         {renderFantosiHouseBtnBar()}
-        {renderTreasury()}
+        {renderProposals()}
       </div>
-      {showModal ? <ProposalModal closeModal={closeModal} /> : <></>}
+      {showModal ? (
+        <ProposalModal
+          closeModal={closeModal}
+          updateProposal={updateProposal}
+          web3={web3}
+        />
+      ) : (
+        <></>
+      )}
       {isLoading ? <LoadingModal /> : <></>}
       <FinishedToast
         isFinished={isFinished}

@@ -289,7 +289,6 @@ const useWeb3 = (): Web3Type => {
     const ls = await auctionViewContract.methods
       .getArtistAllProposalInfo(artistKey)
       .call();
-    console.log("ls", ls);
 
     if (ls) {
       res.push(...ls);
@@ -302,41 +301,47 @@ const useWeb3 = (): Web3Type => {
     targetAddress: string,
     amount: string,
     idea: string
-  ) => {
-    if (fantosiDAOLogicContract === undefined) {
-      throw new Error("propose ::: not initiated fantosi dao logic contract");
-    }
-    const makeProposal: MakeProposal = {
-      targets: [targetAddress],
-      values: [BigNumber.from(amount)],
-      signatures: ["transfer(address,uint256)"],
-      calldatas: [
-        encodeParameters(["address", "uint256"], [targetAddress, amount]),
-      ],
-      idea,
-    };
+  ) =>
+    new Promise<void>((resolve, reject) => {
+      if (fantosiDAOLogicContract === undefined) {
+        throw new Error("propose ::: not initiated fantosi dao logic contract");
+      }
+      const makeProposal: MakeProposal = {
+        targets: [targetAddress],
+        values: [BigNumber.from(amount)],
+        signatures: ["transfer(address,uint256)"],
+        calldatas: [
+          encodeParameters(["address", "uint256"], [targetAddress, amount]),
+        ],
+        idea,
+      };
 
-    await fantosiDAOLogicContract.methods
-      .propose(
-        makeProposal.targets,
-        makeProposal.values,
-        makeProposal.signatures,
-        makeProposal.calldatas,
-        makeProposal.idea
-      )
-      .send({
-        from: account,
-      })
-      .on("transactionHash", (hash: string) => {
-        console.log(`transactionHash: ${hash}`);
-      })
-      .on("receipt", (receipt: any) => {
-        console.log(`receipt: ${receipt}`);
-      })
-      .on("confirmation", (confirmationNumber: number, receipt: any) => {
-        console.log(`confirmation: ${confirmationNumber}`);
-      });
-  };
+      fantosiDAOLogicContract.methods
+        .propose(
+          makeProposal.targets,
+          makeProposal.values,
+          makeProposal.signatures,
+          makeProposal.calldatas,
+          makeProposal.idea
+        )
+        .send({
+          from: account,
+        })
+        .on("transactionHash", (hash: string) => {
+          console.log(`transactionHash: ${hash}`);
+        })
+        .on("receipt", (receipt: any) => {
+          console.log(`receipt: ${receipt}`);
+          resolve();
+        })
+        .on("confirmation", (confirmationNumber: number, receipt: any) => {
+          console.log(`confirmation: ${confirmationNumber}`);
+        })
+        .on("error", (error: any, receipt: any) => {
+          console.log(`error: ${error}`);
+          reject();
+        });
+    });
 
   const encodeParameters = (types: string[], values: unknown[]): string => {
     const abi = new ethers.utils.AbiCoder();
