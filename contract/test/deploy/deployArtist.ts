@@ -23,7 +23,6 @@ export interface RT {
     fantosiToken: FantosiToken;
     fantosiAuctionHouse: FantosiAuctionHouse;
     fantosiDAOExecutor: FantosiDAOExecutor;
-    fantosiDAOProxy: FantosiDAOProxy;
     fantosiDAOLogic: FantosiDAOLogic;
     fantosiView: FantosiView;
 }
@@ -32,9 +31,9 @@ let firstDeployment = true;
 
 const calculateNonce = (): number => {
     if (firstDeployment === true) {
-        return 8;
-    } else {
         return 7;
+    } else {
+        return 6;
     }
 };
 
@@ -107,25 +106,21 @@ export const deployArtist = async (params: DeployParams): Promise<RT> => {
     await fantosiToken.connect(params.admin).setMinter(fantosiAuctionHouse.address);
 
     /// Fantosi DAO Logic 배포
-    const FantosiDAOLogic = await ethers.getContractFactory("FantosiDAOLogic");
-    const fantosiDAOLogic = (await FantosiDAOLogic.deploy()) as FantosiDAOLogic;
-    await fantosiDAOLogic.deployed();
-
-    /// Fantosi DAO Proxy 배포
-    const FantosiDAOProxy = await ethers.getContractFactory("FantosiDAOProxy");
-    const fantosiDAOProxy = (await FantosiDAOProxy.deploy(
+    const FantosiDAOLogicContract = await ethers.getContractFactory("FantosiDAOLogic");
+    const fantosiDAOLogic = (await FantosiDAOLogicContract.deploy(
         fantosiDAOExecutor.address,
         fantosiToken.address,
         params.artist.address, // Artist is Vetoer
         fantosiDAOExecutor.address,
-        fantosiDAOLogic.address,
         governanceInfoTest.votingPeriod,
         governanceInfoTest.votingDelay,
         governanceInfoTest.proposalThresholdBPS,
         governanceInfoTest.dynamicQuorum,
-    )) as FantosiDAOProxy;
-
-    await fantosiDAOProxy.deployed();
+        {
+            gasLimit: "30000000",
+        },
+    )) as FantosiDAOLogic;
+    await fantosiDAOLogic.deployed();
 
     /// AuctionHouse 정지 해제 => Daily Auction 시작
     // TODO: 컨트랙에 특정 시간에 시작하도록 설정하는 로직 추가
@@ -134,14 +129,10 @@ export const deployArtist = async (params: DeployParams): Promise<RT> => {
     // Nonce 계산을 위한 first deployment 설정
     firstDeployment = false;
 
-    /// DAO Treasury로 Ownership 이동
-    // await fantosiAuctionHouse.connect(params.admin).transferOwnership(fantosiDAOExecutor.address);
-
     return {
         fantosiToken,
         fantosiAuctionHouse,
         fantosiDAOExecutor,
-        fantosiDAOProxy,
         fantosiDAOLogic,
         fantosiView,
     };

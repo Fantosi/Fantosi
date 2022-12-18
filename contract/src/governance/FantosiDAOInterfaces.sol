@@ -451,27 +451,7 @@ interface IFantosiDAOLogic {
         uint256 endVote;
     }
 
-    struct ProposalCondensedDto {
-        uint256 id;
-        address proposer;
-        uint256 proposalThreshold;
-        uint256 quorumVotes;
-        uint256 eta;
-        uint256 startBlock;
-        uint256 endBlock;
-        uint256 forVotes;
-        uint256 againstVotes;
-        uint256 abstainVotes;
-        bool canceled;
-        bool vetoed;
-        bool executed;
-        uint256 totalSupply;
-        uint256 creationBlock;
-    }
-
     function getProposal(uint256 num) external view returns (ProposalDto memory);
 
     function getProposalCount() external view returns (uint256);
-
-    function proposals(uint256 proposalId) external view returns(ProposalCondensedDto memory);
 }

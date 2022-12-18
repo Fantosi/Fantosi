@@ -135,19 +135,21 @@ contract FantosiDAOLogic is FantosiDAOStorageV2, FantosiDAOEventsV2 {
      * @param proposalThresholdBPS_ The initial proposal threshold in basis points
      * @param dynamicQuorumParams_ The initial dynamic quorum parameters
      */
-    function initialize(
+    constructor(
         address timelock_,
         address fantosiToken_,
         address vetoer_,
+        address admin_,
         uint256 votingPeriod_,
         uint256 votingDelay_,
         uint256 proposalThresholdBPS_,
-        DynamicQuorumParams calldata dynamicQuorumParams_
-    ) public virtual {
+        DynamicQuorumParams memory dynamicQuorumParams_
+    ) {
         require(address(timelock) == address(0), "FantosiDAO::initialize: can only initialize once");
-        if (msg.sender != admin) {
-            revert AdminOnly();
-        }
+
+        // Proxy 구조 변경으로 인하여, admin을 여기서 세팅
+        admin = msg.sender;
+
         require(timelock_ != address(0), "FantosiDAO::initialize: invalid timelock address");
         require(fantosiToken_ != address(0), "FantosiDAO::initialize: invalid nouns address");
         require(
@@ -178,6 +180,9 @@ contract FantosiDAOLogic is FantosiDAOStorageV2, FantosiDAOEventsV2 {
             dynamicQuorumParams_.maxQuorumVotesBPS,
             dynamicQuorumParams_.quorumCoefficient
         );
+
+        // 배포 완료 후, DAOExecutor로 admin 이동
+        admin = admin_;
     }
 
     struct ProposalTemp {
@@ -205,11 +210,11 @@ contract FantosiDAOLogic is FantosiDAOStorageV2, FantosiDAOEventsV2 {
         string memory description
     ) public returns (uint256) {
         ProposalTemp memory temp;
-        console.log("P: ", address(fantosiToken));
+
         temp.totalSupply = fantosiToken.totalSupply();
-        console.log("P");
+
         temp.proposalThreshold = bps2Uint(proposalThresholdBPS, temp.totalSupply);
-        console.log("P");
+
         require(
             fantosiToken.getPriorVotes(msg.sender, block.number - 1) > temp.proposalThreshold,
             "FantosiDAO::propose: proposer votes below proposal threshold"
@@ -222,7 +227,7 @@ contract FantosiDAOLogic is FantosiDAOStorageV2, FantosiDAOEventsV2 {
         );
         require(targets.length != 0, "FantosiDAO::propose: must provide actions");
         require(targets.length <= proposalMaxOperations, "FantosiDAO::propose: too many actions");
-        console.log("P");
+
         temp.latestProposalId = latestProposalIds[msg.sender];
         if (temp.latestProposalId != 0) {
             ProposalState proposersLatestProposalState = state(temp.latestProposalId);
@@ -235,7 +240,7 @@ contract FantosiDAOLogic is FantosiDAOStorageV2, FantosiDAOEventsV2 {
                 "FantosiDAO::propose: one live proposal per proposer, found an already pending proposal"
             );
         }
-        console.log("P");
+
         temp.startBlock = block.number + votingDelay;
         temp.endBlock = temp.startBlock + votingPeriod;
 
@@ -259,7 +264,7 @@ contract FantosiDAOLogic is FantosiDAOStorageV2, FantosiDAOEventsV2 {
         newProposal.vetoed = false;
         newProposal.totalSupply = temp.totalSupply;
         newProposal.creationBlock = block.number;
-        console.log("P");
+
         latestProposalIds[newProposal.proposer] = newProposal.id;
 
         /// @notice Maintains backwards compatibility with GovernorBravo events
@@ -485,7 +490,7 @@ contract FantosiDAOLogic is FantosiDAOStorageV2, FantosiDAOEventsV2 {
      * @param proposalId the proposal id to get the data for
      * @return A `ProposalCondensed` struct with the proposal data
      */
-    function proposals(uint256 proposalId) public view returns (ProposalCondensed memory) {
+    function proposals(uint256 proposalId) external view returns (ProposalCondensed memory) {
         Proposal storage proposal = _proposals[proposalId];
         return
             ProposalCondensed({

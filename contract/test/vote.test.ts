@@ -1,4 +1,4 @@
-import { FantosiAuctionHouse, FantosiDAOExecutor, FantosiDAOLogic, FantosiDAOProxy, FantosiToken } from "../typechain";
+import { FantosiAuctionHouse, FantosiDAOExecutor, FantosiDAOLogic, FantosiToken } from "../typechain";
 import { ethers } from "hardhat";
 import { BigNumber } from "ethers";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
@@ -14,7 +14,6 @@ describe.only("Fantosi Community Vote 테스트", () => {
     let fantosiToken: FantosiToken;
     let fantosiAuctionHouse: FantosiAuctionHouse;
     let fantosiDAOExecutor: FantosiDAOExecutor;
-    let fantosiDAOProxy: FantosiDAOProxy;
     let fantosiDAOLogic: FantosiDAOLogic;
 
     // Initial deployment function
@@ -30,8 +29,7 @@ describe.only("Fantosi Community Vote 테스트", () => {
 
         const newjeansDeployed = await deployArtist(newjeansParams);
 
-        ({ fantosiToken, fantosiAuctionHouse, fantosiDAOExecutor, fantosiDAOLogic, fantosiDAOProxy } =
-            newjeansDeployed);
+        ({ fantosiToken, fantosiAuctionHouse, fantosiDAOExecutor, fantosiDAOLogic } = newjeansDeployed);
     };
 
     beforeEach(async () => {
@@ -55,7 +53,6 @@ describe.only("Fantosi Community Vote 테스트", () => {
 
     // Encoding 관련: https://github.com/nounsDAO/nouns-monorepo/blob/master/packages/nouns-contracts/test/utils.ts
     it("테스트: 포토카드 보유 유저가 Proposal 제출이 가능한가?", async () => {
-        console.log("얘랑 같아야함.", fantosiDAOLogic.address);
         await fantosiDAOLogic
             .connect(user[0])
             .propose(
@@ -65,5 +62,19 @@ describe.only("Fantosi Community Vote 테스트", () => {
                 proposalExampleTest.calldatas,
                 proposalExampleTest.description,
             );
+
+        await passNSeconds(180000);
+
+        await fantosiDAOLogic.connect(user[0]).castVote(BigNumber.from(1), BigNumber.from(0));
+
+        const firstProposal = await fantosiDAOLogic.proposals(BigNumber.from(1));
+
+        console.log(firstProposal.id.toString());
+        console.log(firstProposal.proposer);
+        console.log(firstProposal.startBlock.toString());
+        console.log(firstProposal.endBlock.toString());
+        console.log(firstProposal.forVotes.toString());
+        console.log(firstProposal.againstVotes.toString());
+        console.log(firstProposal.abstainVotes.toString());
     });
 });

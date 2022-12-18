@@ -118,22 +118,18 @@ contract FantosiView is Initializable {
         allPhotoCardInfo[length] = _getArtistPhotoCardInfo(fantosiToken);
     }
 
+    // function getArtistAllProposalInfo(string memory key)
+    //     external
+    //     view
+    //     returns (FantosiDAOStorageV1.Proposal[] memory allProposalInfo)
+    // {
+    //     IFantosiDAOLogic fantosiDAOLogic = fantosiDAOLogicList[key];
+    //     uint256 proposalCount = fantosiDAOLogic.getProposalCount();
 
-    function getArtistAllProposalInfo(string memory key)
-        external
-        view
-        returns (IFantosiDAOLogic.ProposalCondensedDto[] memory allProposalInfo)
-    {
+    //     allProposalInfo = new FantosiDAOStorageV1.Proposal[](proposalCount);
 
-        IFantosiDAOLogic fantosiDAOLogic = fantosiDAOLogicList[key];
-        uint256 proposalCount = fantosiDAOLogic.getProposalCount();
-
-        allProposalInfo = new IFantosiDAOLogic.ProposalCondensedDto[](proposalCount);
-
-        for (uint256 i = 1; i <= proposalCount; i++) {
-            allProposalInfo[i - 1] = fantosiDAOLogic.proposals(i);
-        }
-
-        return allProposalInfo;
-    }
+    //     for (uint256 i = 1; i <= proposalCount; i++) {
+    //         allProposalInfo[i - 1] = fantosiDAOLogic.getProposal(i);
+    //     }
+    // }
 }

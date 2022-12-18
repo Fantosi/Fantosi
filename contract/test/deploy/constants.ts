@@ -29,14 +29,14 @@ export const governanceInfoTest: {
     votingPeriod: BigNumber;
     votingDelay: BigNumber;
 } = {
-    timeLockDelay: BigNumber.from(172800), // 2 days
+    timeLockDelay: BigNumber.from(172800), // 2 days, for unix time
     proposalThresholdBPS: BigNumber.from(500), // 5%
     dynamicQuorum: {
         minQuorumVotesBPS: BigNumber.from(1000), // 10.00%
         maxQuorumVotesBPS: BigNumber.from(2000), // 20.00%
         quorumCoefficient: BigNumber.from(1),
     },
-    votingPeriod: BigNumber.from(5760), // About 24 hours with 15s blocks
+    votingPeriod: BigNumber.from(28800), // About 24 hours with 3s blocks
     votingDelay: BigNumber.from(1), // 1 block
 };
 
