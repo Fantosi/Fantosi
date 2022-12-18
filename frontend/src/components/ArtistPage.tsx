@@ -17,6 +17,7 @@ const ArtistPage = ({ web3, user, onClickSignIn }: ArtistPageProps) => {
   const { artistPageToken } = useParams();
   const [cardIndex, setCardIndex] = useState(4);
   const [showModal, setShowModal] = useState(false);
+  const [biddingVal, setBiddingVal] = useState<string>("");
   const [photocardInfo, setPhotocardInfo] = useState<PhotoCardInfo | undefined>(
     undefined
   );
@@ -49,6 +50,28 @@ const ArtistPage = ({ web3, user, onClickSignIn }: ArtistPageProps) => {
       const { currentAuction, metadataURI } = responseFromContract[0];
       setRemainTimeInterval(Number(currentAuction.endTime));
 
+      setPhotocardInfo({
+        currentAuction: {
+          amount: currentAuction.amount as BigNumber,
+          photoCardId: currentAuction.photoCardId as BigNumber,
+          startTime: currentAuction.startTime as BigNumber,
+          finalAuctionTime: currentAuction.finalAuctionTime as BigNumber,
+          endTime: currentAuction.endTime as BigNumber,
+          bidder: currentAuction.bidder,
+          isFinalBid: currentAuction.isFinalBid,
+          settled: currentAuction.settled,
+        },
+        metadataURI,
+      });
+    }
+  };
+
+  const getArtistPhotoCardInfo = async () => {
+    const photoCardInfo = await web3.getArtistPhotoCardInfo("NEWJEANS");
+    console.log("photoCardInfo", photoCardInfo);
+
+    if (photoCardInfo) {
+      const { currentAuction, metadataURI } = photoCardInfo;
       setPhotocardInfo({
         currentAuction: {
           amount: currentAuction.amount as BigNumber,
@@ -110,9 +133,22 @@ const ArtistPage = ({ web3, user, onClickSignIn }: ArtistPageProps) => {
     );
   };
 
-  const onClickBiddingBtn = async () => {
-    // const test = await web3.createBid(1, 0.0000001);
-    // console.log("test", test);
+  const getBidAmount = () => {
+    if (photocardInfo === undefined) return "0.15";
+
+    const stringifyAmount = photocardInfo?.currentAuction
+      .amount as unknown as string;
+    const lenDiff = 18 - stringifyAmount.length;
+
+    const web3Utils = web3?.web3Utils;
+    if (web3Utils) {
+      return web3Utils.fromWei(stringifyAmount, "ether");
+    }
+    return 0.15;
+  };
+
+  const getMinBidAmount = () => {
+    return Math.ceil(Number(getBidAmount()) * 1.05 * 100000) / 100000;
   };
 
   const renderArtistPhotoCards = () => {
@@ -121,19 +157,7 @@ const ArtistPage = ({ web3, user, onClickSignIn }: ArtistPageProps) => {
     };
 
     const renderBiddingInfo = () => {
-      const getBidAmount = () => {
-        if (photocardInfo === undefined) return "0.15";
-
-        const stringifyAmount = photocardInfo?.currentAuction
-          .amount as unknown as string;
-        const lenDiff = 18 - stringifyAmount.length;
-
-        const web3Utils = web3?.web3Utils;
-        if (web3Utils) {
-          return web3Utils.fromWei(stringifyAmount, "ether");
-        }
-        return 0.15;
-      };
+      const bidAmount = getBidAmount();
 
       return (
         <div className="biddinginfo-wrapper">
@@ -142,7 +166,7 @@ const ArtistPage = ({ web3, user, onClickSignIn }: ArtistPageProps) => {
               <div className="header">CURRENT BID</div>
               <div className="value">
                 <>
-                  {getBidAmount()}
+                  {bidAmount}
                   <div className="bnb_icon" />
                 </>
               </div>
@@ -180,7 +204,12 @@ const ArtistPage = ({ web3, user, onClickSignIn }: ArtistPageProps) => {
     };
 
     const handlePlaceBid = async () => {
-      await web3.createBid(1, 0.0001);
+      console.log("biddingVal", biddingVal);
+      await web3.createBid(1, Number(biddingVal));
+      console.log("createBid finished");
+      await getArtistPhotoCardInfo();
+      console.log("getArtistPhotoCardInfo finished");
+      setBiddingVal("");
     };
 
     return (
@@ -201,7 +230,21 @@ const ArtistPage = ({ web3, user, onClickSignIn }: ArtistPageProps) => {
               <div className="line" />
               {renderBiddingInfo()}
               <div className="input-wrapper">
-                <input placeholder="" />
+                <input
+                  placeholder={`${getMinBidAmount()} or more`}
+                  value={biddingVal}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    const num = Number(e.target.value);
+                    if (
+                      !isNaN(num) &&
+                      (val.length < getMinBidAmount().toString().length ||
+                        num >= getMinBidAmount())
+                    ) {
+                      setBiddingVal(val);
+                    }
+                  }}
+                />
                 <div className="input-btn" onClick={handlePlaceBid}>
                   PLACE BID
                 </div>

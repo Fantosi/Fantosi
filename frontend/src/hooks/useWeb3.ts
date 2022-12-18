@@ -132,34 +132,40 @@ const useWeb3 = (): Web3Type => {
     setAuctionViewContract(instance);
   };
 
-  const createBid = async (photoCardId: number, bidAmount: number) => {
-    if (web3 === undefined) {
-      throw new Error("createBid ::: not initiated web3");
-    }
+  const createBid = async (photoCardId: number, bidAmount: number) =>
+    new Promise<void>(async (resolve, reject) => {
+      if (web3 === undefined) {
+        throw new Error("createBid ::: not initiated web3");
+      }
 
-    if (auctionHouseContract === undefined) {
-      throw new Error("createBid ::: not initiated auction house contract");
-    }
-    const weiAmount = web3.utils.toWei(bidAmount.toString(), "ether");
-    await auctionHouseContract.methods
-      .createBid(photoCardId)
-      .send({
-        from: account,
-        value: weiAmount,
-      })
-      .on("transactionHash", (hash: string) => {
-        console.log(`transactionHash: ${hash}`);
-      })
-      .on("receipt", (receipt: any) => {
-        console.log(`receipt: ${receipt}`);
-      })
-      .on("confirmation", (confirmationNumber: number, receipt: any) => {
-        console.log(`confirmation: ${confirmationNumber}`);
-      })
-      .on("error", (error: any, receipt: any) => {
-        console.log(`error: ${error}`);
-      });
-  };
+      if (auctionHouseContract === undefined) {
+        throw new Error("createBid ::: not initiated auction house contract");
+      }
+      const weiAmount = web3.utils.toWei(bidAmount.toString(), "ether");
+      await auctionHouseContract.methods
+        .createBid(photoCardId)
+        .send({
+          from: account,
+          value: weiAmount,
+        })
+        .on("transactionHash", (hash: string) => {
+          console.log(`transactionHash: ${hash}`);
+        })
+        .on("receipt", (receipt: any) => {
+          console.log(`receipt: ${receipt}`);
+          resolve();
+        })
+        .on("confirmation", (confirmationNumber: number, receipt: any) => {
+          console.log(`confirmation: ${confirmationNumber}`);
+        })
+        .on("error", (error: any, receipt: any) => {
+          console.log(`error: ${error}`);
+          if (error.code === 4001) {
+            alert("거래를 취소했습니다.");
+          }
+          reject();
+        });
+    });
 
   const getAllArtistInfo = async (): Promise<ArtistInfo[]> => {
     if (web3 === undefined) {
