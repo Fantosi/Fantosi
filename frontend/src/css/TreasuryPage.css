@@ -38,7 +38,7 @@
 
 .left_contents_wrapper {
   height: 328px;
-  width: 350px;
+  /* width: 350px; */
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -256,4 +256,11 @@
   mix-blend-mode: normal;
   border: 1px solid #ffffff;
   color: black;
+  cursor: pointer;
+}
+.submit_btn_wrapper.isSubmited {
+  background: #808080;
+  mix-blend-mode: normal;
+  border: unset;
+  color: white;
 }

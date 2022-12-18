@@ -36,7 +36,11 @@ const TreasuryCard = ({
           </div>
         </div>
         <div>
-          <div className="treasury-expireddate">{`Expired in ${expiredIn} days`}</div>
+          <div className="treasury-expireddate">
+            {status === STATUS.ACTIVE || status === STATUS.QUEUED
+              ? `Expired in ${expiredIn} days`
+              : ""}
+          </div>
 
           <div
             className={classNames("treasury-status", {

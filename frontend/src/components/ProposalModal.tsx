@@ -7,12 +7,23 @@ interface ProposalModalProps {
   closeModal: () => void;
   updateProposal: () => void;
   web3: Web3Type;
+  manageSubmitProposalFunc: (
+    idea: string,
+    address: string,
+    price: string,
+    submitPropose: (
+      targetAddress: string,
+      amount: string,
+      idea: string
+    ) => Promise<void>
+  ) => Promise<void>;
 }
 
 const ProposalModal = ({
   closeModal,
   web3,
   updateProposal,
+  manageSubmitProposalFunc,
 }: ProposalModalProps) => {
   const [idea, setIdea] = useState("");
   const [address, setAddress] = useState("");
@@ -24,9 +35,7 @@ const ProposalModal = ({
     setPrice("");
     console.log(idea, address, price);
     closeModal();
-
-    const response = await web3.submitPropose(address, price, idea);
-    console.log("response of submitPropose", response);
+    await manageSubmitProposalFunc(address, price, idea, web3.submitPropose);
     updateProposal();
   };
 

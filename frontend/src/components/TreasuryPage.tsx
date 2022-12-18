@@ -3,6 +3,7 @@ import {
   ProposalInfo,
   STATUS,
   UserInfo,
+  VoteKind,
   VotingState,
   Web3Type,
 } from "../types";
@@ -10,6 +11,10 @@ import { Link } from "react-router-dom";
 import classNames from "classnames";
 import "../css/TreasuryPage.css";
 import { useEffect, useState } from "react";
+import { dummyProposals } from "../utils/dummyData";
+import LoadingModal from "./LoadingModal";
+import DeniedToast from "./DeniedToast";
+import FinishedToast from "./FinishedToast";
 
 interface TreasuryPageProps {
   web3: Web3Type;
@@ -18,43 +23,48 @@ interface TreasuryPageProps {
 }
 
 const TreasuryPage = ({ web3, user, signIn }: TreasuryPageProps) => {
-  const dummyProps = {
-    bnb: 300,
-    totalCnt: 100,
-    agree: 20,
-    soso: 2,
-    disagree: 10,
-    desc: "뉴진스 데뷔 500일 기념! \n [역삼역 3번 출구] 지하철 광고",
-    address: "0x7d61..55..cA98",
-    status: STATUS.ACTIVE,
-  };
-  const status = dummyProps.status;
   const { treasuryId } = useParams();
   const [votingState, setVotingState] = useState<VotingState | undefined>(
     undefined
   );
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [proposal, setProposal] = useState<ProposalInfo | undefined>(undefined);
+  const [isDenied, setIsDenied] = useState<boolean>(false);
+  const [isFinished, setIsFinished] = useState<boolean>(false);
+  const [isSubmited, setIsSubmited] = useState<boolean>(false);
+
+  const closeDeniedToast = () => {
+    setIsDenied(false);
+  };
+  const closeFinishedToast = () => {
+    setIsFinished(false);
+  };
 
   const renderStatusBox = () => {
+    if (proposal === undefined) {
+      return <div className="title_status"></div>;
+    }
+    const { state } = proposal;
     return (
       <div
         className={classNames("title_status", {
-          active: status === STATUS.ACTIVE,
-          executed: status === STATUS.EXECUTED,
-          canceled: status === STATUS.CANCELED,
-          defeated: status === STATUS.DEFEATED,
-          queued: status === STATUS.QUEUED,
+          active: state === STATUS.ACTIVE,
+          executed: state === STATUS.EXECUTED,
+          canceled: state === STATUS.CANCELED,
+          defeated: state === STATUS.DEFEATED,
+          queued: state === STATUS.QUEUED,
         })}
       >
-        {status === STATUS.ACTIVE ? (
-          <div>{status}</div>
-        ) : status === STATUS.EXECUTED ? (
-          <div>{status}</div>
-        ) : status === STATUS.CANCELED ? (
-          <div>{status}</div>
-        ) : status === STATUS.DEFEATED ? (
-          <div>{status}</div>
-        ) : status === STATUS.QUEUED ? (
-          <div>{status}</div>
+        {state === STATUS.ACTIVE ? (
+          <div>{state}</div>
+        ) : state === STATUS.EXECUTED ? (
+          <div>{state}</div>
+        ) : state === STATUS.CANCELED ? (
+          <div>{state}</div>
+        ) : state === STATUS.DEFEATED ? (
+          <div>{state}</div>
+        ) : state === STATUS.QUEUED ? (
+          <div>{state}</div>
         ) : (
           <div></div>
         )}
@@ -63,7 +73,10 @@ const TreasuryPage = ({ web3, user, signIn }: TreasuryPageProps) => {
   };
 
   const renderLeftSideContent = () => {
-    const [desc1, desc2] = dummyProps.desc.split("\n");
+    if (proposal === undefined) {
+      return <div className="title_status"></div>;
+    }
+    const [desc1, desc2] = proposal.description.split("\n");
     return (
       <div className="left_contents_wrapper">
         <div>
@@ -74,16 +87,16 @@ const TreasuryPage = ({ web3, user, signIn }: TreasuryPageProps) => {
           </div>
           <div className="bidding_desc">
             PROPOSAL 통과 시
-            <div className="bidding_price">{`${dummyProps.bnb}BNB ($${
-              dummyProps.bnb * 5
-            })`}</div>
+            <div className="bidding_price">{`${Number(
+              proposal.sendValues[0]
+            )}BNB ($${Number(proposal.sendValues[0]) * 5})`}</div>
             가 배정됩니다.
           </div>
         </div>
         <div className="main_text">
           {desc1}
           <br />
-          {desc2}
+          {desc2 ? desc2 : ""}
         </div>
         <div className="about_desc">
           DESCRIPTION 기능은 추후 제공될 예정입니다.
@@ -93,7 +106,17 @@ const TreasuryPage = ({ web3, user, signIn }: TreasuryPageProps) => {
   };
 
   const renderRightSideContent = () => {
-    const { totalCnt, agree, soso, disagree, address } = dummyProps;
+    if (proposal === undefined)
+      return <div className="right_contents_wrapper"></div>;
+    const { againstVotes, abstainVotes, forVotes, proposer } = proposal;
+
+    const quorumVotes =
+      Number(proposal.quorumVotes) === 0 ? 26 : proposal.quorumVotes;
+
+    const agree = Number(forVotes);
+    const soso = Number(abstainVotes);
+    const disagree = Number(againstVotes);
+
     return (
       <div className="right_contents_wrapper">
         <div className="voting_info_wrapper">
@@ -101,7 +124,7 @@ const TreasuryPage = ({ web3, user, signIn }: TreasuryPageProps) => {
             <div>투표 성립 인원</div>
             <div className="voting_people_info">{`${
               agree + soso + disagree
-            } / ${totalCnt} 명`}</div>
+            } / ${quorumVotes} 명`}</div>
           </div>
           <div className="white_line" />
           <div className="voting_info_lowerpart">
@@ -112,7 +135,7 @@ const TreasuryPage = ({ web3, user, signIn }: TreasuryPageProps) => {
           </div>
           <div className="voting_proponent">
             {`팬토시 포토카드 보유자 ${
-              address.slice(0, 6) + "..." + address.slice(-4)
+              proposer.slice(0, 6) + "..." + proposer.slice(-4)
             } 의 제안입니다.`}
           </div>
         </div>
@@ -169,8 +192,40 @@ const TreasuryPage = ({ web3, user, signIn }: TreasuryPageProps) => {
   };
 
   const getArtistAllProposalInfo = async () => {
-    const response = await web3.getArtistAllProposalInfo("NEWJEANS");
-    console.log("treasuryPage - getArtistAllProposalInfo response", response);
+    const proposals = await web3.getArtistAllProposalInfo("NEWJEANS");
+    [...proposals, ...dummyProposals].forEach((proposal) => {
+      if (treasuryId && Number(proposal.id) === Number(treasuryId)) {
+        setProposal(proposal as ProposalInfo);
+      }
+    });
+  };
+
+  const submitVote = async () => {
+    try {
+      if (proposal === undefined) return;
+      const { state } = proposal;
+      const voteKind =
+        votingState === VotingState.AGREE
+          ? VoteKind.FOR
+          : votingState === VotingState.DISAGREE
+          ? VoteKind.AGAINST
+          : votingState === VotingState.SOSO
+          ? VoteKind.ABSTAIN
+          : undefined;
+      if (voteKind === undefined) return;
+      setIsLoading(true);
+      const isSubmited = await web3.castVote(Number(proposal.id), voteKind);
+      console.log("isSubmited", isSubmited);
+      if (isSubmited) {
+        setIsSubmited(true);
+        setIsFinished(true);
+      }
+      setIsLoading(false);
+    } catch (e) {
+      console.log("error - submitVote:", e);
+      setIsLoading(false);
+      setIsDenied(true);
+    }
   };
 
   useEffect(() => {
@@ -180,26 +235,36 @@ const TreasuryPage = ({ web3, user, signIn }: TreasuryPageProps) => {
     } else {
       getArtistAllProposalInfo();
     }
-  }, [user]);
+  }, [user, isSubmited]);
 
   return (
-    <div className="treasurypage_wrapper">
-      <Link className="link goback_btn_wrapper" to="/artist-page/NEWJEANS">
-        <div className="goback_btn" />
-        <div className="txt">PROPOSAL</div>
-      </Link>
-      <div className="main_contents_wrapper">
-        {renderLeftSideContent()}
-        {renderRightSideContent()}
+    <>
+      <div className="treasurypage_wrapper">
+        <Link className="link goback_btn_wrapper" to="/artist-page/NEWJEANS">
+          <div className="goback_btn" />
+          <div className="txt">PROPOSAL</div>
+        </Link>
+        <div className="main_contents_wrapper">
+          {renderLeftSideContent()}
+          {renderRightSideContent()}
+        </div>
+        <div
+          className={classNames("submit_btn_wrapper", {
+            selected: votingState !== undefined && !isSubmited,
+            isSubmited,
+          })}
+          onClick={submitVote}
+        >
+          SUBMIT
+        </div>
       </div>
-      <div
-        className={classNames("submit_btn_wrapper", {
-          selected: votingState !== undefined,
-        })}
-      >
-        SUBMIT
-      </div>
-    </div>
+      {isLoading ? <LoadingModal type="voting" /> : <></>}
+      <FinishedToast
+        isFinished={isFinished}
+        closeFinishedToast={closeFinishedToast}
+      />
+      <DeniedToast isDenied={isDenied} closeDeniedToast={closeDeniedToast} />
+    </>
   );
 };
 

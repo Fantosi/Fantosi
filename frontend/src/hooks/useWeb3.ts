@@ -347,26 +347,34 @@ const useWeb3 = (): Web3Type => {
     return abi.encode(types, values);
   };
 
-  const castVote = async (proposalId: number, voteKind: VoteKind) => {
-    if (fantosiDAOLogicContract === undefined) {
-      throw new Error("castVote ::: not initiated fantosi dao logic contract");
-    }
+  const castVote = async (proposalId: number, voteKind: VoteKind) =>
+    new Promise<boolean>((resolve, reject) => {
+      if (fantosiDAOLogicContract === undefined) {
+        throw new Error(
+          "castVote ::: not initiated fantosi dao logic contract"
+        );
+      }
 
-    await fantosiDAOLogicContract.methods
-      .castVote(proposalId, voteKind.valueOf())
-      .send({
-        from: account,
-      })
-      .on("transactionHash", (hash: string) => {
-        console.log(`transactionHash: ${hash}`);
-      })
-      .on("receipt", (receipt: any) => {
-        console.log(`receipt: ${receipt}`);
-      })
-      .on("confirmation", (confirmationNumber: number, receipt: any) => {
-        console.log(`confirmation ${confirmationNumber}`);
-      });
-  };
+      fantosiDAOLogicContract.methods
+        .castVote(proposalId, voteKind.valueOf())
+        .send({
+          from: account,
+        })
+        .on("transactionHash", (hash: string) => {
+          console.log(`transactionHash: ${hash}`);
+        })
+        .on("receipt", (receipt: any) => {
+          console.log(`receipt: ${receipt}`);
+          resolve(true);
+        })
+        .on("confirmation", (confirmationNumber: number, receipt: any) => {
+          console.log(`confirmation ${confirmationNumber}`);
+        })
+        .on("error", (error: any, receipt: any) => {
+          console.log(`error: ${error}`);
+          reject(false);
+        });
+    });
 
   useEffect(() => {
     getWeb3();

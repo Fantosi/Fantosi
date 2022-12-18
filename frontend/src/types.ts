@@ -18,11 +18,11 @@ export interface CardInfo {
 }
 
 export enum STATUS {
-  EXECUTED = "EXECUTED",
-  ACTIVE = "ACTIVE",
-  CANCELED = "CANCELED",
-  DEFEATED = "DEFEATED",
-  QUEUED = "QUEUED",
+  EXECUTED = "Excecuted",
+  ACTIVE = "Active",
+  CANCELED = "Canceled",
+  DEFEATED = "Defeated",
+  QUEUED = "Queued",
 }
 
 // use for hooks for now.
@@ -67,7 +67,7 @@ export interface Web3Type {
     amount: string,
     idea: string
   ) => Promise<void>;
-  castVote: (proposalId: number, vote: VoteKind) => Promise<void>;
+  castVote: (proposalId: number, vote: VoteKind) => Promise<boolean>;
 }
 
 export interface ProposalInfo {
@@ -90,6 +90,7 @@ export interface ProposalInfo {
   sendValues: BigNumber[];
   description: string;
   state: string;
+  likedByArtist?: boolean;
 }
 
 export interface MakeProposal {
