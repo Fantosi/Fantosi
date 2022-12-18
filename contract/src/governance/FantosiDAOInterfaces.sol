@@ -402,6 +402,10 @@ contract FantosiDAOStorageV2 is FantosiDAOStorageV1Adjusted {
         uint256 totalSupply;
         /// @notice The block at which this proposal was created
         uint256 creationBlock;
+        /// @notice The address that sends money after the proposal has been executed
+        address[] targets;
+        /// @notice The sending amount after the proposal has been executed
+        uint256[] values;
     }
 }
 
@@ -467,11 +471,13 @@ interface IFantosiDAOLogic {
         bool executed;
         uint256 totalSupply;
         uint256 creationBlock;
+        address[] targets;
+        uint256[] values;
     }
 
     function getProposal(uint256 num) external view returns (ProposalDto memory);
 
     function getProposalCount() external view returns (uint256);
 
-    function proposals(uint256 proposalId) external view returns(ProposalCondensedDto memory);
+    function proposals(uint256 proposalId) external view returns (ProposalCondensedDto memory);
 }

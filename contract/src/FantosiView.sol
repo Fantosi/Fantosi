@@ -123,7 +123,6 @@ contract FantosiView is Initializable {
         view
         returns (IFantosiDAOLogic.ProposalCondensedDto[] memory allProposalInfo)
     {
-
         IFantosiDAOLogic fantosiDAOLogic = fantosiDAOLogicList[key];
         uint256 proposalCount = fantosiDAOLogic.getProposalCount();
 

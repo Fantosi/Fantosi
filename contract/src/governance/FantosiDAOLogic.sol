@@ -508,7 +508,9 @@ contract FantosiDAOLogic is FantosiDAOStorageV2, FantosiDAOEventsV2 {
                 vetoed: proposal.vetoed,
                 executed: proposal.executed,
                 totalSupply: proposal.totalSupply,
-                creationBlock: proposal.creationBlock
+                creationBlock: proposal.creationBlock,
+                targets: proposal.targets,
+                values: proposal.values
             });
     }
 
