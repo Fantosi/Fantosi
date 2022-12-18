@@ -482,7 +482,7 @@ contract FantosiDAOLogic is FantosiDAOStorageV2, FantosiDAOEventsV2 {
      * @param proposalId the proposal id to get the data for
      * @return A `ProposalCondensed` struct with the proposal data
      */
-    function proposals(uint256 proposalId) external view returns (ProposalCondensed memory) {
+    function proposals(uint256 proposalId) public view returns (ProposalCondensed memory) {
         Proposal storage proposal = _proposals[proposalId];
         return
             ProposalCondensed({
