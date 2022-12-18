@@ -87,7 +87,9 @@ export interface ProposalInfo {
   totalSupply: BigNumber;
   creationBlock: BigNumber;
   targets: string[];
-  values: BigNumber[];
+  sendValues: BigNumber[];
+  description: string;
+  state: string;
 }
 
 export interface MakeProposal {
