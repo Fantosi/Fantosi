@@ -2,21 +2,19 @@ import classNames from "classnames";
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import "../css/Navbar.css";
-import { UserInfo } from "../types";
+import { UserInfo, Web3Type } from "../types";
 import { removeUserItem, setUserItem } from "../utils/localstorage";
-// import {
-//   signInWithWeb3Onboard,
-//   signOutWithWeb3Onboard,
-// } from "../utils/web3-onboard";
 
-const Navbar = (props: any) => {
+interface NavbarProps {
+  web3: Web3Type;
+}
+
+const Navbar = (props: NavbarProps) => {
   const [user, setUser] = useState<UserInfo | undefined>(undefined);
   const location = useLocation();
   const isArtistPage = location.pathname.includes("/artist-page");
 
   const web3 = props.web3;
-
-
 
   const onClickSignOut = async () => {
     await web3.signOutWithWeb3Onboard();
@@ -49,8 +47,9 @@ const Navbar = (props: any) => {
         <Link
           key={"artist"}
           to={"/artist-page/newjeans-0"}
-          className={`nav_btn link ${location.pathname.includes("/artist") ? "navbar_active" : ""
-            }`}
+          className={`nav_btn link ${
+            location.pathname.includes("/artist") ? "navbar_active" : ""
+          }`}
         >
           ARTIST
         </Link>
@@ -58,8 +57,9 @@ const Navbar = (props: any) => {
         <Link
           key={"my"}
           to={"/"}
-          className={`nav_btn link ${location.pathname.includes("/about-us") ? "navbar_active" : ""
-            }`}
+          className={`nav_btn link ${
+            location.pathname.includes("/about-us") ? "navbar_active" : ""
+          }`}
         >
           MY
         </Link>

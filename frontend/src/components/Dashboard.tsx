@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "../css/Dashboard.css";
 import { CardInfo } from "../types";
 import CardList from "./CardList";
 import Vision from "./Vision";
 
-const Dashboard = () => {
+const Dashboard = (propse: any) => {
   const cardList: CardInfo[] = [
     { key: 1, likeCnt: 88, artist: "NCT 127", bidDone: false },
     { key: 2, likeCnt: 2, artist: "TXT", bidDone: true },
@@ -32,6 +32,7 @@ const Dashboard = () => {
   const selectCard = (key: number | undefined) => {
     setClickedCardKey(key);
   };
+
   return (
     <>
       <div className="component_wrapper">

@@ -1,15 +1,30 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import "../css/ArtistPage.css";
-import { STATUS } from "../types";
+import { STATUS, Web3Type } from "../types";
 import Carousel from "./Carousel";
 import ProposalModal from "./ProposalModal";
 import TreasuryCard from "./TreasuryCard";
 
-const ArtistPage = (props: any) => {
+interface ArtistPageProps {
+  web3: Web3Type;
+}
+
+const ArtistPage = (props: ArtistPageProps) => {
   const { artistPageToken } = useParams();
   const [cardIndex, setCardIndex] = useState(4);
   const [showModal, setShowModal] = useState(false);
+
+  const getArtistPhotoCardHistoryInfo = async () => {
+    console.log("getArtistPhotoCardHistoryInfo start");
+    const test = await web3.getArtistPhotoCardHistoryInfo("NEWJEANS");
+    console.log("test", test);
+  };
+
+  useEffect(() => {
+    console.log("ArtistPage useEffect start");
+    getArtistPhotoCardHistoryInfo();
+  }, []);
 
   const web3 = props.web3;
 

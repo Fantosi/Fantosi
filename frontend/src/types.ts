@@ -42,3 +42,16 @@ export interface AuctionInfo {
   isFinalBid: boolean;
   settled: boolean;
 }
+
+export interface Web3Type {
+  signInWithWeb3Onboard: () => Promise<string | undefined>;
+  signOutWithWeb3Onboard: () => Promise<void>;
+  account: string;
+  createBid: (photoCardId: number, bidAmount: number) => Promise<void>;
+  getAllArtistInfo: () => Promise<ArtistInfo[]>;
+  getAllPhotoCardInfo: () => Promise<PhotoCardInfo[]>;
+  getArtistPhotoCardInfo: (artistKey: string) => Promise<PhotoCardInfo | null>;
+  getArtistPhotoCardHistoryInfo: (
+    artistKey: string
+  ) => Promise<PhotoCardInfo[]>;
+}

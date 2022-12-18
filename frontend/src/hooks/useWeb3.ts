@@ -1,4 +1,4 @@
-import { ArtistInfo, PhotoCardInfo } from "./../types";
+import { ArtistInfo, PhotoCardInfo, Web3Type } from "./../types";
 import { useEffect, useState } from "react";
 import Web3 from "web3";
 import { Contract } from "web3-eth-contract";
@@ -12,7 +12,7 @@ import ViewArtifact from "../contract/abi/FantosiView.json";
 const AUCTION_HOUSE_ADDR = "0xA659B98a2569c4cD2dD255a16c4f1d8a37420596";
 const AUCTION_VIEW_ADDR = "0x8fF60cd85F6c0870C56BF71efe51D25E2BE3deD9";
 
-const useWeb3 = () => {
+const useWeb3 = (): Web3Type => {
   const [web3, setWeb3] = useState<Web3 | undefined>(undefined);
   const [auctionHouseContract, setAuctionHouseContract] = useState<Contract>();
   const [auctionViewContract, setAuctionViewContract] = useState<Contract>();
