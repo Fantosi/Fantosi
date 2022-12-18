@@ -1,10 +1,16 @@
 import { useEffect, useState } from "react";
 import "../css/Dashboard.css";
-import { CardInfo } from "../types";
+import { CardInfo, UserInfo, Web3Type } from "../types";
 import CardList from "./CardList";
 import Vision from "./Vision";
 
-const Dashboard = (propse: any) => {
+interface DashboardProps {
+  web3: Web3Type;
+  user: UserInfo | undefined;
+  onClickSignIn: () => Promise<void>;
+}
+
+const Dashboard = (propse: DashboardProps) => {
   const cardList: CardInfo[] = [
     { key: 1, likeCnt: 88, artist: "NCT 127", bidDone: false },
     { key: 2, likeCnt: 2, artist: "TXT", bidDone: true },

@@ -1,4 +1,6 @@
 import { BigNumber } from "ethers";
+import Web3 from "web3";
+import { Utils } from "web3-utils";
 
 export interface UserInfo {
   role: "ADMIN" | "USER";
@@ -29,7 +31,7 @@ export interface ArtistInfo {
 
 export interface PhotoCardInfo {
   metadataURI: string;
-  auction: AuctionInfo;
+  currentAuction: AuctionInfo;
 }
 
 export interface AuctionInfo {
@@ -54,4 +56,5 @@ export interface Web3Type {
   getArtistPhotoCardHistoryInfo: (
     artistKey: string
   ) => Promise<PhotoCardInfo[]>;
+  web3Utils: Utils | undefined;
 }

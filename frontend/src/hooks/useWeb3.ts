@@ -19,8 +19,6 @@ const useWeb3 = (): Web3Type => {
   const [account, setAccount] = useState<string>("");
   const [wallets, setWallets] = useState<WalletState[]>([]);
 
-  console.log(auctionHouseContract);
-
   const getOnboard = async () => {
     if (!web3) {
       await getWeb3();
@@ -86,9 +84,6 @@ const useWeb3 = (): Web3Type => {
 
       const signer = ethersProvider.getSigner();
 
-      console.log("address: ", address);
-      console.log("ethersProvider", ethersProvider);
-      console.log("signer", signer);
       setAccount(address);
       setContracts();
 
@@ -107,7 +102,6 @@ const useWeb3 = (): Web3Type => {
     const result = await onboard.disconnectWallet({
       label: primaryWallet.label,
     });
-    console.log("sign out result: ", result);
   };
 
   const setContracts = () => {
@@ -124,7 +118,6 @@ const useWeb3 = (): Web3Type => {
     const abi = AuctionHouseArtifact.abi as AbiItem[];
     const ca: string = AUCTION_HOUSE_ADDR;
     const instance = new web3.eth.Contract(abi, ca);
-    console.log(instance);
     setAuctionHouseContract(instance);
   };
 
@@ -143,8 +136,6 @@ const useWeb3 = (): Web3Type => {
     if (web3 === undefined) {
       throw new Error("createBid ::: not initiated web3");
     }
-
-    console.log(auctionHouseContract);
 
     if (auctionHouseContract === undefined) {
       throw new Error("createBid ::: not initiated auction house contract");
@@ -171,12 +162,14 @@ const useWeb3 = (): Web3Type => {
   };
 
   const getAllArtistInfo = async (): Promise<ArtistInfo[]> => {
-    if (!web3) {
-      throw new Error("createBid ::: not initiated web3");
+    if (web3 === undefined) {
+      throw new Error("getAllArtistInfo ::: not initiated web3");
     }
 
-    if (!auctionViewContract) {
-      throw new Error("createBid ::: not initiated auction view contract");
+    if (auctionViewContract === undefined) {
+      throw new Error(
+        "getAllArtistInfo ::: not initiated auction view contract"
+      );
     }
 
     const res: ArtistInfo[] = [];
@@ -186,12 +179,14 @@ const useWeb3 = (): Web3Type => {
   };
 
   const getAllPhotoCardInfo = async (): Promise<PhotoCardInfo[]> => {
-    if (!web3) {
-      throw new Error("createBid ::: not initiated web3");
+    if (web3 === undefined) {
+      throw new Error("getAllPhotoCardInfo ::: not initiated web3");
     }
 
-    if (!auctionViewContract) {
-      throw new Error("createBid ::: not initiated auction view contract");
+    if (auctionViewContract === undefined) {
+      throw new Error(
+        "getAllPhotoCardInfo ::: not initiated auction view contract"
+      );
     }
 
     const res: PhotoCardInfo[] = [];
@@ -205,16 +200,18 @@ const useWeb3 = (): Web3Type => {
   const getArtistPhotoCardInfo = async (
     artistKey: string
   ): Promise<PhotoCardInfo | null> => {
-    if (!web3) {
-      throw new Error("createBid ::: not initiated web3");
+    if (web3 === undefined) {
+      throw new Error("getArtistPhotoCardInfo ::: not initiated web3");
     }
 
-    if (!auctionViewContract) {
-      throw new Error("createBid ::: not initiated auction view contract");
+    if (auctionViewContract === undefined) {
+      throw new Error(
+        "getArtistPhotoCardInfo ::: not initiated auction view contract"
+      );
     }
 
     const photoCard = await auctionViewContract.methods
-      .getArtistPhotoCardInfo()
+      .getArtistPhotoCardInfo(artistKey)
       .call();
     return photoCard ? photoCard : null;
   };
@@ -222,17 +219,19 @@ const useWeb3 = (): Web3Type => {
   const getArtistPhotoCardHistoryInfo = async (
     artistKey: string
   ): Promise<PhotoCardInfo[]> => {
-    if (!web3) {
-      throw new Error("createBid ::: not initiated web3");
+    if (web3 === undefined) {
+      throw new Error("getArtistPhotoCardHistoryInfo ::: not initiated web3");
     }
 
-    if (!auctionViewContract) {
-      throw new Error("createBid ::: not initiated auction view contract");
+    if (auctionViewContract === undefined) {
+      throw new Error(
+        "getArtistPhotoCardHistoryInfo ::: not initiated auction view contract"
+      );
     }
 
     const res: PhotoCardInfo[] = [];
     const ls = await auctionViewContract.methods
-      .getArtistPhotoCardHistoryInfo()
+      .getArtistPhotoCardHistoryInfo(artistKey)
       .call();
 
     if (ls) {
@@ -244,7 +243,13 @@ const useWeb3 = (): Web3Type => {
 
   useEffect(() => {
     getWeb3();
-  }, []);
+  }, [account]);
+
+  useEffect(() => {
+    if (web3) {
+      setContracts();
+    }
+  }, [web3]);
 
   return {
     signInWithWeb3Onboard,
@@ -255,6 +260,7 @@ const useWeb3 = (): Web3Type => {
     getAllPhotoCardInfo,
     getArtistPhotoCardInfo,
     getArtistPhotoCardHistoryInfo,
+    web3Utils: web3?.utils,
   };
 };
 

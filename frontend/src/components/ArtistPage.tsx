@@ -1,37 +1,83 @@
+import { BigNumber } from "ethers";
 import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import "../css/ArtistPage.css";
-import { STATUS, Web3Type } from "../types";
+import { STATUS, UserInfo, Web3Type, PhotoCardInfo } from "../types";
 import Carousel from "./Carousel";
 import ProposalModal from "./ProposalModal";
 import TreasuryCard from "./TreasuryCard";
 
 interface ArtistPageProps {
   web3: Web3Type;
+  user: UserInfo | undefined;
+  onClickSignIn: () => Promise<void>;
 }
 
-const ArtistPage = (props: ArtistPageProps) => {
+const ArtistPage = ({ web3, user, onClickSignIn }: ArtistPageProps) => {
   const { artistPageToken } = useParams();
   const [cardIndex, setCardIndex] = useState(4);
   const [showModal, setShowModal] = useState(false);
+  const [photocardInfo, setPhotocardInfo] = useState<PhotoCardInfo | undefined>(
+    undefined
+  );
+  const [remainTime, setRemainTime] = useState<{
+    hour: number;
+    min: number;
+    sec: number;
+  }>({ hour: 0, min: 0, sec: 0 });
+
+  const setRemainTimeInterval = (endTime: number) => {
+    const getTime = () => {
+      const currentDate = Date.now() / 1000;
+      const diff = Number(endTime) - currentDate;
+      if (typeof Math.round(diff / 3600) === "number")
+        setRemainTime({
+          hour: Math.round(diff / 3600),
+          min: Math.round((diff % 3600) / 60),
+          sec: Math.round((diff % 3600) % 60),
+        });
+    };
+    getTime();
+    setInterval(getTime, 1000);
+  };
 
   const getArtistPhotoCardHistoryInfo = async () => {
-    console.log("getArtistPhotoCardHistoryInfo start");
-    const test = await web3.getArtistPhotoCardHistoryInfo("NEWJEANS");
-    console.log("test", test);
+    const responseFromContract = await web3.getArtistPhotoCardHistoryInfo(
+      "NEWJEANS"
+    );
+    if (responseFromContract && responseFromContract.length > 0) {
+      const { currentAuction, metadataURI } = responseFromContract[0];
+      setRemainTimeInterval(Number(currentAuction.endTime));
+
+      setPhotocardInfo({
+        currentAuction: {
+          amount: currentAuction.amount as BigNumber,
+          photoCardId: currentAuction.photoCardId as BigNumber,
+          startTime: currentAuction.startTime as BigNumber,
+          finalAuctionTime: currentAuction.finalAuctionTime as BigNumber,
+          endTime: currentAuction.endTime as BigNumber,
+          bidder: currentAuction.bidder,
+          isFinalBid: currentAuction.isFinalBid,
+          settled: currentAuction.settled,
+        },
+        metadataURI,
+      });
+    }
   };
 
   useEffect(() => {
-    console.log("ArtistPage useEffect start");
-    getArtistPhotoCardHistoryInfo();
-  }, []);
-
-  const web3 = props.web3;
+    if (user === undefined) {
+      onClickSignIn();
+      return;
+    } else {
+      getArtistPhotoCardHistoryInfo();
+    }
+  }, [user]);
 
   if (artistPageToken === undefined) {
     return <div></div>;
   }
-  const [artistId, cardId] = artistPageToken.split("-");
+  // const [artistId, cardId] = artistPageToken.split("-");
 
   const openModal = () => {
     setShowModal(true);
@@ -70,35 +116,62 @@ const ArtistPage = (props: ArtistPageProps) => {
   };
 
   const renderArtistPhotoCards = () => {
-    const address = "0X3864fffaefweaf";
+    const displayTime = (time: number) => {
+      return time < 10 ? `0${time}` : time;
+    };
+
     const renderBiddingInfo = () => {
+      const getBidAmount = () => {
+        if (photocardInfo === undefined) return "0.15";
+
+        const stringifyAmount = photocardInfo?.currentAuction
+          .amount as unknown as string;
+        const lenDiff = 18 - stringifyAmount.length;
+
+        const web3Utils = web3?.web3Utils;
+        if (web3Utils) {
+          return web3Utils.fromWei(stringifyAmount, "ether");
+        }
+        return 0.15;
+      };
+
       return (
         <div className="biddinginfo-wrapper">
           <div className="row-wrapper">
             <div className="left-wrapper">
               <div className="header">CURRENT BID</div>
               <div className="value">
-                120 <div className="bnb_icon" />
+                <>
+                  {getBidAmount()}
+                  <div className="bnb_icon" />
+                </>
               </div>
             </div>
             <div className="right-wrapper">
               <div className="header">AUCTION ENDS IN</div>
-              <div className="value">02:12:39</div>
+              <div className="value">
+                {`${displayTime(remainTime.hour)}:${displayTime(
+                  remainTime.min
+                )}:${displayTime(remainTime.sec)}`}
+              </div>
             </div>
           </div>
           <div className="row-wrapper">
             <div className="left-wrapper">
-              <div className="header high">CURRENT BID</div>
+              <div className="header high">LAST BID</div>
               <div className="value">
                 <div className="charactor_icon" />
-                <div className="address">{address.slice(0, 6) + "..."}</div>
+                <div className="address">
+                  {photocardInfo?.currentAuction.bidder.slice(0, 6) +
+                    "..." +
+                    photocardInfo?.currentAuction.bidder.slice(-4)}
+                </div>
               </div>
             </div>
             <div className="right-wrapper">
               <div className="header"></div>
               <div className="value">
-                120
-                <div className="bnb_icon" />
+                <div className="outlink_icon" />
               </div>
             </div>
           </div>
@@ -119,7 +192,9 @@ const ArtistPage = (props: ArtistPageProps) => {
               <Carousel setCardIndex={setCardIndex} />
             </div>
             <div className="cardinfo-wrapper">
-              <div className="title">Photocard #21</div>
+              <div className="title">
+                {`Photocard #${photocardInfo?.currentAuction.photoCardId}`}
+              </div>
               <div className="sub-title">
                 첫 번째 앨범 “NewJeans”의 다니엘 미공개 컷.
               </div>

@@ -39,8 +39,6 @@ export const signInWithWeb3Onboard = async (): Promise<string | undefined> => {
   const onboard = getOnboard();
   wallets = await onboard.connectWallet();
 
-  console.log(wallets);
-
   if (wallets[0]) {
     const address = wallets[0].accounts[0].address;
     // create an ethers provider with the last connected wallet provider
@@ -52,7 +50,6 @@ export const signInWithWeb3Onboard = async (): Promise<string | undefined> => {
     const signer = ethersProvider.getSigner();
 
     console.log("address: ", address);
-    console.log("ethersProvider", ethersProvider);
     console.log("signer", signer);
 
     return address;

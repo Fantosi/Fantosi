@@ -1,35 +1,18 @@
 import classNames from "classnames";
-import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import "../css/Navbar.css";
 import { UserInfo, Web3Type } from "../types";
-import { removeUserItem, setUserItem } from "../utils/localstorage";
 
 interface NavbarProps {
   web3: Web3Type;
+  user: UserInfo | undefined;
+  onClickSignIn: () => Promise<void>;
+  onClickSignOut: () => Promise<void>;
 }
 
-const Navbar = (props: NavbarProps) => {
-  const [user, setUser] = useState<UserInfo | undefined>(undefined);
+const Navbar = ({ user, onClickSignIn, onClickSignOut }: NavbarProps) => {
   const location = useLocation();
   const isArtistPage = location.pathname.includes("/artist-page");
-
-  const web3 = props.web3;
-
-  const onClickSignOut = async () => {
-    await web3.signOutWithWeb3Onboard();
-    removeUserItem();
-    setUser(undefined);
-  };
-
-  const onClickSignIn = async () => {
-    const address = await web3.signInWithWeb3Onboard();
-    if (address) {
-      const userInfo = { role: "USER", address } as UserInfo;
-      setUserItem(userInfo);
-      setUser(userInfo);
-    }
-  };
 
   return (
     <div className={classNames("navbar", { isArtistPage })}>
