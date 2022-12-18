@@ -11,21 +11,96 @@ interface DashboardProps {
 
 const Dashboard = (propse: DashboardProps) => {
   const cardList: CardInfo[] = [
-    { key: 1, likeCnt: 88, artist: "NCT 127", bidDone: false },
-    { key: 2, likeCnt: 2, artist: "TXT", bidDone: true },
-    { key: 3, likeCnt: 55, artist: "NCT 127", bidDone: false },
-    { key: 4, likeCnt: 34, artist: "Dummy", bidDone: false },
-    { key: 5, likeCnt: 63, artist: "Dummy", bidDone: false },
-    { key: 6, likeCnt: 87, artist: "TXT", bidDone: true },
-    { key: 7, likeCnt: 6, artist: "Dummy", bidDone: true },
-    { key: 8, likeCnt: 4, artist: "Dummy", bidDone: true },
-    { key: 9, likeCnt: 1, artist: "TXT", bidDone: false },
-    { key: 10, likeCnt: 3, artist: "TXT", bidDone: false },
-    { key: 11, likeCnt: 33, artist: "TXT", bidDone: false },
-    { key: 12, likeCnt: 12, artist: "TXT", bidDone: true },
-    { key: 13, likeCnt: 143, artist: "TXT-12", bidDone: true },
-    { key: 14, likeCnt: 3, artist: "TXT-3", bidDone: true },
-    { key: 15, likeCnt: 166, artist: "TXT-1", bidDone: true },
+    {
+      key: 1,
+      likeCnt: 88,
+      artist: "NCT 127",
+      bidDone: false,
+    },
+    {
+      key: 2,
+      likeCnt: 2,
+      artist: "TXT",
+      bidDone: true,
+    },
+    {
+      key: 3,
+      likeCnt: 55,
+      artist: "NCT 127",
+      bidDone: false,
+    },
+    {
+      key: 4,
+      likeCnt: 34,
+      artist: "Dummy",
+      bidDone: false,
+    },
+    {
+      key: 5,
+      likeCnt: 63,
+      artist: "Dummy",
+      bidDone: false,
+    },
+    {
+      key: 6,
+      likeCnt: 87,
+      artist: "TXT",
+      bidDone: true,
+    },
+    {
+      key: 7,
+      likeCnt: 6,
+      artist: "Dummy",
+      bidDone: true,
+    },
+    {
+      key: 8,
+      likeCnt: 4,
+      artist: "Dummy",
+      bidDone: true,
+    },
+    {
+      key: 9,
+      likeCnt: 1,
+      artist: "TXT",
+      bidDone: false,
+    },
+    {
+      key: 10,
+      likeCnt: 3,
+      artist: "TXT",
+      bidDone: false,
+    },
+    {
+      key: 11,
+      likeCnt: 33,
+      artist: "TXT",
+      bidDone: false,
+    },
+    {
+      key: 12,
+      likeCnt: 12,
+      artist: "TXT",
+      bidDone: true,
+    },
+    {
+      key: 13,
+      likeCnt: 143,
+      artist: "TXT-12",
+      bidDone: true,
+    },
+    {
+      key: 14,
+      likeCnt: 3,
+      artist: "TXT-3",
+      bidDone: true,
+    },
+    {
+      key: 15,
+      likeCnt: 166,
+      artist: "TXT-1",
+      bidDone: true,
+    },
   ];
 
   const bidDoneCardList = cardList.filter((card) => card.bidDone);

@@ -58,3 +58,9 @@ export interface Web3Type {
   ) => Promise<PhotoCardInfo[]>;
   web3Utils: Utils | undefined;
 }
+
+export enum VotingState {
+  AGREE = "AGREE",
+  DISAGREE = "DISAGREE",
+  SOSO = "SOSO",
+}

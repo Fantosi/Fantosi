@@ -4,6 +4,9 @@ import { useParams } from "react-router-dom";
 import "../css/ArtistPage.css";
 import { STATUS, UserInfo, Web3Type, PhotoCardInfo } from "../types";
 import Carousel from "./Carousel";
+import DeniedToast from "./DeniedToast";
+import FinishedToast from "./FinishedToast";
+import LoadingModal from "./LoadingModal";
 import ProposalModal from "./ProposalModal";
 import TreasuryCard from "./TreasuryCard";
 
@@ -18,6 +21,9 @@ const ArtistPage = ({ web3, user, signIn }: ArtistPageProps) => {
   const [cardIndex, setCardIndex] = useState(4);
   const [showModal, setShowModal] = useState(false);
   const [biddingVal, setBiddingVal] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isFinished, setIsFinished] = useState<boolean>(false);
+  const [isDenied, setIsDenied] = useState<boolean>(false);
   const [photocardInfo, setPhotocardInfo] = useState<PhotoCardInfo | undefined>(
     undefined
   );
@@ -26,6 +32,13 @@ const ArtistPage = ({ web3, user, signIn }: ArtistPageProps) => {
     min: number;
     sec: number;
   }>({ hour: 0, min: 0, sec: 0 });
+
+  const closeFinishedToast = () => {
+    setIsFinished(false);
+  };
+  const closeDeniedToast = () => {
+    setIsDenied(false);
+  };
 
   const setRemainTimeInterval = (endTime: number) => {
     const getTime = () => {
@@ -216,12 +229,21 @@ const ArtistPage = ({ web3, user, signIn }: ArtistPageProps) => {
     };
 
     const handlePlaceBid = async () => {
-      console.log("biddingVal", biddingVal);
-      await web3.createBid(1, Number(biddingVal));
-      console.log("createBid finished");
-      await getArtistPhotoCardInfo();
-      console.log("getArtistPhotoCardInfo finished");
-      setBiddingVal("");
+      try {
+        console.log("biddingVal", biddingVal);
+        setIsLoading(true);
+        await web3.createBid(1, Number(biddingVal));
+        console.log("createBid finished");
+        await getArtistPhotoCardInfo();
+        console.log("getArtistPhotoCardInfo finished");
+        setIsLoading(false);
+        setIsFinished(true);
+        setBiddingVal("");
+      } catch (e) {
+        console.log("error - ", e);
+        setIsLoading(false);
+        setIsDenied(true);
+      }
     };
 
     return (
@@ -276,7 +298,12 @@ const ArtistPage = ({ web3, user, signIn }: ArtistPageProps) => {
     return (
       <div className="fantosihouse-wrapper">
         <div className="fantosihouse-btn" />
-        <div className="fantosihouse-txt">
+        <div
+          className="fantosihouse-txt"
+          onClick={() => {
+            setIsDenied(!isDenied);
+          }}
+        >
           하루에 하나씩 발행되는 포토 카드의 주인이 되어보세요! 수익금 전액은
           We've collected..에서 확인할 수 있으며 community에 의해 <br />
           관리되고 사용됩니다. Fantosi House는 아티스트, 포토카드 holder,
@@ -383,6 +410,12 @@ const ArtistPage = ({ web3, user, signIn }: ArtistPageProps) => {
         {renderTreasury()}
       </div>
       {showModal ? <ProposalModal closeModal={closeModal} /> : <></>}
+      {isLoading ? <LoadingModal /> : <></>}
+      <FinishedToast
+        isFinished={isFinished}
+        closeFinishedToast={closeFinishedToast}
+      />
+      <DeniedToast isDenied={isDenied} closeDeniedToast={closeDeniedToast} />
     </>
   );
 };

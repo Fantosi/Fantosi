@@ -1,0 +1,29 @@
+.toast_wrapper {
+  position: fixed;
+  width: 251px;
+  height: 110px;
+  right: calc(50vw - 480px);
+  top: 21px;
+
+  background: #ffffff;
+  border-radius: 12px;
+
+  transition: all 0.5s ease;
+  transform: translateX(251px);
+  opacity: 0;
+
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.toast_wrapper.display {
+  transition: all 0.5s ease;
+  transform: unset;
+  opacity: 1;
+}
+
+.toast_wrapper img {
+  width: 251px;
+  height: 110px;
+  object-fit: contain;
+}

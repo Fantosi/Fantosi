@@ -3,7 +3,8 @@
   min-height: 100vh;
   background-color: black;
   color: white;
-  padding: 68px 39px;
+  padding: 78px 39px;
+  /* padding: 68px 39px; */
   box-sizing: border-box;
 }
 
@@ -31,5 +32,203 @@
   margin: 38px 59px;
   width: 804px;
   height: 328px;
-  background-color: gray;
+  display: flex;
+  justify-content: space-between;
+}
+
+.left_contents_wrapper {
+  height: 328px;
+  width: 350px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.title_wrapper {
+  display: flex;
+  height: 26px;
+  align-items: flex-end;
+}
+.title_wrapper .title_txt {
+  font-family: "Apple SD Gothic Neo";
+  font-weight: 800;
+  font-size: 15px;
+}
+.title_id {
+  margin-left: 7px;
+  font-family: "Chonburi";
+  font-weight: 400;
+  font-size: 21px;
+  line-height: 25px;
+}
+
+.title_wrapper .title_status {
+  width: 60px;
+  height: 15px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 11px;
+  padding-bottom: -1px;
+  box-sizing: border-box;
+  margin: 5px 8px;
+}
+
+.active {
+  background: #20c04d;
+}
+.executed {
+  background: #20a3c0;
+}
+.canceled {
+  background: #c0205a;
+}
+.defeated {
+  background: #d0b004;
+}
+.queued {
+  background: #d67d15;
+}
+
+.bidding_desc {
+  font-family: "Apple SD Gothic Neo";
+  font-style: normal;
+  font-weight: 500;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.5);
+  display: flex;
+  margin-top: 6px;
+}
+
+.bidding_price {
+  font-family: "Apple SD Gothic Neo";
+  font-weight: 700;
+  font-size: 13px;
+  color: white;
+  text-decoration-line: underline;
+  margin-left: 5px;
+}
+
+.main_text {
+  font-family: "Apple SD Gothic Neo";
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 160%;
+}
+
+.about_desc {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 18px;
+}
+
+.right_contents_wrapper {
+  height: 328px;
+  width: 370px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  display: flex;
+  justify-content: space-between;
+
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.voting_info_wrapper {
+  height: 110px;
+  width: 370px;
+  display: flex;
+  flex-direction: column;
+}
+
+.voting_info_upperpart {
+  width: 100%;
+  height: 29px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+.voting_people_info {
+  font-weight: 700;
+  font-size: 24px;
+}
+.white_line {
+  height: 2px;
+  width: 369px;
+  background-image: url("../svg/white_line.svg");
+  margin-bottom: 10px;
+}
+.voting_info_lowerpart {
+  width: 100%;
+  height: 39px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+.voting_info_date {
+  font-weight: 700;
+  text-align: right;
+}
+.voting_proponent {
+  width: 100%;
+  text-align: right;
+  font-weight: 500;
+  font-size: 13px;
+  text-align: right;
+  text-transform: uppercase;
+
+  color: #808080;
+}
+
+.voting_btns {
+  height: 154px;
+  width: 370px;
+  display: flex;
+  flex-direction: column;
+  gap: 17px;
+}
+.voting_btn {
+  box-sizing: border-box;
+  width: 372px;
+  height: 40px;
+  background: #000000;
+  border: 0.6px solid #808080;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 14px;
+  padding-right: 18px;
+  cursor: pointer;
+}
+.voting_btn.selected {
+  color: black;
+}
+.voting_btn.soso.selected {
+  background: #a597ff;
+  border: 0.6px solid #a597ff;
+}
+.voting_btn.agree.selected {
+  background: #97ffae;
+  border: 0.6px solid #97ffae;
+}
+.voting_btn.disagree.selected {
+  background: #ff9797;
+  border: 0.6px solid #ff9797;
+}
+.selected .voting_icon {
+  background-image: url("../svg/voting_btn_selected.svg");
+}
+.voting_btn_wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.voting_icon {
+  width: 18px;
+  height: 18px;
+  background-image: url("../svg/voting_btn.svg");
 }

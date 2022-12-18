@@ -162,9 +162,9 @@ const useWeb3 = (): Web3Type => {
         })
         .on("error", (error: any, receipt: any) => {
           console.log(`error: ${error}`);
-          if (error.code === 4001) {
-            alert("거래를 취소했습니다.");
-          }
+          // if (error.code === 4001) {
+          //   alert("거래를 취소했습니다.");
+          // }
           reject();
         });
     });

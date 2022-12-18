@@ -1,0 +1,13 @@
+.modal-wrapper.loadingmodal {
+  width: 252px;
+  height: 276px;
+  left: calc(50vw - 126px);
+  top: calc(50vh - 138px);
+  overflow: hidden;
+  padding: unset;
+}
+.loadingmodal img {
+  width: 252px;
+  height: 276px;
+  object-fit: contain;
+}
