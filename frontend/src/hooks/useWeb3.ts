@@ -11,6 +11,7 @@ import ViewArtifact from "../contract/abi/FantosiView.json";
 
 const AUCTION_HOUSE_ADDR = "0xA659B98a2569c4cD2dD255a16c4f1d8a37420596";
 const AUCTION_VIEW_ADDR = "0x8fF60cd85F6c0870C56BF71efe51D25E2BE3deD9";
+const BINANCE_TESTNET_RPC = "https://data-seed-prebsc-1-s1.binance.org:8545";
 
 const useWeb3 = (): Web3Type => {
   const [web3, setWeb3] = useState<Web3 | undefined>(undefined);
@@ -60,10 +61,9 @@ const useWeb3 = (): Web3Type => {
 
   const getWeb3 = async () => {
     try {
-      if (window.ethereum) {
-        setWeb3(new Web3(window.ethereum as any));
-      } else {
-      }
+      const provider = new Web3.providers.HttpProvider(BINANCE_TESTNET_RPC);
+      const web3 = new Web3(provider);
+      setWeb3(web3);
     } catch (e) {
       console.log(e);
     }
@@ -110,15 +110,17 @@ const useWeb3 = (): Web3Type => {
   };
 
   const getAuctionHouse = () => {
-    if (!web3) {
-      getWeb3();
-      return;
+    try {
+      if (window.ethereum) {
+        const sendWeb3 = new Web3(window.ethereum as any);
+        const abi = AuctionHouseArtifact.abi as AbiItem[];
+        const ca: string = AUCTION_HOUSE_ADDR;
+        const instance = new sendWeb3.eth.Contract(abi, ca);
+        setAuctionHouseContract(instance);
+      }
+    } catch (e) {
+      throw new Error(`getAuctionHouse ::: ERROR ${e}`);
     }
-
-    const abi = AuctionHouseArtifact.abi as AbiItem[];
-    const ca: string = AUCTION_HOUSE_ADDR;
-    const instance = new web3.eth.Contract(abi, ca);
-    setAuctionHouseContract(instance);
   };
 
   const getViewContract = () => {
