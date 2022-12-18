@@ -54,3 +54,25 @@ export const photoCardInfoTest: {
             "https://jade-deliberate-partridge-706.mypinata.cloud/ipfs/QmYPbjNtDWF1H6BBrzujWKsJ8gzeBNX9Z81NhFg7bvkAHM/",
     },
 };
+
+export const encodeParameters = (types: string[], values: unknown[]): string => {
+    const abi = new ethers.utils.AbiCoder();
+    return abi.encode(types, values);
+};
+
+export const exampleSenderAddress = "0x0934D78959e4b25C7A263aCAe02077b277d57771";
+export const exampleSenderAmount = ethers.utils.parseEther("0.00001");
+
+export const proposalExampleTest: {
+    targets: string[];
+    values: string[];
+    signatures: string[];
+    calldatas: string[];
+    description: string;
+} = {
+    targets: [exampleSenderAddress],
+    values: ["0"],
+    signatures: ["transfer(address,uint256)"],
+    calldatas: [encodeParameters(["address", "uint256"], [exampleSenderAddress, exampleSenderAmount])],
+    description: "뉴진스한테 돈주기 가보자고-!",
+};

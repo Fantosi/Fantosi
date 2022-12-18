@@ -54,6 +54,9 @@ pragma solidity ^0.8.6;
 
 import "./FantosiDAOInterfaces.sol";
 
+// TODO: 테스트 완료 후 제거
+import "hardhat/console.sol";
+
 contract FantosiDAOLogic is FantosiDAOStorageV2, FantosiDAOEventsV2 {
     /// @notice The name of this contract
     string public constant name = "FANTOSI FAN COMMUNITY";
@@ -202,11 +205,11 @@ contract FantosiDAOLogic is FantosiDAOStorageV2, FantosiDAOEventsV2 {
         string memory description
     ) public returns (uint256) {
         ProposalTemp memory temp;
-
+        console.log("P: ", address(fantosiToken));
         temp.totalSupply = fantosiToken.totalSupply();
-
+        console.log("P");
         temp.proposalThreshold = bps2Uint(proposalThresholdBPS, temp.totalSupply);
-
+        console.log("P");
         require(
             fantosiToken.getPriorVotes(msg.sender, block.number - 1) > temp.proposalThreshold,
             "FantosiDAO::propose: proposer votes below proposal threshold"
@@ -219,7 +222,7 @@ contract FantosiDAOLogic is FantosiDAOStorageV2, FantosiDAOEventsV2 {
         );
         require(targets.length != 0, "FantosiDAO::propose: must provide actions");
         require(targets.length <= proposalMaxOperations, "FantosiDAO::propose: too many actions");
-
+        console.log("P");
         temp.latestProposalId = latestProposalIds[msg.sender];
         if (temp.latestProposalId != 0) {
             ProposalState proposersLatestProposalState = state(temp.latestProposalId);
@@ -232,7 +235,7 @@ contract FantosiDAOLogic is FantosiDAOStorageV2, FantosiDAOEventsV2 {
                 "FantosiDAO::propose: one live proposal per proposer, found an already pending proposal"
             );
         }
-
+        console.log("P");
         temp.startBlock = block.number + votingDelay;
         temp.endBlock = temp.startBlock + votingPeriod;
 
@@ -256,7 +259,7 @@ contract FantosiDAOLogic is FantosiDAOStorageV2, FantosiDAOEventsV2 {
         newProposal.vetoed = false;
         newProposal.totalSupply = temp.totalSupply;
         newProposal.creationBlock = block.number;
-
+        console.log("P");
         latestProposalIds[newProposal.proposer] = newProposal.id;
 
         /// @notice Maintains backwards compatibility with GovernorBravo events

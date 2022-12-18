@@ -40,6 +40,9 @@ pragma solidity ^0.8.6;
 
 import "./FantosiDAOInterfaces.sol";
 
+// TODO: 테스트 완료 시 제거
+import "hardhat/console.sol";
+
 contract FantosiDAOProxy is FantosiDAOStorageV2, FantosiDAOEvents {
     constructor(
         address timelock_,
@@ -54,7 +57,7 @@ contract FantosiDAOProxy is FantosiDAOStorageV2, FantosiDAOEvents {
     ) {
         // Admin set to msg.sender for initialization
         admin = msg.sender;
-
+        console.log("HIHI");
         delegateTo(
             implementation_,
             abi.encodeWithSignature(
@@ -68,9 +71,9 @@ contract FantosiDAOProxy is FantosiDAOStorageV2, FantosiDAOEvents {
                 dynamicQuorumParams_
             )
         );
-
+        console.log("This should: ", implementation_);
         _setImplementation(implementation_);
-
+        console.log("HIHI");
         admin = admin_;
     }
 

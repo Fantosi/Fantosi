@@ -119,4 +119,8 @@ contract FantosiToken is IFantosiToken, Ownable, ERC721Checkpointable {
 
         return nounId;
     }
+
+    function totalSupply() public view override returns (uint256) {
+        super.totalSupply();
+    }
 }
