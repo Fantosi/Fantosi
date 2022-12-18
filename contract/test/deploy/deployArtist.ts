@@ -71,6 +71,7 @@ export const deployArtist = async (params: DeployParams): Promise<RT> => {
         auctionInfoTest.timeBuffer,
         auctionInfoTest.reservePrice,
         auctionInfoTest.minBidIncrementPercentage,
+        auctionInfoTest.initialStartTime,
         auctionInfoTest.totalDuration,
         auctionInfoTest.finalDurationPoint,
         fantosiDAOExecutor.address,

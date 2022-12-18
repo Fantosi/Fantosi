@@ -7,7 +7,7 @@ import { deployArtist, DeployParams } from "./deploy/deployArtist";
 import { auctionInfoTest, photoCardInfoTest } from "./deploy/constants";
 import { blockTimeStamp, passNSeconds } from "./util/hardhat.util";
 
-describe.only("View 테스트", () => {
+describe("View 테스트", () => {
     let admin: SignerWithAddress;
     let newjeans: SignerWithAddress;
     let user: SignerWithAddress[];
@@ -20,9 +20,9 @@ describe.only("View 테스트", () => {
     const deployAllArtists = async () => {
         // Newjeans
         const newjeansParams: DeployParams = {
-            name: "NEWJEANS PHOTOCARD",
-            symbol: "NEWJEANS",
-            contractURIHash: "QmWJUHeeSYUQMyX695ntnjUzh3MY3tT6PBCWxhM8ngVP6n",
+            name: photoCardInfoTest.NEWJEANS.name,
+            symbol: photoCardInfoTest.NEWJEANS.symbol,
+            contractURIHash: photoCardInfoTest.NEWJEANS.contractURIHash,
             admin: admin,
             artist: newjeans,
         };

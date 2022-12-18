@@ -5,6 +5,7 @@ export const auctionInfoTest: {
     timeBuffer: BigNumber;
     reservePrice: BigNumber;
     minBidIncrementPercentage: BigNumber;
+    initialStartTime: BigNumber;
     totalDuration: BigNumber;
     finalDurationPoint: BigNumber;
 } = {
@@ -12,6 +13,7 @@ export const auctionInfoTest: {
     timeBuffer: BigNumber.from(300), // 5 min
     reservePrice: ethers.utils.parseEther("0.01"), // 0.01 BNB
     minBidIncrementPercentage: BigNumber.from(5), // 5%
+    initialStartTime: BigNumber.from(0), // 0으로 되어 있을 시, 현재 시간
     totalDuration: BigNumber.from(86400), // 1 day
     finalDurationPoint: BigNumber.from(86100), // after 23 hours and 55 min, only in test case
 };
@@ -40,6 +42,7 @@ export const photoCardInfoTest: {
     NEWJEANS: {
         name: "NEWJEANS PHOTOCARD",
         symbol: "NEWJEANS",
-        contractURIHash: "QmWJUHeeSYUQMyX695ntnjUzh3MY3tT6PBCWxhM8ngVP6n",
+        contractURIHash:
+            "https://jade-deliberate-partridge-706.mypinata.cloud/ipfs/QmYPbjNtDWF1H6BBrzujWKsJ8gzeBNX9Z81NhFg7bvkAHM/",
     },
 };

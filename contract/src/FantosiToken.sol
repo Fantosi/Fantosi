@@ -33,7 +33,7 @@ contract FantosiToken is IFantosiToken, Ownable, ERC721Checkpointable {
     uint256 private _currentPhotoCardId;
 
     // IPFS content hash of contract-level metadata
-    string private _contractURIHash;
+    string public contractURIHash;
 
     // modifiers
     modifier whenMinterNotLocked() {
@@ -60,7 +60,7 @@ contract FantosiToken is IFantosiToken, Ownable, ERC721Checkpointable {
     ) ERC721(name, symbol) {
         fantosiAdmin = _fantosiAdmin;
         fantosiArtist = _fantosiArtist;
-        _contractURIHash = baseContractURIHash;
+        contractURIHash = baseContractURIHash;
     }
 
     function getTokenURI(uint256 tokenId) public view returns (string memory) {
@@ -72,7 +72,11 @@ contract FantosiToken is IFantosiToken, Ownable, ERC721Checkpointable {
     }
 
     function setContractURIHash(string memory newContractURIHash) external onlyOwner {
-        _contractURIHash = newContractURIHash;
+        contractURIHash = newContractURIHash;
+    }
+
+    function tokenURI(uint256 tokenId) public view override returns (string memory) {
+        return string(abi.encodePacked(super.tokenURI(tokenId), ".json"));
     }
 
     function mint() public override onlyMinter returns (uint256) {
@@ -106,7 +110,7 @@ contract FantosiToken is IFantosiToken, Ownable, ERC721Checkpointable {
     }
 
     function _baseURI() internal view override returns (string memory) {
-        return string(abi.encodePacked("ipfs://", _contractURIHash));
+        return contractURIHash;
     }
 
     function _mintTo(address to, uint256 nounId) internal returns (uint256) {

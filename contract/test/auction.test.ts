@@ -140,6 +140,9 @@ describe("Daily Auction 테스트", () => {
         /// Settlement 이후 상태 확인
         /* 입찰자에게 포토카드가 지급되었는지 확인 */
         expect(await fantosiToken.ownerOf(BigNumber.from(1))).to.equal(user[0].address);
+        expect(await fantosiToken.getTokenURI(BigNumber.from(1))).to.equal(
+            "https://jade-deliberate-partridge-706.mypinata.cloud/ipfs/QmYPbjNtDWF1H6BBrzujWKsJ8gzeBNX9Z81NhFg7bvkAHM/1.json",
+        );
 
         /* Treasury에 입찰금이 전달되었는지 확인 */
         expect(await ethers.provider.getBalance(fantosiDAOExecutor.address)).to.equal(user0BidAmount);

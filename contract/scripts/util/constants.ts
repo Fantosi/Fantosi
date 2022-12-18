@@ -42,7 +42,8 @@ export const photoCardInfo: {
         address: "0x3A6528E50DB65Ac99555DD45C16a14853Db0F48a",
         name: "NEWJEANS PHOTOCARD",
         symbol: "NEWJEANS",
-        contractURIHash: "QmWJUHeeSYUQMyX695ntnjUzh3MY3tT6PBCWxhM8ngVP6n",
+        contractURIHash:
+            "https://jade-deliberate-partridge-706.mypinata.cloud/ipfs/QmYPbjNtDWF1H6BBrzujWKsJ8gzeBNX9Z81NhFg7bvkAHM/",
     },
 };
 
