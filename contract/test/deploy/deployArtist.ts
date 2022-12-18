@@ -77,9 +77,6 @@ export const deployArtist = async (params: DeployParams): Promise<RT> => {
         params.contractURIHash,
     )) as FantosiToken;
     await fantosiToken.deployed();
-    
-    // View 컨트랙트에 저장
-    await fantosiView.connect(params.admin).setFantosiTokenAddress(params.symbol, fantosiToken.address);
 
     // View 컨트랙트에 저장
     await fantosiView.connect(params.admin).setFantosiTokenAddress(params.symbol, fantosiToken.address);
@@ -123,6 +120,9 @@ export const deployArtist = async (params: DeployParams): Promise<RT> => {
         },
     )) as FantosiDAOLogic;
     await fantosiDAOLogic.deployed();
+
+    // View 컨트랙트에 저장
+    await fantosiView.connect(params.admin).setFantosiDAOLogic(params.symbol, fantosiDAOLogic.address);
 
     /// AuctionHouse 정지 해제 => Daily Auction 시작
     // TODO: 컨트랙에 특정 시간에 시작하도록 설정하는 로직 추가

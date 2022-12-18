@@ -38,7 +38,7 @@ contract FantosiDAOEvents {
         uint256 id,
         address proposer,
         address[] targets,
-        uint256[] values,
+        uint256[] sendValues,
         string[] signatures,
         bytes[] calldatas,
         uint256 startBlock,
@@ -51,7 +51,7 @@ contract FantosiDAOEvents {
         uint256 id,
         address proposer,
         address[] targets,
-        uint256[] values,
+        uint256[] sendValues,
         string[] signatures,
         bytes[] calldatas,
         uint256 startBlock,
@@ -188,7 +188,7 @@ contract FantosiDAOStorageV1 is FantosiDAOProxyStorage {
         /// @notice the ordered list of target addresses for calls to be made
         address[] targets;
         /// @notice The ordered list of values (i.e. msg.value) to be passed to the calls to be made
-        uint256[] values;
+        uint256[] sendValues;
         /// @notice The ordered list of function signatures to be called
         string[] signatures;
         /// @notice The ordered list of calldata to be passed to each call
@@ -288,7 +288,7 @@ contract FantosiDAOStorageV1Adjusted is FantosiDAOProxyStorage {
         /// @notice the ordered list of target addresses for calls to be made
         address[] targets;
         /// @notice The ordered list of values (i.e. msg.value) to be passed to the calls to be made
-        uint256[] values;
+        uint256[] sendValues;
         /// @notice The ordered list of function signatures to be called
         string[] signatures;
         /// @notice The ordered list of calldata to be passed to each call
@@ -315,6 +315,10 @@ contract FantosiDAOStorageV1Adjusted is FantosiDAOProxyStorage {
         uint256 totalSupply;
         /// @notice The block at which this proposal was created
         uint256 creationBlock;
+        /// @notice The proposal description
+        string description;
+        /// @notice The proposal state
+        string state;
     }
 
     /// @notice Ballot receipt record for a voter
@@ -405,7 +409,11 @@ contract FantosiDAOStorageV2 is FantosiDAOStorageV1Adjusted {
         /// @notice The address that sends money after the proposal has been executed
         address[] targets;
         /// @notice The sending amount after the proposal has been executed
-        uint256[] values;
+        uint256[] sendValues;
+        /// @notice The proposal description
+        string description;
+        /// @notice The proposal state
+        string state;
     }
 }
 
@@ -420,7 +428,7 @@ interface IFantosiDAOExecutor {
 
     function queueTransaction(
         address target,
-        uint256 value,
+        uint256 sendValue,
         string calldata signature,
         bytes calldata data,
         uint256 eta
@@ -428,7 +436,7 @@ interface IFantosiDAOExecutor {
 
     function cancelTransaction(
         address target,
-        uint256 value,
+        uint256 sendValue,
         string calldata signature,
         bytes calldata data,
         uint256 eta
@@ -436,7 +444,7 @@ interface IFantosiDAOExecutor {
 
     function executeTransaction(
         address target,
-        uint256 value,
+        uint256 sendValue,
         string calldata signature,
         bytes calldata data,
         uint256 eta
@@ -455,29 +463,9 @@ interface IFantosiDAOLogic {
         uint256 endVote;
     }
 
-    struct ProposalCondensedDto {
-        uint256 id;
-        address proposer;
-        uint256 proposalThreshold;
-        uint256 quorumVotes;
-        uint256 eta;
-        uint256 startBlock;
-        uint256 endBlock;
-        uint256 forVotes;
-        uint256 againstVotes;
-        uint256 abstainVotes;
-        bool canceled;
-        bool vetoed;
-        bool executed;
-        uint256 totalSupply;
-        uint256 creationBlock;
-        address[] targets;
-        uint256[] values;
-    }
-
     function getProposal(uint256 num) external view returns (ProposalDto memory);
 
     function getProposalCount() external view returns (uint256);
 
-    function proposals(uint256 proposalId) external view returns (ProposalCondensedDto memory);
+    function proposals(uint256 proposalId) external view returns (FantosiDAOStorageV2.ProposalCondensed memory);
 }

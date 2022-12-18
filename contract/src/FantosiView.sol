@@ -4,7 +4,7 @@ pragma solidity ^0.8.6;
 
 import { IFantosiAuctionHouse } from "./interfaces/IFantosiAuctionHouse.sol";
 import { IFantosiToken } from "./interfaces/IFantosiToken.sol";
-import { FantosiDAOStorageV1, IFantosiDAOLogic } from "./governance/FantosiDAOInterfaces.sol";
+import { FantosiDAOStorageV1, FantosiDAOStorageV2, IFantosiDAOLogic } from "./governance/FantosiDAOInterfaces.sol";
 import { Initializable } from "./upgrade/higherversion/Initializable.sol";
 
 // TODO: 테스트 완료 후 제거
@@ -121,12 +121,12 @@ contract FantosiView is Initializable {
     function getArtistAllProposalInfo(string memory key)
         external
         view
-        returns (IFantosiDAOLogic.ProposalCondensedDto[] memory allProposalInfo)
+        returns (FantosiDAOStorageV2.ProposalCondensed[] memory allProposalInfo)
     {
         IFantosiDAOLogic fantosiDAOLogic = fantosiDAOLogicList[key];
         uint256 proposalCount = fantosiDAOLogic.getProposalCount();
 
-        allProposalInfo = new IFantosiDAOLogic.ProposalCondensedDto[](proposalCount);
+        allProposalInfo = new FantosiDAOStorageV2.ProposalCondensed[](proposalCount);
 
         for (uint256 i = 1; i <= proposalCount; i++) {
             allProposalInfo[i - 1] = fantosiDAOLogic.proposals(i);

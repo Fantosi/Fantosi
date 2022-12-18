@@ -114,6 +114,29 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     await (await fantosiToken.connect(wallet).setMinter(FantosiAuctionHouse.address)).wait();
     console.log("포토카드 Minter 설정 완료 😻");
 
+    /// Fantosi Token 컨트랙트 배포
+    const FantosiDAOLogic = await deploy("FantosiDAOLogic", {
+        from: deployer,
+        args: [
+            FantosiDAOExecutor.address,
+            fantosiToken.address,
+            photoCardInfo.NEWJEANS.address, // Artist is Vetoer
+            FantosiDAOExecutor.address,
+            governanceInfo.votingPeriod,
+            governanceInfo.votingDelay,
+            governanceInfo.proposalThresholdBPS,
+            governanceInfo.dynamicQuorum,
+        ],
+        log: true,
+        autoMine: true,
+    });
+    console.log("FantosiDAOLogic 배포 완료 🚀: ", FantosiDAOLogic.address);
+
+    // View 컨트랙트에 저장
+    await (
+        await fantosiView.connect(wallet).setFantosiDAOLogic(photoCardInfo.NEWJEANS.symbol, FantosiDAOLogic.address)
+    ).wait();
+
     /// DAO Treasury로 Ownership 이동
     // await (await fantosiAuctionHouse.connect(wallet).transferOwnership(FantosiDAOExecutor.address)).wait();
 
