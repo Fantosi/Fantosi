@@ -1,4 +1,4 @@
-import { FantosiAuctionHouse, FantosiDAOExecutor, FantosiDAOLogic, FantosiToken } from "../typechain";
+import { FantosiAuctionHouse, FantosiDAOExecutor, FantosiDAOLogic, FantosiToken, FantosiView } from "../typechain";
 import { ethers } from "hardhat";
 import { BigNumber } from "ethers";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
@@ -16,6 +16,7 @@ describe("Fantosi Community Vote 테스트", () => {
     let fantosiAuctionHouse: FantosiAuctionHouse;
     let fantosiDAOExecutor: FantosiDAOExecutor;
     let fantosiDAOLogic: FantosiDAOLogic;
+    let fantosiView: FantosiView;
 
     // Initial deployment function
     const deployAllArtists = async () => {
@@ -30,7 +31,7 @@ describe("Fantosi Community Vote 테스트", () => {
 
         const newjeansDeployed = await deployArtist(newjeansParams);
 
-        ({ fantosiToken, fantosiAuctionHouse, fantosiDAOExecutor, fantosiDAOLogic } = newjeansDeployed);
+        ({ fantosiToken, fantosiAuctionHouse, fantosiDAOExecutor, fantosiDAOLogic, fantosiView } = newjeansDeployed);
     };
 
     beforeEach(async () => {
@@ -83,10 +84,14 @@ describe("Fantosi Community Vote 테스트", () => {
         await passNSeconds(1);
 
         /* user1이 찬성 투표 실행 */
-        await fantosiDAOLogic.connect(user[0]).castVote(BigNumber.from(1), BigNumber.from(0));
+        await fantosiDAOLogic.connect(user[0]).castVote(BigNumber.from(1), BigNumber.from(1));
 
         /* proposal state 값 확인 */
         const firstProposal = await fantosiDAOLogic.proposals(BigNumber.from(1));
         expect(firstProposal.forVotes).to.equal(BigNumber.from(1));
+
+        /* view 컨트랙트 테스트 */
+        const data = await fantosiView.getArtistAllProposalInfo(photoCardInfoTest.NEWJEANS.symbol);
+        console.log(data[0]);
     });
 });

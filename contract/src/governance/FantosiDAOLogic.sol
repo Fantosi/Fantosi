@@ -516,7 +516,7 @@ contract FantosiDAOLogic is FantosiDAOStorageV2, FantosiDAOEventsV2 {
                 targets: proposal.targets,
                 sendValues: proposal.sendValues,
                 description: proposal.description,
-                state: proposal.state
+                state: state(proposalCount)
             });
     }
 
