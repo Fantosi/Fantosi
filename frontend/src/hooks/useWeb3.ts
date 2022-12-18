@@ -20,6 +20,7 @@ import FantosiDAOLogicArtifact from "../contract/abi/FantosiDAOLogic.json";
 const AUCTION_HOUSE_ADDR = "0x65a4544F7B95278e5D8AAbC5BC383b4e61Fd93E0";
 const AUCTION_VIEW_ADDR = "0x543AfCA36CE3A2cE6bAc886f1bDc169F2382Dc8f";
 const FANTOSI_DAO_LOGIC_ADDR = "0x3489323335068b716398B1DEc640027903049d63";
+const FANTOSI_DAO_EXCUTER_ADDR = "0x50356bc28e11C7E5d00877B7B444e834524AB814";
 const BINANCE_TESTNET_RPC = "https://data-seed-prebsc-1-s1.binance.org:8545";
 
 const useWeb3 = (): Web3Type => {
@@ -158,6 +159,22 @@ const useWeb3 = (): Web3Type => {
     } catch (e) {
       throw new Error(`getAuctionHouse ::: ERROR ${e}`);
     }
+  };
+
+  const getTreasury = async (): Promise<string> => {
+    if (!web3) {
+      getWeb3();
+      console.log(`getTreasury ::: web3 is not initiated`);
+      return "0";
+    }
+    // get balance from address dao excutor
+    const balance = await web3.eth.getBalance(FANTOSI_DAO_EXCUTER_ADDR);
+    if (!balance) {
+      console.log(`getTreasury ::: balance is not initiated`);
+      return "0";
+    }
+
+    return web3.utils.fromWei(balance, "ether");
   };
 
   const createBid = async (photoCardId: number, bidAmount: number) =>
@@ -399,6 +416,7 @@ const useWeb3 = (): Web3Type => {
     getArtistAllProposalInfo,
     submitPropose,
     castVote,
+    getTreasury,
   };
 };
 

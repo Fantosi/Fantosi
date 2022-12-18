@@ -68,6 +68,7 @@ export interface Web3Type {
     idea: string
   ) => Promise<void>;
   castVote: (proposalId: number, vote: VoteKind) => Promise<boolean>;
+  getTreasury: () => Promise<string>;
 }
 
 export interface ProposalInfo {
