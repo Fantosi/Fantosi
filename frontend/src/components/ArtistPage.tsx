@@ -349,59 +349,59 @@ const ArtistPage = ({ web3, user, signIn }: ArtistPageProps) => {
   };
 
   const renderProposals = () => {
-    // console.log("proposals", proposals);
-    const datas = [
-      {
-        id: 116,
-        expiredIn: 2,
-        status: STATUS.EXECUTED,
-        title: "익선동 카페 [오늘다움]에서 2022 다니엘 생일 카페 개최",
-        likedByArtist: false,
-      },
-      {
-        id: 115,
-        expiredIn: 5,
-        status: STATUS.ACTIVE,
-        title: "tvn 방송 [유퀴즈 온더 블럭] 뉴진스 출연 밥차 조공",
-        likedByArtist: false,
-      },
-      {
-        id: 114,
-        expiredIn: 16,
-        status: STATUS.CANCELED,
-        title: "뉴진스 [인기가요 데뷔] 첫방 기념 밥차 서포트",
-        likedByArtist: false,
-      },
-      {
-        id: 113,
-        expiredIn: 17,
-        status: STATUS.DEFEATED,
-        title: "뉴진스 프리 싱글 [Ditto] 발매 기념 멜론 300곡 스트리밍권 100장",
-        likedByArtist: false,
-      },
-      {
-        id: 112,
-        expiredIn: 18,
-        status: STATUS.QUEUED,
-        title:
-          "추운 날씨에도 사녹 와주는 고마운 우리 버니즈를 위한 맛난 도시락 역조공!",
-        likedByArtist: true,
-      },
-      {
-        id: 111,
-        expiredIn: 20,
-        status: STATUS.EXECUTED,
-        title: "데뷔 500일 기념 [역삼역 3번 출구] 지하철 광고",
-        likedByArtist: false,
-      },
-      {
-        id: 110,
-        expiredIn: 22,
-        status: STATUS.ACTIVE,
-        title: "[뉴진스 & 버니즈] 이름으로 [초록우산 기부재단] 2100만원 기부",
-        likedByArtist: false,
-      },
-    ];
+    console.log("proposals", proposals);
+    // const datas = [
+    //   {
+    //     id: 116,
+    //     expiredIn: 2,
+    //     status: STATUS.EXECUTED,
+    //     title: "익선동 카페 [오늘다움]에서 2022 다니엘 생일 카페 개최",
+    //     likedByArtist: false,
+    //   },
+    //   {
+    //     id: 115,
+    //     expiredIn: 5,
+    //     status: STATUS.ACTIVE,
+    //     title: "tvn 방송 [유퀴즈 온더 블럭] 뉴진스 출연 밥차 조공",
+    //     likedByArtist: false,
+    //   },
+    //   {
+    //     id: 114,
+    //     expiredIn: 16,
+    //     status: STATUS.CANCELED,
+    //     title: "뉴진스 [인기가요 데뷔] 첫방 기념 밥차 서포트",
+    //     likedByArtist: false,
+    //   },
+    //   {
+    //     id: 113,
+    //     expiredIn: 17,
+    //     status: STATUS.DEFEATED,
+    //     title: "뉴진스 프리 싱글 [Ditto] 발매 기념 멜론 300곡 스트리밍권 100장",
+    //     likedByArtist: false,
+    //   },
+    //   {
+    //     id: 112,
+    //     expiredIn: 18,
+    //     status: STATUS.QUEUED,
+    //     title:
+    //       "추운 날씨에도 사녹 와주는 고마운 우리 버니즈를 위한 맛난 도시락 역조공!",
+    //     likedByArtist: true,
+    //   },
+    //   {
+    //     id: 111,
+    //     expiredIn: 20,
+    //     status: STATUS.EXECUTED,
+    //     title: "데뷔 500일 기념 [역삼역 3번 출구] 지하철 광고",
+    //     likedByArtist: false,
+    //   },
+    //   {
+    //     id: 110,
+    //     expiredIn: 22,
+    //     status: STATUS.ACTIVE,
+    //     title: "[뉴진스 & 버니즈] 이름으로 [초록우산 기부재단] 2100만원 기부",
+    //     likedByArtist: false,
+    //   },
+    // ];
     return (
       <>
         <div className="treasury-wrapper">
@@ -417,16 +417,16 @@ const ArtistPage = ({ web3, user, signIn }: ArtistPageProps) => {
             </div>
           </div>
           <div className="treasury-cards">
-            {datas.map((data, index) => {
-              const { id, expiredIn, status, title, likedByArtist } = data;
+            {proposals.reverse().map((proposal, index) => {
+              const { id, state, description } = proposal;
               return (
                 <TreasuryCard
                   key={index}
-                  id={id}
-                  expiredIn={expiredIn}
-                  status={status}
-                  title={title}
-                  likedByArtist={likedByArtist}
+                  id={Number(id)}
+                  expiredIn={18}
+                  status={STATUS.ACTIVE}
+                  title={description}
+                  likedByArtist={false}
                 />
               );
             })}

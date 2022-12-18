@@ -289,7 +289,6 @@ const useWeb3 = (): Web3Type => {
     const ls = await auctionViewContract.methods
       .getArtistAllProposalInfo(artistKey)
       .call();
-
     if (ls) {
       res.push(...ls);
     }
