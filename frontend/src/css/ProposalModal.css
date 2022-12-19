@@ -145,3 +145,8 @@ input.price {
   background: black;
   cursor: pointer;
 }
+
+.warning {
+  transform: translateY(20px);
+  font-size: 13px;
+}

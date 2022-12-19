@@ -86,6 +86,9 @@ const ProposalModal = ({
           />
           <div className="bnb_icon" />
         </div>
+        <div className="warning">
+          ** 포토카드 보유하고 있는 공식 멤버만 제안할 수 있습니다.
+        </div>
         <div
           className={classNames("submit-btn", {
             ready: price.length > 0 && address.length > 0 && idea.length > 0,
