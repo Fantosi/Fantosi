@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/Fantosi/static/css/main.0cfe1c1f.css",
-    "main.js": "/Fantosi/static/js/main.e7ae284c.js",
+    "main.js": "/Fantosi/static/js/main.7492742d.js",
     "static/js/21.65d9f906.chunk.js": "/Fantosi/static/js/21.65d9f906.chunk.js",
     "static/js/562.c06b7bd4.chunk.js": "/Fantosi/static/js/562.c06b7bd4.chunk.js",
     "static/js/602.23ad0e85.chunk.js": "/Fantosi/static/js/602.23ad0e85.chunk.js",
@@ -86,7 +86,7 @@
     "static/media/vertical_line.svg": "/Fantosi/static/media/vertical_line.42bacc016027eea79c04.svg",
     "static/media/voting_btn.svg": "/Fantosi/static/media/voting_btn.fd7184796f0f4ddb6ef7.svg",
     "main.0cfe1c1f.css.map": "/Fantosi/static/css/main.0cfe1c1f.css.map",
-    "main.e7ae284c.js.map": "/Fantosi/static/js/main.e7ae284c.js.map",
+    "main.7492742d.js.map": "/Fantosi/static/js/main.7492742d.js.map",
     "21.65d9f906.chunk.js.map": "/Fantosi/static/js/21.65d9f906.chunk.js.map",
     "562.c06b7bd4.chunk.js.map": "/Fantosi/static/js/562.c06b7bd4.chunk.js.map",
     "602.23ad0e85.chunk.js.map": "/Fantosi/static/js/602.23ad0e85.chunk.js.map",
@@ -128,6 +128,6 @@
   },
   "entrypoints": [
     "static/css/main.0cfe1c1f.css",
-    "static/js/main.e7ae284c.js"
+    "static/js/main.7492742d.js"
   ]
 }
