@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/Fantosi/static/css/main.0cfe1c1f.css",
-    "main.js": "/Fantosi/static/js/main.2c59101b.js",
+    "main.css": "/Fantosi/static/css/main.c7e855d7.css",
+    "main.js": "/Fantosi/static/js/main.42788751.js",
     "static/js/21.65d9f906.chunk.js": "/Fantosi/static/js/21.65d9f906.chunk.js",
     "static/js/562.c06b7bd4.chunk.js": "/Fantosi/static/js/562.c06b7bd4.chunk.js",
     "static/js/602.23ad0e85.chunk.js": "/Fantosi/static/js/602.23ad0e85.chunk.js",
@@ -85,8 +85,8 @@
     "static/media/white_line.svg": "/Fantosi/static/media/white_line.76b50a3e58ac957d6874.svg",
     "static/media/vertical_line.svg": "/Fantosi/static/media/vertical_line.42bacc016027eea79c04.svg",
     "static/media/voting_btn.svg": "/Fantosi/static/media/voting_btn.fd7184796f0f4ddb6ef7.svg",
-    "main.0cfe1c1f.css.map": "/Fantosi/static/css/main.0cfe1c1f.css.map",
-    "main.2c59101b.js.map": "/Fantosi/static/js/main.2c59101b.js.map",
+    "main.c7e855d7.css.map": "/Fantosi/static/css/main.c7e855d7.css.map",
+    "main.42788751.js.map": "/Fantosi/static/js/main.42788751.js.map",
     "21.65d9f906.chunk.js.map": "/Fantosi/static/js/21.65d9f906.chunk.js.map",
     "562.c06b7bd4.chunk.js.map": "/Fantosi/static/js/562.c06b7bd4.chunk.js.map",
     "602.23ad0e85.chunk.js.map": "/Fantosi/static/js/602.23ad0e85.chunk.js.map",
@@ -127,7 +127,7 @@
     "718.39758e57.chunk.js.map": "/Fantosi/static/js/718.39758e57.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.0cfe1c1f.css",
-    "static/js/main.2c59101b.js"
+    "static/css/main.c7e855d7.css",
+    "static/js/main.42788751.js"
   ]
 }
