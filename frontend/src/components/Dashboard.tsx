@@ -84,7 +84,7 @@ const Dashboard = ({ web3, user, signIn }: DashboardProps) => {
       likeCnt: 55,
       artist: "NCT 127",
       bidDone: false,
-      src: dummy6,
+      src: dummy9,
     },
     {
       key: 4,
@@ -105,13 +105,13 @@ const Dashboard = ({ web3, user, signIn }: DashboardProps) => {
       likeCnt: 1,
       artist: "Newjeans",
       bidDone: false,
-      src: dummy9,
     },
     {
       key: 10,
       likeCnt: 3,
       artist: "TXT",
       bidDone: false,
+      src: dummy6,
     },
     {
       key: 11,
