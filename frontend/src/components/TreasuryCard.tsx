@@ -49,7 +49,11 @@ const TreasuryCard = ({
 
           <div
             className={classNames("treasury-status", {
-              active: status === STATUS.ACTIVE,
+              active:
+                status !== STATUS.DEFEATED &&
+                status !== STATUS.CANCELED &&
+                status !== STATUS.QUEUED &&
+                status !== STATUS.EXECUTED,
               executed: status === STATUS.EXECUTED,
               canceled: status === STATUS.CANCELED,
               defeated: status === STATUS.DEFEATED,
@@ -67,7 +71,7 @@ const TreasuryCard = ({
             ) : status === STATUS.QUEUED ? (
               <div>{status}</div>
             ) : (
-              <div></div>
+              <div>{"Active"}</div>
             )}
           </div>
         </div>

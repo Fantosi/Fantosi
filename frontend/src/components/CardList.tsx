@@ -27,10 +27,10 @@ const CardList = ({ cardList, clickedCardKey, selectCard }: CardListProps) => {
         }}
       />
       <div className="cards_wrapper">
-        {cardList.map((card) => {
+        {cardList.map((card, index) => {
           return (
             <div
-              key={card.key}
+              key={`${card.key}_${index}`}
               style={{
                 transform: `translate3d(
               ${currentImgIndex * -210}px, 0px, 0px)`,

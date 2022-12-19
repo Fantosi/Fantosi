@@ -77,6 +77,10 @@ const TreasuryPage = ({ web3, user, signIn }: TreasuryPageProps) => {
       return <div className="title_status"></div>;
     }
     const [desc1, desc2] = proposal.description.split("\n");
+    let val = proposal.sendValues[0] as unknown as string;
+    if (val.length > 5) {
+      val = val.substr(0, 3);
+    }
     return (
       <div className="left_contents_wrapper">
         <div>
@@ -87,9 +91,9 @@ const TreasuryPage = ({ web3, user, signIn }: TreasuryPageProps) => {
           </div>
           <div className="bidding_desc">
             PROPOSAL 통과 시
-            <div className="bidding_price">{`${Number(
-              proposal.sendValues[0]
-            )}BNB ($${Number(proposal.sendValues[0]) * 5})`}</div>
+            <div className="bidding_price">{`${Number(val)}BNB ($${
+              Number(val) * 250
+            })`}</div>
             가 배정됩니다.
           </div>
         </div>

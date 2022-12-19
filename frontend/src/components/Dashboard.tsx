@@ -4,6 +4,15 @@ import { CardInfo, PhotoCardInfo, UserInfo, Web3Type } from "../types";
 import { getNftImgInfos } from "../utils/handleNft";
 import CardList from "./CardList";
 import Vision from "./Vision";
+const dummy1 = require("../img/dummy-card.png");
+const dummy2 = require("../img/dummy-card-1.jpg");
+const dummy3 = require("../img/dummy-card-2.jpg");
+const dummy4 = require("../img/dummy-card-3.jpg");
+const dummy5 = require("../img/dummy-card-4.jpg");
+const dummy6 = require("../img/dummy-card-6.jpg");
+const dummy7 = require("../img/dummy-card-7.jpg");
+const dummy8 = require("../img/dummy-card-8.jpg");
+const dummy9 = require("../img/dummy-card-9.jpg");
 
 interface DashboardProps {
   web3: Web3Type;
@@ -20,31 +29,42 @@ const Dashboard = ({ web3, user, signIn }: DashboardProps) => {
     {
       key: 2,
       likeCnt: 2,
-      artist: "TXT",
+      artist: "Newjeans",
       bidDone: true,
+      src: dummy1,
     },
     {
-      key: 3,
-      likeCnt: 55,
-      artist: "NCT 127",
-      bidDone: false,
+      key: 12,
+      likeCnt: 12,
+      artist: "Newjeans",
+      bidDone: true,
+      src: dummy2,
     },
     {
-      key: 4,
-      likeCnt: 34,
-      artist: "Dummy",
-      bidDone: false,
+      key: 13,
+      likeCnt: 143,
+      artist: "Newjeans",
+      bidDone: true,
+      src: dummy3,
     },
     {
-      key: 5,
-      likeCnt: 63,
-      artist: "Dummy",
-      bidDone: false,
+      key: 14,
+      likeCnt: 3,
+      artist: "Newjeans",
+      bidDone: true,
+      src: dummy4,
+    },
+    {
+      key: 15,
+      likeCnt: 166,
+      artist: "Newjeans",
+      bidDone: true,
+      src: dummy5,
     },
     {
       key: 6,
       likeCnt: 87,
-      artist: "TXT",
+      artist: "Newjeans",
       bidDone: true,
     },
     {
@@ -60,10 +80,32 @@ const Dashboard = ({ web3, user, signIn }: DashboardProps) => {
       bidDone: true,
     },
     {
+      key: 3,
+      likeCnt: 55,
+      artist: "NCT 127",
+      bidDone: false,
+      src: dummy6,
+    },
+    {
+      key: 4,
+      likeCnt: 34,
+      artist: "Newjeans",
+      bidDone: false,
+      src: dummy7,
+    },
+    {
+      key: 5,
+      likeCnt: 63,
+      artist: "Newjeans",
+      bidDone: false,
+      src: dummy8,
+    },
+    {
       key: 9,
       likeCnt: 1,
-      artist: "TXT",
+      artist: "Newjeans",
       bidDone: false,
+      src: dummy9,
     },
     {
       key: 10,
@@ -152,7 +194,7 @@ const Dashboard = ({ web3, user, signIn }: DashboardProps) => {
         };
         newPhotoCardInfos.push(photoCardInfo);
       }
-      setPhotoCardInfo(newPhotoCardInfos[0]);
+      setPhotoCardInfo(newPhotoCardInfos[newPhotoCardInfos.length - 1]);
     }
   };
 

@@ -102,7 +102,8 @@ const ArtistPage = ({ web3, user, signIn }: ArtistPageProps) => {
   const getArtistAllProposalInfo = async () => {
     const response = await web3.getArtistAllProposalInfo("NEWJEANS");
     console.log("getArtistAllProposalInfo response", response);
-    setProposals(response as ProposalInfo[]);
+    const newProposals = response as ProposalInfo[];
+    setProposals(newProposals);
   };
 
   const getArtistPhotoCardHistoryInfo = async () => {
@@ -133,6 +134,7 @@ const ArtistPage = ({ web3, user, signIn }: ArtistPageProps) => {
         newPhotoCardInfos.push(photoCardInfo);
       }
       setPhotoCardInfos(newPhotoCardInfos);
+
       setCardIndex(newPhotoCardInfos.length - 1);
     }
   };
@@ -204,7 +206,7 @@ const ArtistPage = ({ web3, user, signIn }: ArtistPageProps) => {
     );
   };
 
-  const getBidAmount = () => {
+  const getBidAmount = (photoCardInfos: PhotoCardInfo[]) => {
     const web3Utils = web3?.web3Utils;
     if (photoCardInfos[cardIndex] === undefined || !web3Utils) return "0.15";
     const test = photoCardInfos[cardIndex]?.currentAuction.amount;
@@ -212,8 +214,8 @@ const ArtistPage = ({ web3, user, signIn }: ArtistPageProps) => {
     return web3Utils.fromWei(stringifyAmount, "ether");
   };
 
-  const getMinBidAmount = () => {
-    return Math.ceil(Number(getBidAmount()) * 1.05 * 100000) / 100000;
+  const getMinBidAmount = (bidAmount: string) => {
+    return Math.ceil(Number(bidAmount) * 1.05 * 100000) / 100000;
   };
 
   const renderArtistPhotoCards = () => {
@@ -222,7 +224,6 @@ const ArtistPage = ({ web3, user, signIn }: ArtistPageProps) => {
     };
 
     const renderBiddingInfo = () => {
-      const bidAmount = getBidAmount();
       return (
         <div className="biddinginfo-wrapper">
           <div className="row-wrapper">
@@ -230,7 +231,7 @@ const ArtistPage = ({ web3, user, signIn }: ArtistPageProps) => {
               <div className="header">CURRENT BID</div>
               <div className="value">
                 <>
-                  {bidAmount}
+                  {getBidAmount(photoCardInfos)}
                   <div className="bnb_icon" />
                 </>
               </div>
@@ -284,13 +285,14 @@ const ArtistPage = ({ web3, user, signIn }: ArtistPageProps) => {
     };
 
     const handlePlaceBid = async () => {
+      if (photoCardInfos.length === 0) return;
       try {
-        console.log("biddingVal", biddingVal);
         setIsLoading(true);
-        await web3.createBid(1, Number(biddingVal));
-        console.log("createBid finished");
+        await web3.createBid(
+          Number(photoCardInfos[cardIndex].currentAuction.photoCardId),
+          Number(biddingVal)
+        );
         await getArtistPhotoCardInfo();
-        console.log("getArtistPhotoCardInfo finished");
         setIsLoading(false);
         setIsFinished(true);
         setBiddingVal("");
@@ -328,15 +330,19 @@ const ArtistPage = ({ web3, user, signIn }: ArtistPageProps) => {
               {renderBiddingInfo()}
               <div className="input-wrapper">
                 <input
-                  placeholder={`${getMinBidAmount()} or more`}
+                  placeholder={`${getMinBidAmount(
+                    getBidAmount(photoCardInfos)
+                  )} or more`}
                   value={biddingVal}
                   onChange={(e) => {
                     const val = e.target.value;
                     const num = Number(e.target.value);
                     if (
                       !isNaN(num) &&
-                      (val.length < getMinBidAmount().toString().length ||
-                        num >= getMinBidAmount())
+                      (val.length <
+                        getMinBidAmount(getBidAmount(photoCardInfos)).toString()
+                          .length ||
+                        num >= getMinBidAmount(getBidAmount(photoCardInfos)))
                     ) {
                       setBiddingVal(val);
                     }

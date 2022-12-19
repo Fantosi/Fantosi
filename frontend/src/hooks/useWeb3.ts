@@ -17,9 +17,9 @@ import AuctionHouseArtifact from "../contract/abi/FantosiAuctionHouse.json";
 import ViewArtifact from "../contract/abi/FantosiView.json";
 import FantosiDAOLogicArtifact from "../contract/abi/FantosiDAOLogic.json";
 
-const AUCTION_HOUSE_ADDR = "0x65a4544F7B95278e5D8AAbC5BC383b4e61Fd93E0";
-const AUCTION_VIEW_ADDR = "0x543AfCA36CE3A2cE6bAc886f1bDc169F2382Dc8f";
-const FANTOSI_DAO_LOGIC_ADDR = "0x3489323335068b716398B1DEc640027903049d63";
+const AUCTION_HOUSE_ADDR = "0x543828dE1779353F389A01b5C726c277cDDFA68e";
+const AUCTION_VIEW_ADDR = "0xAaCca28c14260991D5f404E08244357Fea12A956";
+const FANTOSI_DAO_LOGIC_ADDR = "0x72B5cF7104D3FAeE494bEf6Cc8D4483d58bEbC20";
 const BINANCE_TESTNET_RPC = "https://data-seed-prebsc-1-s1.binance.org:8545";
 
 const useWeb3 = (): Web3Type => {
